@@ -1,0 +1,308 @@
+/* ============================================
+   Restaurant Kiosk Menu Header Styles
+   Production-Level Classical Design
+   ============================================ */
+
+/* Main Header Container */
+.menu-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(to bottom, #faf8f5 0%, #f5f2ed 100%);
+  padding: 28px 48px 16px;
+  box-shadow: 0 4px 12px rgba(74, 55, 40, 0.08);
+  border-bottom: 2px solid #e8dfd3;
+}
+
+/* Top Bar Layout */
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+/* Title Section */
+.header-title-section {
+  flex: 1;
+  text-align: center;
+}
+
+.menu-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #3d3229;
+  margin: 0;
+  letter-spacing: 1px;
+  text-transform: capitalize;
+}
+
+.menu-subtitle {
+  font-size: 15px;
+  color: #7a6a5a;
+  margin-top: 6px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.subtitle-accent {
+  color: #c9462c;
+  font-weight: 700;
+  font-size: 18px;
+  margin-right: 4px;
+}
+
+/* Action Buttons Container */
+.header-actions {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 12px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: 2px solid #d4c5b3;
+  background-color: #ffffff;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4a3728;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 4px rgba(74, 55, 40, 0.06);
+}
+
+.action-btn:hover {
+  background-color: #f9f6f2;
+  border-color: #c9a961;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(74, 55, 40, 0.12);
+}
+
+.action-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(74, 55, 40, 0.08);
+}
+
+/* Category Navigation */
+.category-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.category-btn {
+  padding: 12px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #5a4a3a;
+  background-color: transparent;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  position: relative;
+}
+
+.category-btn:hover {
+  background-color: #ebe5dc;
+  color: #3d3229;
+}
+
+.category-btn.active {
+  background: linear-gradient(135deg, #a04e0b 0%, #f78c3a 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(74, 55, 40, 0.25);
+  transform: translateY(-2px);
+}
+
+/* .category-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 2px;
+  background-color: #d4af37;
+  border-radius: 2px;
+} */
+
+/* Header Divider */
+.header-divider {
+  margin-top: 20px;
+  height: 1px;
+  background: linear-gradient(to right, transparent 0%, #d4c5b3 20%, #d4c5b3 80%, transparent 100%);
+}
+
+/* Responsive Design for Smaller Kiosk Screens */
+@media (max-width: 1024px) {
+  .menu-header {
+    padding: 24px 32px 14px;
+  }
+
+  .menu-title {
+    font-size: 36px;
+  }
+
+  .action-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+  }
+
+  .category-btn {
+    padding: 10px 22px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-header {
+    padding: 20px 24px 12px;
+  }
+
+  .header-top {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .header-actions {
+    position: relative;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .category-navigation {
+    gap: 10px;
+  }
+
+  .category-btn {
+    padding: 9px 18px;
+    font-size: 13px;
+  }
+}
+/* Category Container Wrapper */
+.category-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Category Navigation - Updated */
+.category-navigation {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  max-height: 90px; /* Approximately 2 rows */
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out;
+  width: 100%;
+  padding: 0 60px;
+}
+
+.category-navigation.expanded {
+  max-height: 500px; /* Allow all categories to show */
+}
+
+/* Expand/Collapse Toggle Button */
+.expand-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 20px;
+  background-color: #ffffff;
+  border: 2px solid #d4c5b3;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a3728;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(74, 55, 40, 0.08);
+}
+
+.expand-toggle-btn:hover {
+  background: linear-gradient(135deg, #6b4e37 0%, #4a3728 100%);
+  color: #ffffff;
+  border-color: #6b4e37;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(74, 55, 40, 0.15);
+}
+
+.expand-toggle-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Adjustments for Category Navigation */
+@media (max-width: 1200px) {
+  .category-navigation {
+    max-height: 80px;
+    gap: 12px;
+    padding: 0 40px;
+  }
+
+  .category-btn {
+    padding: 10px 22px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .category-navigation {
+    max-height: 75px;
+    gap: 10px;
+    padding: 0 30px;
+  }
+
+  .category-btn {
+    padding: 9px 18px;
+    font-size: 13px;
+  }
+
+  .expand-toggle-btn {
+    font-size: 13px;
+    padding: 7px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-navigation {
+    max-height: 70px;
+    gap: 8px;
+    padding: 0 20px;
+  }
+
+  .category-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .expand-toggle-btn {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-navigation {
+    max-height: 65px;
+    gap: 6px;
+    padding: 0 10px;
+  }
+
+  .category-btn {
+    padding: 7px 14px;
+    font-size: 11px;
+  }
+}

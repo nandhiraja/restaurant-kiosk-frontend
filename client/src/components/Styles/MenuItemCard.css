@@ -1,0 +1,240 @@
+/* ============================================
+   Restaurant Kiosk Menu Item Card Styles
+   Production-Level Classical Design
+   ============================================ */
+
+/* Card Container */
+.menu-item-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(74, 55, 40, 0.1);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e8dfd3;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 28px rgba(74, 55, 40, 0.18);
+  border-color: #d4c5b3;
+}
+
+/* Image Section */
+.item-image-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f2ed 0%, #e8dfd3 100%);
+}
+
+.item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.menu-item-card:hover .item-image {
+  transform: scale(1.08);
+}
+
+/* Image Overlay */
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, rgba(61, 50, 41, 0.3) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* Content Section */
+.item-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  background-color: #faf8f5;
+}
+
+/* Item Details */
+.item-details {
+  margin-bottom: 16px;
+}
+
+.item-name {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #3d3229;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  letter-spacing: 0.3px;
+}
+
+.item-description {
+  font-size: 14px;
+  color: #7a6a5a;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 42px;
+}
+
+/* Footer Section */
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #e8dfd3;
+}
+
+/* Price */
+.item-price {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #c9462c;
+  letter-spacing: 0.5px;
+}
+
+.currency-symbol {
+  font-size: 20px;
+  margin-right: 2px;
+  font-weight: 600;
+}
+
+/* Add Button */
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 24px;
+  background: linear-gradient(135deg, #f19142 0%, #bd5506 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(74, 55, 40, 0.2);
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.add-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.add-btn:hover::before {
+  left: 100%;
+}
+
+.add-btn:hover {
+  background: linear-gradient(135deg, #b85e0f 0%, #f18746 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 55, 40, 0.3);
+}
+
+.add-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 8px rgba(74, 55, 40, 0.25);
+}
+
+.add-btn-text {
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.add-btn-icon {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Responsive Design for Different Kiosk Screens */
+@media (max-width: 1024px) {
+  .item-image-container {
+    height: 200px;
+  }
+
+  .item-content {
+    padding: 18px;
+  }
+
+  .item-name {
+    font-size: 18px;
+  }
+
+  .item-description {
+    font-size: 13px;
+  }
+
+  .item-price {
+    font-size: 24px;
+  }
+
+  .add-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .item-image-container {
+    height: 180px;
+  }
+
+  .item-content {
+    padding: 16px;
+  }
+
+  .item-name {
+    font-size: 17px;
+  }
+
+  .item-description {
+    font-size: 12px;
+    min-height: 36px;
+  }
+
+  .item-price {
+    font-size: 22px;
+  }
+
+  .add-btn {
+    padding: 9px 18px;
+    font-size: 13px;
+  }
+}
+
+/* Touch-friendly hover states for kiosk */
+@media (hover: none) {
+  .menu-item-card:active {
+    transform: scale(0.98);
+  }
+
+  .add-btn:active {
+    transform: scale(0.95);
+  }
+}

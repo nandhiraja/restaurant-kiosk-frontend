@@ -1,0 +1,458 @@
+/* ============================================
+   Restaurant Kiosk Modal Styles
+   Production-Level Classical Design
+   ============================================ */
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(61, 50, 41, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 24px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Container */
+.modal-container {
+  background-color: #faf8f5;
+  border-radius: 20px;
+  box-shadow: 0 24px 48px rgba(74, 55, 40, 0.3);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid #d4c5b3;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Modal Header */
+.modal-header {
+  position: relative;
+  background: linear-gradient(135deg, #6b4e37 0%, #4a3728 100%);
+  padding: 28px 32px;
+  border-radius: 18px 18px 0 0;
+  border-bottom: 3px solid #c9a961;
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.modal-header-content {
+  color: #ffffff;
+}
+
+.modal-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.modal-description {
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0 0 12px 0;
+  color: #e8dfd3;
+}
+
+.modal-base-price {
+  font-size: 14px;
+  color: #d4af37;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Modal Body */
+.modal-body {
+  padding: 32px;
+}
+
+/* Section */
+.modal-section {
+  margin-bottom: 32px;
+}
+
+.modal-section:last-child {
+  margin-bottom: 0;
+}
+
+.section-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #3d3229;
+  margin: 0 0 16px 0;
+  letter-spacing: 0.3px;
+  border-bottom: 2px solid #e8dfd3;
+  padding-bottom: 8px;
+}
+
+/* Customization Group */
+.customization-group {
+  margin-bottom: 24px;
+}
+
+.customization-group:last-child {
+  margin-bottom: 0;
+}
+
+.customization-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4a3728;
+  margin: 0 0 12px 0;
+}
+
+.multiple-indicator {
+  font-size: 13px;
+  font-weight: 500;
+  color: #7a6a5a;
+  margin-left: 8px;
+  font-style: italic;
+}
+
+/* Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.option-btn {
+  padding: 14px 16px;
+  background-color: #ffffff;
+  border: 2px solid #d4c5b3;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-height: 70px;
+  justify-content: center;
+}
+
+.option-btn:hover {
+  border-color: #c9a961;
+  background-color: #f9f6f2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 55, 40, 0.1);
+}
+
+.option-btn.selected {
+  background: linear-gradient(135deg, #6b4e37 0%, #4a3728 100%);
+  border-color: #6b4e37;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(74, 55, 40, 0.25);
+  transform: translateY(-2px);
+}
+
+.option-label {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.option-price {
+  font-size: 13px;
+  font-weight: 700;
+  color: #c9462c;
+}
+
+.option-btn.selected .option-price {
+  color: #d4af37;
+}
+
+/* Add-ons List */
+.addons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.addon-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border: 2px solid #e8dfd3;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.addon-item:hover {
+  border-color: #c9a961;
+  background-color: #f9f6f2;
+  box-shadow: 0 4px 8px rgba(74, 55, 40, 0.08);
+}
+
+.addon-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.addon-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #3d3229;
+}
+
+.addon-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #c9462c;
+}
+
+/* Custom Checkbox */
+.addon-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkbox-custom {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #d4c5b3;
+  border-radius: 6px;
+  background-color: #ffffff;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.addon-checkbox:checked ~ .checkbox-custom {
+  background: linear-gradient(135deg, #6b4e37 0%, #4a3728 100%);
+  border-color: #6b4e37;
+}
+
+.addon-checkbox:checked ~ .checkbox-custom::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* Quantity Selector */
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.quantity-btn {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  border: 2px solid #d4c5b3;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #4a3728;
+}
+
+.quantity-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #6b4e37 0%, #4a3728 100%);
+  border-color: #6b4e37;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.quantity-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quantity-display {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #3d3229;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 24px 32px;
+  background-color: #f5f2ed;
+  border-top: 2px solid #e8dfd3;
+  border-radius: 0 0 18px 18px;
+}
+
+.price-breakdown {
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e8dfd3;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 15px;
+  color: #5a4a3a;
+}
+
+.price-row:last-child {
+  margin-bottom: 0;
+}
+
+.price-row.total {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #3d3229;
+  padding-top: 12px;
+  border-top: 2px solid #e8dfd3;
+  margin-top: 8px;
+}
+
+/* Footer Actions */
+.footer-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.cancel-btn,
+.add-to-cart-btn {
+  flex: 1;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  letter-spacing: 0.3px;
+}
+
+.cancel-btn {
+  background-color: #ffffff;
+  border: 2px solid #d4c5b3;
+  color: #4a3728;
+}
+
+.cancel-btn:hover {
+  background-color: #e8dfd3;
+  border-color: #c9a961;
+}
+
+.add-to-cart-btn {
+  background: linear-gradient(135deg, #6b4e37 0%, #4a3728 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(74, 55, 40, 0.25);
+}
+
+.add-to-cart-btn:hover {
+  background: linear-gradient(135deg, #8a6749 0%, #5d4435 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 55, 40, 0.35);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal-container {
+    max-width: 95%;
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 24px 24px;
+  }
+
+  .modal-title {
+    font-size: 24px;
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-actions {
+    flex-direction: column;
+  }
+}
+
+/* Scrollbar Styling */
+.modal-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-container::-webkit-scrollbar-track {
+  background: #e8dfd3;
+  border-radius: 0 20px 20px 0;
+}
+
+.modal-container::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6b4e37, #4a3728);
+  border-radius: 5px;
+}
