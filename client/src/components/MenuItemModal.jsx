@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { X, Plus, Minus } from 'lucide-react';
-import './Styles/menuItemModal.css';
+import './Styles/MenuItemModal.css';
 import { useCart } from './CartContext';
 
 const TAX_RATE = 0.05; // 5% tax

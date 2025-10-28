@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Home, ChevronDown, ChevronUp } from 'lucide-react';
 import CartPage from './CartPage'; // or import your CartPage if it is styled as a modal
-import './Styles/menuHeader.css';
+import './Styles/MenuHeader.css';
 
 const categories = ["Indian", "Italian", "Chinese", "Desserts", "Beverages", "Indian", "Italian", "Chinese", "Desserts", "Beverages", "Indian", "Italian", "Chinese", "Desserts", "Beverages"];
 

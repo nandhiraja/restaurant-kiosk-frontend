@@ -1,4 +1,4 @@
-import './Styles/menuHeader.css';
+import './Styles/MenuHeader.css';
 import { ShoppingCart, Home, ChevronDown, ChevronUp } from 'lucide-react';
 import React, { useState } from 'react';
 import CartPage from './CartPage'; // or import your CartPage if it is styled as a modal

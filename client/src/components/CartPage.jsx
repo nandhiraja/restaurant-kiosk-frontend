@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, Minus, Trash } from 'lucide-react';
-import './Styles/cartPage.css'; // Create or modify as needed
+import './Styles/CartPage.css'; // Create or modify as needed
 import { useCart } from './CartContext';
 
 const TAX_RATE = 0.10; // 10% as in screenshot

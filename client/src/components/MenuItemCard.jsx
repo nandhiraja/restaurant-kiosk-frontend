@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Styles/menuItemCard.css';
+import './Styles/MenuItemCard.css';
 // import {pic} from '../../public/Images/biryani-rice-dish.jpg'
 // import './Images/biryani-rice-dish.jpg'
 

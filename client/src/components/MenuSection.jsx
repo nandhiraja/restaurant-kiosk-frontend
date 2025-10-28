@@ -4,7 +4,7 @@ import MenuItemCard from './MenuItemCard';
 import { menuItems } from '../Datas/metadatas';
 import  { useState } from 'react';
 import MenuItemModal from './MenuItemModal';
-import './Styles/menuSection.css';
+import './Styles/MenuSection.css';
 import  Navigation  from './NavigationBar';
 /**
  * The main component for the entire menu page.
