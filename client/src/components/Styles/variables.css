@@ -1,8 +1,8 @@
 :root {
   /* Primary Brand Colors */
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-color: #667eea;
-  --primary-dark: #764ba2;
+  --primary-gradient: linear-gradient(135deg, #fff9e8 0%, #faf3e0 100%);
+  --primary-color: #fcf7d5;
+  --primary-dark: #08570c;
   
   /* Accent Colors */
   --accent-gold: #fbbf24;
@@ -10,18 +10,18 @@
   --success-green: #0f8a3f;
   
   /* Neutral Colors */
-  --background-white: #ffffff;
+  --background-white: white;
   --background-light: #f9fafb;
   --background-dark: #1f2937;
   
   /* Text Colors */
-  --text-primary: #1f2937;
+  --text-primary: #35422e;
   --text-secondary: #6b7280;
   --text-light: #9ca3af;
-  --text-white: #ffffff;
+  --text-white: #0b0b0c;
   
   /* Border Colors */
-  --border-light: #e5e7eb;
+  --border-light: #faba5b;
   --border-medium: #d1d5db;
   
   /* Shadows */

@@ -1,342 +1,248 @@
-/* ============================================
-   Restaurant Kiosk Menu Item Card Styles
-   Production-Level Classical Design
-   ============================================ */
+@import './variables.css';
 
-/* Card Container */
-
-::-webkit-scrollbar {
-  width: 0px;
-}
 .menu-item-card {
-  background-color: #ffffff;
-  border-radius: 16px;
+  background: var(--background-white);
+  border: 3px solid var(--border-light);
+  border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(74, 55, 40, 0.1);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #e8dfd3;
-  cursor: pointer;
-  height: 100%;
+  transition: all var(--transition-normal);
   display: flex;
   flex-direction: column;
+  position: relative;
+  min-height: 380px;
+}
+
+.menu-item-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--primary-gradient);
+  transform: scaleX(0);
+  transition: transform var(--transition-normal);
+  z-index: 2;
 }
 
 .menu-item-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 28px rgba(74, 55, 40, 0.18);
-  border-color: #d4c5b3;
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
+
+.menu-item-card:hover::before {
+  transform: scaleX(1);
 }
 
 /* Image Section */
 .item-image-container {
   position: relative;
-  width: 100%;
-  height: 220px;
+  height: 200px;
   overflow: hidden;
-  background: linear-gradient(135deg, #f5f2ed 0%, #e8dfd3 100%);
+  background: var(--background-light);
 }
 
 .item-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform var(--transition-slow);
 }
 
 .menu-item-card:hover .item-image {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
-/* Image Overlay */
 .image-overlay {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(to top, rgba(61, 50, 41, 0.3) 0%, transparent 100%);
-  pointer-events: none;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+}
+
+/* Veg/Non-Veg Badge */
+.food-type-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--background-white);
+  background: var(--background-white);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: var(--shadow-sm);
+}
+
+.food-type-badge.veg {
+  border-color: var(--success-green);
+}
+
+.food-type-badge.non-veg {
+  border-color: var(--accent-red);
+}
+
+.food-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+}
+
+.food-type-badge.veg .food-indicator {
+  background: var(--success-green);
+}
+
+.food-type-badge.non-veg .food-indicator {
+  background: var(--accent-red);
 }
 
 /* Content Section */
 .item-content {
-  padding: 20px;
+  padding: 1.5rem;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-  background-color: #faf8f5;
 }
 
-/* Item Details */
 .item-details {
-  margin-bottom: 16px;
+  flex: 1;
 }
 
 .item-name {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 20px;
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem 0;
   font-weight: 700;
-  color: #3d3229;
-  margin: 0 0 8px 0;
-  line-height: 1.3;
-  letter-spacing: 0.3px;
 }
 
-.item-description {
-  font-size: 14px;
-  color: #7a6a5a;
-  line-height: 1.5;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  min-height: 42px;
+/* Tags */
+.item-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0;
+}
+
+.tag-badge {
+  background: var(--background-light);
+  color: var(--text-secondary);
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--border-light);
+}
+
+.item-nature {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin: 0.5rem 0 0 0;
 }
 
 /* Footer Section */
 .item-footer {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid #e8dfd3;
+  align-items: flex-end;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--border-light);
 }
 
-/* Price */
+.price-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
 .item-price {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 26px;
+  font-size: 1.5rem;
+  color: var(--text-primary);
   font-weight: 700;
-  color: #c9462c;
-  letter-spacing: 0.5px;
 }
 
 .currency-symbol {
-  font-size: 20px;
-  margin-right: 2px;
+  font-size: 1.2rem;
+}
+
+.tax-info {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.total-price {
+  font-size: 0.9rem;
+  color: var(--primary-color);
   font-weight: 600;
 }
 
 /* Add Button */
 .add-btn {
+  background: var(--primary-gradient);
+  color: var(--text-white);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 11px 24px;
-  background: linear-gradient(135deg, #647a53 0%, #435e2f 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(74, 55, 40, 0.2);
-  letter-spacing: 0.5px;
-  position: relative;
-  overflow: hidden;
-}
-
-.add-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.add-btn:hover::before {
-  left: 100%;
+  gap: 0.5rem;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
 }
 
 .add-btn:hover {
-  background: linear-gradient(135deg, #6d964f 0%, #86be5b 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(74, 55, 40, 0.3);
+  box-shadow: var(--shadow-md);
 }
 
 .add-btn:active {
   transform: translateY(0);
-  box-shadow: 0 3px 8px rgba(74, 55, 40, 0.25);
-}
-
-.add-btn-text {
-  font-family: 'Georgia', 'Times New Roman', serif;
 }
 
 .add-btn-icon {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1;
+  font-size: 1.2rem;
 }
 
-/* Responsive Design for Different Kiosk Screens */
-@media (max-width: 1024px) {
-  .item-image-container {
-    height: 200px;
-  }
-
-  .item-content {
-    padding: 18px;
-  }
-
-  .item-name {
-    font-size: 18px;
-  }
-
-  .item-description {
-    font-size: 13px;
-  }
-
-  .item-price {
-    font-size: 24px;
-  }
-
-  .add-btn {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 768px) {
-  .item-image-container {
-    height: 180px;
-  }
-
-  .item-content {
-    padding: 16px;
-  }
-
-  .item-name {
-    font-size: 17px;
-  }
-
-  .item-description {
-    font-size: 12px;
-    min-height: 36px;
-  }
-
-  .item-price {
-    font-size: 22px;
-  }
-
-  .add-btn {
-    padding: 9px 18px;
-    font-size: 13px;
-  }
-}
-
-/* Touch-friendly hover states for kiosk */
-@media (hover: none) {
-  .menu-item-card:active {
-    transform: scale(0.98);
-  }
-
-  .add-btn:active {
-    transform: scale(0.95);
-  }
-}
-
-/* Tags styling */
-.item-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 8px 0;
-}
-
-.tag-badge {
-  background: #f0f0f0;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 11px;
-  color: #666;
-  font-weight: 500;
-}
-
-/* Veg/Non-Veg indicator */
-.food-type-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 20px;
-  height: 20px;
-  border: 2px solid;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  border-radius: 3px;
-  z-index: 2;
-}
-
-.food-type-badge.veg {
-  border-color: #0f8a3f;
-}
-
-.food-type-badge.non-veg {
-  border-color: #c12626;
-}
-
-.food-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.food-type-badge.veg .food-indicator {
-  background: #0f8a3f;
-}
-
-.food-type-badge.non-veg .food-indicator {
-  background: #c12626;
-}
-
-/* Price container */
-.price-container {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.tax-info {
-  font-size: 10px;
-  color: #888;
-}
-
-.total-price {
-  font-weight: 600;
-  font-size: 14px;
-  color: #333;
-}
-
-/* Tax breakdown */
+/* Tax Breakdown */
 .tax-breakdown {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #eee;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-light);
 }
 
 .tax-detail {
-  font-size: 10px;
-  color: #666;
-  background: #f9f9f9;
-  padding: 2px 6px;
-  border-radius: 4px;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  background: var(--background-light);
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
 }
 
-.item-nature {
-  font-size: 11px;
-  color: #999;
-  margin: 4px 0 0 0;
+/* Responsive */
+@media (max-width: 768px) {
+  .item-name {
+    font-size: 1.2rem;
+  }
+
+  .item-price {
+    font-size: 1.3rem;
+  }
+
+  .add-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
 }

@@ -70,7 +70,8 @@ const MenuHeader = ({onSelectCategory}) => {
   return (
     <header className="menu-header">
       {/* Top Bar */}
-     
+             <Navigation />
+
 
       {/* Category Navigation */}
       <div className="category-container">
