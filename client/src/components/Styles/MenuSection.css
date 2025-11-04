@@ -1,50 +1,49 @@
 @import './variables.css';
 
-/* Main Container - Flexbox Layout */
 .menu-section-container {
   min-height: 100vh;
-  background: var(--primary-gradient);
+  background: var(--bg-warm);
   display: flex;
   flex-direction: column;
 }
 
-/* Main Content - Flex Grow */
 .menu-main-content {
-  padding: 2rem 1.5rem;
+  padding: 2.5rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
-  flex: 1; /* THIS IS KEY - Takes remaining space */
+  flex: 1;
 }
 
 .menu-items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 2rem;
 }
 
-/* Error & Empty States */
 .error-message,
 .no-items {
   text-align: center;
-  padding: 3rem;
-  background: white;
-  border-radius: 20px;
+  padding: 4rem 2rem;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
   margin: 2rem auto;
   color: var(--text-primary);
   max-width: 600px;
+  box-shadow: var(--shadow-md);
 }
 
 .error-message button {
-  margin-top: 1rem;
-  background: var(--primary-gradient);
-  color: white;
+  margin-top: 1.5rem;
+  background: var(--secondary-gradient);
+  color: var(--text-on-dark);
   border: none;
-  padding: 0.75rem 2rem;
-  border-radius: 12px;
+  padding: 0.9rem 2.5rem;
+  border-radius: var(--radius-md);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
 .error-message button:hover {
@@ -52,42 +51,28 @@
   box-shadow: var(--shadow-md);
 }
 
-/* Footer - Always at bottom */
 .menu-footer {
-  background: var(--background-dark);
-  color: var(--text-white);
+  background: var(--earth-dark);
+  color: var(--neutral-100);
   text-align: center;
-  padding: 1.5rem;
-  margin-top: auto; /* THIS IS KEY - Pushes to bottom */
-  flex-shrink: 0;
-  width: 100%;
-}
-
-.footer-content {
-  max-width: 600px;
-  margin: 0 auto;
+  padding: 2rem;
+  margin-top: auto;
 }
 
 .footer-text {
   margin: 0 0 1rem 0;
-  font-size: 1rem;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .footer-decorative-line {
   width: 80px;
   height: 3px;
-  background: var(--accent-gold);
+  background: var(--gold-primary);
   margin: 0 auto;
   border-radius: 2px;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-  .menu-main-content {
-    padding: 1.5rem 1rem;
-  }
-
   .menu-items-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;

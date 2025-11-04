@@ -1,15 +1,13 @@
 @import './variables.css';
 
-/* Navigation Bar - Sticky at top */
 .navigation-bar {
   position: sticky;
   top: 0;
-  left: 0;
-  right: 0;
   z-index: 1000;
-  background: linear-gradient(135deg, #1f491b 0%, #0e2e1b 100%);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  padding: 0;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-md);
+  border-bottom: 1px solid var(--neutral-200);
+  backdrop-filter: blur(10px);
 }
 
 .nav-container {
@@ -18,34 +16,32 @@
   display: grid;
   grid-template-columns: 100px 1fr 100px;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 1rem 2rem;
   gap: 1rem;
 }
 
-/* Navigation Buttons */
 .nav-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  border-radius: 12px;
+  background: transparent;
+  border: 2px solid var(--gold-light);
+  border-radius: var(--radius-md);
   padding: 10px 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  color: white;
+  transition: all var(--transition);
+  color: var(--text-primary);
   width: 100%;
-  position: relative;
+  position: relative; /* Important for badge positioning */
 }
 
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: var(--secondary-gradient);
+  color: var(--text-on-dark);
+  border-color: var(--gold-dark);
   transform: translateY(-2px);
-}
-
-.nav-btn:active {
-  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
 .nav-label {
@@ -54,64 +50,66 @@
   letter-spacing: 0.5px;
 }
 
-/* Center Section - Category & Order Type */
 .nav-center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  text-align: center;
 }
 
 .category-title {
-  font-size: 1.75rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: white;
+  color: var(--text-primary);
   margin: 0;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
 }
 
 .order-type-pill {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.25);
-  color: white;
-  padding: 6px 20px;
+  background: var(--secondary-gradient);
+  color: var(--text-on-dark);
+  padding: 6px 18px;
   border-radius: 20px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   letter-spacing: 0.5px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Cart Icon with Badge */
+/* Cart Icon Wrapper - Important for positioning */
 .cart-icon-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 24px;
+  height: 24px;
 }
 
+/* Cart Badge - Always Visible with Beautiful Styling */
 .cart-badge {
   position: absolute;
-  top: -8px;
-  right: -10px;
-  background: #ff4757;
+  top: -10px;
+  right: -12px;
+  min-width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%);
   color: white;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 3px 6px;
+  padding: 0 6px;
   border-radius: 10px;
-  min-width: 18px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
   border: 2px solid white;
-  animation: pulse 2s infinite;
+  z-index: 10;
+  animation: badgePulse 2s ease-in-out infinite;
+  pointer-events: none; /* Prevents interfering with button clicks */
 }
 
-@keyframes pulse {
+/* Pulse Animation for Cart Badge */
+@keyframes badgePulse {
   0%, 100% {
     transform: scale(1);
   }
@@ -120,110 +118,78 @@
   }
 }
 
-/* Cart Modal Overlay */
-.cart-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: fadeIn 0.3s ease;
+/* Make badge more prominent when cart has items */
+.cart-badge:not(:empty) {
+  animation: badgePulse 2s ease-in-out infinite, badgeAppear 0.3s ease-out;
 }
 
-@keyframes fadeIn {
+@keyframes badgeAppear {
   from {
+    transform: scale(0);
     opacity: 0;
   }
   to {
+    transform: scale(1);
     opacity: 1;
   }
 }
 
-/* Responsive Design */
+/* Enhanced hover effect for cart button */
+.nav-btn.cart-btn:hover .cart-badge {
+  background: linear-gradient(135deg, #FF8C8C 0%, #FF7A8A 100%);
+  transform: scale(1.15);
+  box-shadow: 0 3px 12px rgba(255, 107, 107, 0.6);
+}
 
-/* Tablet */
+.cart-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 25, 23, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .nav-container {
     grid-template-columns: 80px 1fr 80px;
-    padding: 0.875rem 1.25rem;
+    padding: 1rem 1.5rem;
   }
 
   .category-title {
     font-size: 1.5rem;
-    letter-spacing: 1.5px;
   }
 
-  .order-type-pill {
-    font-size: 0.75rem;
-    padding: 5px 16px;
+  .cart-badge {
+    top: -8px;
+    right: -10px;
+    min-width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0.75rem 1rem;
   }
 
   .nav-btn {
     padding: 8px 12px;
   }
 
-  .nav-label {
-    font-size: 10px;
-  }
-}
-
-/* Mobile */
-@media (max-width: 480px) {
-  .nav-container {
-    grid-template-columns: 70px 1fr 70px;
-    padding: 0.75rem 1rem;
-    gap: 0.5rem;
-  }
-
-  .category-title {
-    font-size: 1.25rem;
-    letter-spacing: 1px;
-  }
-
-  .order-type-pill {
-    font-size: 0.7rem;
-    padding: 4px 12px;
-  }
-
-  .nav-btn {
-    padding: 8px 8px;
-    gap: 2px;
-  }
-
-  .nav-label {
-    font-size: 9px;
-  }
-
   .cart-badge {
     top: -6px;
     right: -8px;
+    min-width: 16px;
+    height: 16px;
     font-size: 9px;
-    padding: 2px 5px;
-  }
-}
-
-/* Very Small Mobile */
-@media (max-width: 360px) {
-  .nav-container {
-    grid-template-columns: 60px 1fr 60px;
-    padding: 0.625rem 0.75rem;
-  }
-
-  .category-title {
-    font-size: 1.1rem;
-  }
-
-  .order-type-pill {
-    font-size: 0.65rem;
-    padding: 3px 10px;
-  }
-
-  .nav-label {
-    display: none;
+    padding: 0 4px;
   }
 }
