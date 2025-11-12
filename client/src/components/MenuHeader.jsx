@@ -35,7 +35,7 @@ const MenuHeader = ({onSelectCategory}) => {
   useEffect(() => {
   console.log("Fetching category data from backend...", BASE_URL);
 
-  fetch(`${BASE_URL}/menu/categories`)
+  fetch(`${BASE_URL}/catalog/?channel=Palas Kisok`)
     .then(async (response) => {
       console.log("Status:", response.status);
       console.log("Response Type:", response.headers.get("content-type"));

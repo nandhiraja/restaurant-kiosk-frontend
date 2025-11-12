@@ -37,8 +37,7 @@ function CartPage() {
   const handleQuantityUpdate = (index, newQuantity) => {
     updateQuantity(index, newQuantity);
   };
-
-  const handleProceedToPayment = async () => {
+const handleProceedToPayment = async () => {
   if (cart.items.length === 0) {
     alert('Your cart is empty!');
     return;
@@ -47,62 +46,67 @@ function CartPage() {
   setLoading(true);
   setError(null);
 
-  // Prepare order data
-  const orderData = {
+  // Calculate totals
+  const totalWithTax = breakdown.subtotal + breakdown.tax;
+  const totalWithoutTax = breakdown.subtotal;
+
+  // Prepare order payload exactly as per API spec
+  const orderPayload = {
+    channel: "Palas Kiosk",
     items: cart.items.map(item => ({
-      itemId: item.itemId,
-      itemName: item.itemName,
-      quantity: item.quantity,
-      price: item.price,
-      taxAmount: item.taxAmount,
-      total: calculateItemTotal(item)
+      item_skuid: item.skuCode || item.itemId.toString(),
+      quantity: item.quantity
     })),
-    subtotal: breakdown.subtotal,
-    tax: breakdown.tax,
-    total: total,
-    timestamp: new Date().toISOString()
+    total_amount_include_tax: parseFloat(totalWithTax.toFixed(2)),
+    total_amount_exclude_tax: parseFloat(totalWithoutTax.toFixed(2))
   };
 
+  console.log('Creating Order:', orderPayload);
+
   try {
-    // Simulate API call with setTimeout (2.5 seconds)
-    const mockPaymentResponse = await new Promise((resolve) => {
-      setTimeout(() => {
-        // Mock successful payment response
-        resolve({
-          success: true,
-          code: "SUCCESS",
-          message: "Your request has been successfully completed.",
-          data: {
-            transactionId: `TXN${Date.now()}`,
-            amount: total,
-            merchantId: "HIMALAYANSAVOURUAT",
-            qrString: `upi://pay?pa=HIMALAYANSAVOURUAT@ybl&pn=P2Mstore3&am=${total}&mam=${total}&tr=TXN${Date.now()}&tn=Paymentfor${Date.now()}&mc=5192&mode=04&purpose=00`
-          }
-        });
-      }, 2500); // 2.5 second delay
+    const response = await fetch(`${BASE_URL}/orders/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(orderPayload)
     });
 
-    console.log('Payment Response:', mockPaymentResponse);
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error?.message || 'Failed to create order');
+    }
 
-    // Navigate to payment page with order data and payment response
+    const result = await response.json();
+    console.log('Order Created:', result);
+    
+    // API returns: { order_id, total_amount_include_tax, total_amount_exclude_tax }
     navigate('/payment', { 
       state: { 
-        orderData: orderData,
-        cartTotal: total,
-        paymentResponse: mockPaymentResponse
+        orderId: result.order_id,
+        totalAmount: result.total_amount_include_tax,
+        orderDetails: {
+          items: cart.items,
+          subtotal: breakdown.subtotal,
+          tax: breakdown.tax,
+          total: totalWithTax
+        }
       } 
     });
+    
+    // Clear cart after successful order creation
+    clearCart();
 
   } catch (error) {
     console.error('Error creating order:', error);
-    setError('Failed to process your order. Please try again.');
+    setError(error.message || 'Failed to process your order. Please try again.');
     setLoading(false);
     
-    setTimeout(() => {
-      setError(null);
-    }, 5000);
+    setTimeout(() => setError(null), 5000);
   }
 };
+
+
 
 
   return (

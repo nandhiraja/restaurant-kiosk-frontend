@@ -1,27 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import { CreditCard, QrCode, ChevronDown, ChevronUp, Printer, Send, Check } from 'lucide-react';
+import { CreditCard, QrCode, ChevronDown, ChevronUp, Printer, Send, Check, Loader } from 'lucide-react';
 import './Styles/PaymentPage.css';
+import { useCart } from './CartContext';
+
+const BASE_URL = import.meta.env.VITE_Base_url;
 
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { orderData, cartTotal, paymentResponse } = location.state || {};
+  const { clearCart } = useCart();
+
+  const { orderId, totalAmount, orderDetails } = location.state || {};
   
-  const [selectedMethod, setSelectedMethod] = useState(null); // null initially
+  const [selectedMethod, setSelectedMethod] = useState(null);
   const [expandedMethod, setExpandedMethod] = useState(null);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [paymentProcessing, setPaymentProcessing] = useState(false);
-  const [orderId, setOrderId] = useState(null);
+  const [qrData, setQrData] = useState(null);
+  const [edcData, setEdcData] = useState(null);
+  const [loadingQR, setLoadingQR] = useState(false);
+  const [loadingEDC, setLoadingEDC] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState('PENDING');
+  const [transactionDetails, setTransactionDetails] = useState(null);
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [showWhatsappInput, setShowWhatsappInput] = useState(false);
+  const [error, setError] = useState(null);
+  
+  const pollingRef = useRef(null);
 
-  if (!orderData) {
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+      }
+    };
+  }, []);
+
+  if (!orderId || !orderDetails) {
     return (
       <div className="payment-root">
         <div className="payment-error">
-          <h2>No order data found</h2>
+          <h2>No order found</h2>
           <button onClick={() => navigate('/cart')} className="back-to-cart-btn">
             Go to Cart
           </button>
@@ -35,30 +54,174 @@ const PaymentPage = () => {
     setExpandedMethod(expandedMethod === method ? null : method);
   };
 
-  // Simulate QR Payment - only when user clicks "Pay with QR"
-  const handleQRPayment = () => {
-    setPaymentProcessing(true);
+  // Convert INR to Paise (multiply by 100)
+  const amountInPaise = Math.round(totalAmount * 100).toString();
+
+  // Generate QR Code
+  const handleGenerateQR = async () => {
+    setLoadingQR(true);
+    setError(null);
     
-    // Simulate payment verification after 5 seconds
-    setTimeout(() => {
-      setPaymentProcessing(false);
-      setPaymentSuccess(true);
-      setOrderId(`ORD${Date.now()}`);
-    }, 5000); // 5 seconds to simulate payment
+    try {
+      const response = await fetch(`${BASE_URL}/payments/qr/init`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          order_id: orderId,
+          amount_paise: amountInPaise
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate QR code');
+      }
+
+      const result = await response.json();
+      console.log('QR Initialized:', result);
+      
+      // Result: { order_id, amount_paise, qr_code, status, timestamp }
+      setQrData(result);
+      setPaymentStatus('PROCESSING');
+      
+      // Start polling for payment status
+      startQRStatusPolling();
+
+    } catch (error) {
+      console.error('Error generating QR:', error);
+      setError('Failed to generate QR code. Please try again.');
+    } finally {
+      setLoadingQR(false);
+    }
   };
 
-  // Simulate Card Payment - only when user clicks "Pay Now"
-  const handleCardPayment = () => {
-    setPaymentProcessing(true);
+  // Poll QR Payment Status
+  const startQRStatusPolling = () => {
+    let pollCount = 0;
+    const maxPolls = 120; // 6 minutes (120 * 3 seconds)
     
-    // Simulate card processing after 3 seconds
-    setTimeout(() => {
-      setPaymentProcessing(false);
-      setPaymentSuccess(true);
-      setOrderId(`ORD${Date.now()}`);
-    }, 3000); // 3 seconds for card payment
+    pollingRef.current = setInterval(async () => {
+      pollCount++;
+      
+      if (pollCount > maxPolls) {
+        clearInterval(pollingRef.current);
+        setPaymentStatus('TIMEOUT');
+        setError('Payment timeout. Please try again.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/payments/qr/status/${orderId}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to check status');
+        }
+
+        const result = await response.json();
+        console.log('QR Status:', result);
+        
+        // Result: { order_id, amount_paise, status, payment_method, transaction_id, payment_timestamp, created_at }
+       // ✅ CORRECTED: Check payment_status instead of status
+      if (result.payment_status === 'COMPLETED') {
+        setPaymentStatus('SUCCESS');
+        setTransactionDetails(result);
+        clearCart();
+        localStorage.removeItem('restaurantCart');
+
+        clearInterval(pollingRef.current);
+      } else if (result.payment_status === 'FAILED') {
+        setPaymentStatus('FAILED');
+        setError('Payment failed. Please try again.');
+        clearInterval(pollingRef.current);
+      }
+      } catch (error) {
+        console.error('Error checking payment status:', error);
+      }
+    }, 3000); // Poll every 3 seconds
   };
 
+  // Initialize EDC Payment
+  const handleEDCPayment = async () => {
+    setLoadingEDC(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`${BASE_URL}/payments/edc/init`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          order_id: orderId,
+          amount_paise: amountInPaise
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to initialize EDC payment');
+      }
+
+      const result = await response.json();
+      console.log('EDC Initialized:', result);
+      
+      // Result: { order_id, amount_paise, edc_reference, status, timestamp, device_id }
+      setEdcData(result);
+      setPaymentStatus('PROCESSING');
+      
+      // Start polling for EDC payment status
+      startEDCStatusPolling();
+
+    } catch (error) {
+      console.error('Error initializing EDC:', error);
+      setError('Failed to initialize card payment. Please try again.');
+    } finally {
+      setLoadingEDC(false);
+    }
+  };
+
+  // Poll EDC Payment Status
+  const startEDCStatusPolling = () => {
+    let pollCount = 0;
+    const maxPolls = 120;
+    
+    pollingRef.current = setInterval(async () => {
+      pollCount++;
+      
+      if (pollCount > maxPolls) {
+        clearInterval(pollingRef.current);
+        setPaymentStatus('TIMEOUT');
+        setError('Payment timeout. Please try again.');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/payments/edc/status/${orderId}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to check status');
+        }
+
+        const result = await response.json();
+        console.log('EDC Status:', result);
+        
+        // Result: { order_id, amount_paise, status, payment_method, transaction_id, edc_reference, card_last_four, payment_timestamp, created_at }
+        if (result.status === 'COMPLETED') {
+          setPaymentStatus('SUCCESS');
+          setTransactionDetails(result);
+          clearInterval(pollingRef.current);
+        } else if (result.status === 'FAILED' || result.status === 'CANCELLED') {
+          setPaymentStatus('FAILED');
+          setError('Payment failed or cancelled. Please try again.');
+          clearInterval(pollingRef.current);
+        }
+      } catch (error) {
+        console.error('Error checking EDC status:', error);
+      }
+    }, 3000);
+  };
+
+  // Print KOT
   const handlePrintKOT = () => {
     const printWindow = window.open('', '', 'width=300,height=600');
     printWindow.document.write(`
@@ -68,7 +231,7 @@ const PaymentPage = () => {
           <style>
             body { font-family: monospace; padding: 10px; font-size: 12px; }
             h2 { text-align: center; margin: 10px 0; }
-            .item { margin: 5px 0; display: flex; justify-content: space-between; }
+            .item { margin: 5px 0; }
             hr { border: 1px dashed #333; }
           </style>
         </head>
@@ -78,7 +241,7 @@ const PaymentPage = () => {
           <p><strong>Order ID:</strong> ${orderId}</p>
           <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
           <hr>
-          ${orderData.items.map(item => `
+          ${orderDetails.items.map(item => `
             <div class="item">
               <span>${item.itemName} x${item.quantity}</span>
             </div>
@@ -92,6 +255,7 @@ const PaymentPage = () => {
     printWindow.print();
   };
 
+  // Print Bill
   const handlePrintBill = () => {
     const printWindow = window.open('', '', 'width=400,height=700');
     printWindow.document.write(`
@@ -113,32 +277,37 @@ const PaymentPage = () => {
           <div class="header">
             <h2>RESTAURANT BILL</h2>
             <p><strong>Order ID:</strong> ${orderId}</p>
+            <p><strong>Transaction ID:</strong> ${transactionDetails?.transaction_id || 'N/A'}</p>
             <p>${new Date().toLocaleString()}</p>
           </div>
           <hr>
           <h3>Items:</h3>
-          ${orderData.items.map(item => `
-            <div class="item-row">
-              <span>${item.itemName} x${item.quantity}</span>
-              <span>₹${item.total.toFixed(2)}</span>
-            </div>
-          `).join('')}
+          ${orderDetails.items.map(item => {
+            const itemTotal = (item.price + (item.taxAmount || 0)) * item.quantity;
+            return `
+              <div class="item-row">
+                <span>${item.itemName} x${item.quantity}</span>
+                <span>₹${itemTotal.toFixed(2)}</span>
+              </div>
+            `;
+          }).join('')}
           <div class="totals">
             <div class="item-row">
               <span>Subtotal:</span>
-              <span>₹${orderData.subtotal.toFixed(2)}</span>
+              <span>₹${orderDetails.subtotal.toFixed(2)}</span>
             </div>
             <div class="item-row">
               <span>Tax:</span>
-              <span>₹${orderData.tax.toFixed(2)}</span>
+              <span>₹${orderDetails.tax.toFixed(2)}</span>
             </div>
             <hr>
             <div class="total-row">
               <span>TOTAL:</span>
-              <span>₹${orderData.total.toFixed(2)}</span>
+              <span>₹${orderDetails.total.toFixed(2)}</span>
             </div>
           </div>
           <div class="footer">
+            <p>Payment Method: ${transactionDetails?.payment_method || 'N/A'}</p>
             <p>Thank you for dining with us!</p>
             <p>Visit again soon</p>
           </div>
@@ -149,13 +318,14 @@ const PaymentPage = () => {
     printWindow.print();
   };
 
+  // Send via WhatsApp
   const handleWhatsAppKOT = () => {
     if (!whatsappNumber || whatsappNumber.length < 10) {
       alert('Please enter a valid phone number');
       return;
     }
     
-    const message = `*KITCHEN ORDER TICKET*\n\nOrder ID: ${orderId}\nDate: ${new Date().toLocaleString()}\n\n*Items:*\n${orderData.items.map(item => `${item.itemName} x${item.quantity}`).join('\n')}\n\nTotal: ₹${orderData.total.toFixed(2)}`;
+    const message = `*KITCHEN ORDER TICKET*\n\nOrder ID: ${orderId}\nTransaction ID: ${transactionDetails?.transaction_id || 'N/A'}\nDate: ${new Date().toLocaleString()}\n\n*Items:*\n${orderDetails.items.map(item => `${item.itemName} x${item.quantity}`).join('\n')}\n\nSubtotal: ₹${orderDetails.subtotal.toFixed(2)}\nTax: ₹${orderDetails.tax.toFixed(2)}\nTotal: ₹${orderDetails.total.toFixed(2)}\n\nThank you for your order!`;
     
     const whatsappUrl = `https://wa.me/91${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -166,129 +336,57 @@ const PaymentPage = () => {
   return (
     <div className="payment-root">
       <div className="payment-container">
-        {/* Order Summary - Left Side */}
+        {/* Order Summary */}
         <div className="order-summary-compact">
           <h3 className="summary-heading">Order Summary</h3>
+          <p className="order-id-display">Order ID: <strong>{orderId}</strong></p>
+          
           <div className="summary-items">
-            {orderData.items.map((item, idx) => (
-              <div key={idx} className="summary-item-row">
-                <span className="item-name-qty">
-                  {item.itemName} <span className="qty-badge">x{item.quantity}</span>
-                </span>
-                <span className="item-amount">₹{item.total.toFixed(2)}</span>
-              </div>
-            ))}
+            {orderDetails.items.map((item, idx) => {
+              const itemTotal = (item.price + (item.taxAmount || 0)) * item.quantity;
+              return (
+                <div key={idx} className="summary-item-row">
+                  <span className="item-name-qty">
+                    {item.itemName} <span className="qty-badge">x{item.quantity}</span>
+                  </span>
+                  <span className="item-amount">₹{itemTotal.toFixed(2)}</span>
+                </div>
+              );
+            })}
           </div>
+          
           <div className="summary-totals">
             <div className="summary-total-row">
               <span>Subtotal:</span>
-              <span>₹{orderData.subtotal.toFixed(2)}</span>
+              <span>₹{orderDetails.subtotal.toFixed(2)}</span>
             </div>
             <div className="summary-total-row">
               <span>Tax:</span>
-              <span>₹{orderData.tax.toFixed(2)}</span>
+              <span>₹{orderDetails.tax.toFixed(2)}</span>
             </div>
             <div className="summary-total-row grand-total">
               <span>Total:</span>
-              <span>₹{orderData.total.toFixed(2)}</span>
+              <span>₹{orderDetails.total.toFixed(2)}</span>
             </div>
           </div>
         </div>
 
-        {/* Payment Methods - Right Side */}
+        {/* Payment Methods */}
         <div className="payment-methods-section">
-          {!paymentSuccess ? (
-            <>
-              <h2 className="payment-heading">Select Payment Method</h2>
-              
-              {/* QR Code Payment */}
-              <div className={`payment-method-card ${selectedMethod === 'qr' ? 'selected' : ''}`}>
-                <div 
-                  className="method-header"
-                  onClick={() => handleMethodToggle('qr')}
-                >
-                  <div className="method-info">
-                    <QrCode size={24} />
-                    <span className="method-name">UPI / QR Code</span>
-                  </div>
-                  {expandedMethod === 'qr' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </div>
-                
-                {expandedMethod === 'qr' && paymentResponse?.data?.qrString && (
-                  <div className="method-content">
-                    <div className="qr-container">
-                      <QRCodeSVG 
-                        value={paymentResponse.data.qrString}
-                        size={200}
-                        level="H"
-                        includeMargin={true}
-                      />
-                    </div>
-                    <p className="qr-instruction">Scan this QR code with any UPI app</p>
-                    <div className="transaction-details">
-                      <p><strong>Transaction ID:</strong> {paymentResponse.data.transactionId}</p>
-                      <p><strong>Amount:</strong> ₹{paymentResponse.data.amount}</p>
-                    </div>
-                    
-                    {!paymentProcessing ? (
-                      <button 
-                        className="confirm-payment-btn"
-                        onClick={handleQRPayment}
-                      >
-                        I Have Paid - Verify Payment
-                      </button>
-                    ) : (
-                      <div className="waiting-indicator">
-                        <div className="spinner"></div>
-                        <p>Verifying payment...</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
+          {error && (
+            <div className="error-message" style={{
+              background: 'rgba(244, 67, 54, 0.1)',
+              border: '1px solid rgba(244, 67, 54, 0.3)',
+              color: '#C62828',
+              padding: '1rem',
+              borderRadius: '8px',
+              marginBottom: '1rem'
+            }}>
+              {error}
+            </div>
+          )}
 
-              {/* Card Payment */}
-              <div className={`payment-method-card ${selectedMethod === 'card' ? 'selected' : ''}`}>
-                <div 
-                  className="method-header"
-                  onClick={() => handleMethodToggle('card')}
-                >
-                  <div className="method-info">
-                    <CreditCard size={24} />
-                    <span className="method-name">Card Payment</span>
-                  </div>
-                  {expandedMethod === 'card' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                </div>
-                
-                {expandedMethod === 'card' && (
-                  <div className="method-content">
-                    <div className="card-form">
-                      <input type="text" placeholder="Card Number" className="card-input" maxLength="16" />
-                      <div className="card-row">
-                        <input type="text" placeholder="MM/YY" className="card-input-half" maxLength="5" />
-                        <input type="text" placeholder="CVV" className="card-input-half" maxLength="3" />
-                      </div>
-                      <input type="text" placeholder="Cardholder Name" className="card-input" />
-                      
-                      {!paymentProcessing ? (
-                        <button 
-                          className="pay-now-btn"
-                          onClick={handleCardPayment}
-                        >
-                          Pay ₹{orderData.total.toFixed(2)}
-                        </button>
-                      ) : (
-                        <div className="waiting-indicator">
-                          <div className="spinner"></div>
-                          <p>Processing payment...</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </>
-          ) : (
+          {paymentStatus === 'SUCCESS' ? (
             // Payment Success Screen
             <div className="payment-success">
               <div className="success-icon">
@@ -296,6 +394,9 @@ const PaymentPage = () => {
               </div>
               <h2>Payment Successful!</h2>
               <p className="order-id">Order ID: <strong>{orderId}</strong></p>
+              {transactionDetails?.transaction_id && (
+                <p className="transaction-id">Transaction ID: <strong>{transactionDetails.transaction_id}</strong></p>
+              )}
               
               <div className="action-buttons">
                 <button className="action-btn print-kot" onClick={handlePrintKOT}>
@@ -313,7 +414,7 @@ const PaymentPage = () => {
                   onClick={() => setShowWhatsappInput(!showWhatsappInput)}
                 >
                   <Send size={20} />
-                  Send KOT via WhatsApp
+                  Send via WhatsApp
                 </button>
               </div>
 
@@ -321,7 +422,7 @@ const PaymentPage = () => {
                 <div className="whatsapp-input-section">
                   <input
                     type="tel"
-                    placeholder="Enter WhatsApp Number (10 digits)"
+                    placeholder="Enter WhatsApp Number"
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
                     className="whatsapp-input"
@@ -339,6 +440,126 @@ const PaymentPage = () => {
                 Start New Order
               </button>
             </div>
+          ) : (
+            <>
+              <h2 className="payment-heading">Select Payment Method</h2>
+              
+              {/* QR Code Payment */}
+              <div className={`payment-method-card ${selectedMethod === 'qr' ? 'selected' : ''}`}>
+                <div 
+                  className="method-header"
+                  onClick={() => handleMethodToggle('qr')}
+                >
+                  <div className="method-info">
+                    <QrCode size={24} />
+                    <span className="method-name">UPI / QR Code</span>
+                  </div>
+                  {expandedMethod === 'qr' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </div>
+                
+                {expandedMethod === 'qr' && (
+                  <div className="method-content">
+                    {!qrData ? (
+                      <button 
+                        className="generate-qr-btn"
+                        onClick={handleGenerateQR}
+                        disabled={loadingQR}
+                      >
+                        {loadingQR ? (
+                          <>
+                            <Loader size={20} className="spinning" />
+                            Generating QR...
+                          </>
+                        ) : (
+                          'Generate QR Code'
+                        )}
+                      </button>
+                    ) : (
+                      <>
+                        <div className="qr-container">
+                          <QRCodeSVG 
+                            value={qrData.qr_string}
+                            size={200}
+                            level="H"
+                            includeMargin={true}
+                          />
+                        </div>
+                        <p className="qr-instruction">Scan this QR code with any UPI app</p>
+                        <div className="transaction-details">
+                            <p><strong>Order ID:</strong> {qrData.order_id}</p>
+                            <p><strong>Transaction ID:</strong> {qrData.transaction_id}</p>
+                            <p><strong>Amount:</strong> ₹{(parseInt(amountInPaise) / 100).toFixed(2)}</p>
+                            <p><strong>Expires At:</strong> {new Date(qrData.expires_at).toLocaleString()}</p>
+                            <p><strong>Provider:</strong> {qrData.provider}</p>
+                          </div>
+
+                        
+                        {paymentStatus === 'PROCESSING' && (
+                          <div className="waiting-indicator">
+                            <div className="spinner"></div>
+                            <p>Waiting for payment confirmation...</p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* EDC Card Payment */}
+              <div className={`payment-method-card ${selectedMethod === 'edc' ? 'selected' : ''}`}>
+                <div 
+                  className="method-header"
+                  onClick={() => handleMethodToggle('edc')}
+                >
+                  <div className="method-info">
+                    <CreditCard size={24} />
+                    <span className="method-name">Card Payment (EDC)</span>
+                  </div>
+                  {expandedMethod === 'edc' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                </div>
+                
+                {expandedMethod === 'edc' && (
+                  <div className="method-content">
+                    {!edcData ? (
+                      <button 
+                        className="pay-now-btn"
+                        onClick={handleEDCPayment}
+                        disabled={loadingEDC}
+                      >
+                        {loadingEDC ? (
+                          <>
+                            <Loader size={20} className="spinning" />
+                            Initializing...
+                          </>
+                        ) : (
+                          `Pay ₹${orderDetails.total.toFixed(2)} with Card`
+                        )}
+                      </button>
+                    ) : (
+                      <>
+                        <div className="edc-info">
+                          <p className="edc-instruction">Please insert or tap your card on the EDC device</p>
+                          <div className="transaction-details">
+                            <p><strong>EDC Reference:</strong> {edcData.edc_reference}</p>
+                            <p><strong>Device ID:</strong> {edcData.device_id}</p>
+                            <p><strong>Amount:</strong> ₹{(parseInt(edcData.amount_paise) / 100).toFixed(2)}</p>
+                            <p><strong>Status:</strong> {edcData.status}</p>
+                          </div>
+                        </div>
+                        
+                        {paymentStatus === 'PROCESSING' && (
+                          <div className="waiting-indicator">
+                            <div className="spinner"></div>
+                            <p>Processing card payment...</p>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </div>
       </div>

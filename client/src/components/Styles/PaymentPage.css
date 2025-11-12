@@ -423,3 +423,51 @@
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
+
+
+
+.generate-qr-btn {
+  width: 100%;
+  padding: 1.1rem;
+  background: var(--secondary-gradient);
+  color: var(--text-on-dark);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.generate-qr-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.generate-qr-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.order-id-display {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  padding: 0.75rem;
+  background: var(--neutral-50);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
