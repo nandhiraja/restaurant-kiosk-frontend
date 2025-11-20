@@ -27,8 +27,10 @@
 }
 
 .summary-heading {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-family: var(--primary-theme-subheading);
+
+  font-size: 1rem;
+  /* font-weight: 700; */
   color: var(--text-primary);
   margin: 0 0 1rem 0;
   padding-bottom: 0.75rem;
@@ -50,7 +52,9 @@
 }
 
 .item-name-qty {
-  font-size: 0.95rem;
+  font-family: var(--secondary-theme-subheading);
+
+  font-size: 1rem;
   color: var(--text-primary);
   display: flex;
   align-items: center;
@@ -104,8 +108,9 @@
 }
 
 .payment-heading {
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-family: var(--primary-theme-subheading);
+  font-size: 1.3em;
+  /* font-weight: 700; */
   color: var(--text-primary);
   margin: 0 0 1.5rem 0;
 }

@@ -26,9 +26,9 @@
   align-items: center;
   gap: 4px;
   background: transparent;
-  border: 2px solid var(--gold-light);
+  /* border: 2px solid var(--gold-light); */
   border-radius: var(--radius-md);
-  padding: 10px 16px;
+  /* padding: 10px 16px; */
   cursor: pointer;
   transition: all var(--transition);
   color: var(--text-primary);
@@ -58,6 +58,7 @@
 }
 
 .category-title {
+  font-family: var(--primary-theme-header);
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--text-primary);

@@ -878,7 +878,7 @@ printWindow.print();
                 >
                   <div className="method-info">
                     <CreditCard size={24} />
-                    <span className="method-name">Card Payment (EDC)</span>
+                    <span className="method-name">Card</span>
                   </div>
                   {expandedMethod === 'edc' ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </div>
@@ -905,10 +905,10 @@ printWindow.print();
                         <div className="edc-info">
                           <p className="edc-instruction">Please insert or tap your card on the EDC device</p>
                           <div className="transaction-details">
-                            <p><strong>EDC Reference:</strong> {edcData.edc_reference}</p>
-                            <p><strong>Device ID:</strong> {edcData.device_id}</p>
+                            {/* <p><strong>EDC Reference:</strong> {edcData.edc_reference}</p> */}
+                            {/* <p><strong>Device ID:</strong> {edcData.device_id}</p> */}
                             <p><strong>Amount:</strong> ₹{(parseInt(edcData.amount_paise) / 100).toFixed(2)}</p>
-                            <p><strong>Status:</strong> {edcData.status}</p>
+                            {/* <p><strong>Status:</strong> {edcData.status}</p> */}
                           </div>
                         </div>
                         

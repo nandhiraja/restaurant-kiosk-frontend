@@ -53,6 +53,8 @@
 }
 
 .cart-header h1 {
+    font-family: var(--primary-theme-header);
+
   font-size: 1.75rem;
   color: var(--text-primary);
   margin: 0;
@@ -148,8 +150,10 @@
 }
 
 .cart-item-title {
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-family: var(--secondary-theme-subheading);
+
+  font-size: 1.2rem;
+  
   color: var(--text-primary);
   margin: 0;
   line-height: 1.3;
@@ -266,8 +270,10 @@
 }
 
 .item-total-price {
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-family: var(--primary-theme-subheading);
+
+  font-size: .86rem;
+  /* font-weight: 700; */
   color: var(--gold-dark);
 }
 
@@ -283,10 +289,12 @@
 }
 
 .summary-row {
+  font-family: var(--primary-theme-subheading);
+
   display: flex;
   justify-content: space-between;
   padding: 0.7rem 0;
-  font-size: 1rem;
+  font-size: .81rem;
   color: var(--text-secondary);
 }
 
@@ -304,6 +312,7 @@
 }
 
 .payment-btn {
+  font-family: var(--primary-theme-subheading);
   width: 100%;
   padding: 1.1rem;
   background: var(--secondary-gradient);

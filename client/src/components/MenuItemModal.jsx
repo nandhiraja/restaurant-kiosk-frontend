@@ -77,14 +77,14 @@ const MenuItemModal = ({ item, onClose, onAddToCart }) => {
           <div className="modal-header-content">
             <h2 className="modal-title">{item.itemName}</h2>
             
-            {/* Display tags */}
+            {/* Display tags
             {item.tags && item.tags.length > 0 && (
               <div className="modal-tags">
                 {item.tags.map((tag, index) => (
                   <span key={index} className="modal-tag">{tag}</span>
                 ))}
               </div>
-            )}
+            )} */}
             
             <div className="modal-item-info">
               <div className="modal-base-price">
@@ -106,28 +106,6 @@ const MenuItemModal = ({ item, onClose, onAddToCart }) => {
 
         {/* Modal Body */}
         <div className="modal-body">
-          
-          {/* Tax Breakdown Section */}
-          {item.taxes && item.taxes.length > 0 && (
-            <div className="modal-section">
-              <h3 className="section-title">Tax Information</h3>
-              <div className="tax-details">
-                {item.taxes.map((tax, index) => (
-                  <div key={index} className="tax-item">
-                    <span className="tax-name">{tax.name}</span>
-                    <span className="tax-rate">{tax.percentage}%</span>
-                    <span className="tax-amount">
-                      ₹{(basePrice * tax.percentage / 100).toFixed(2)}
-                    </span>
-                  </div>
-                ))}
-                <div className="tax-item total-tax">
-                  <span className="tax-name">Total Tax per unit</span>
-                  <span className="tax-amount">₹{taxPerUnit.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Price per unit */}
           <div className="modal-section">
@@ -157,6 +135,32 @@ const MenuItemModal = ({ item, onClose, onAddToCart }) => {
               </button>
             </div>
           </div>
+       
+
+          
+          
+          {/* Tax Breakdown Section */}
+          {item.taxes && item.taxes.length > 0 && (
+            <div className="modal-section">
+              <h3 className="section-title">Tax Information</h3>
+              <div className="tax-details">
+                {item.taxes.map((tax, index) => (
+                  <div key={index} className="tax-item">
+                    <span className="tax-name">{tax.name}</span>
+                    <span className="tax-rate">{tax.percentage}%</span>
+                    <span className="tax-amount">
+                      ₹{(basePrice * tax.percentage / 100).toFixed(2)}
+                    </span>
+                  </div>
+                ))}
+                <div className="tax-item total-tax">
+                  <span className="tax-name">Total Tax per unit</span>
+                  <span className="tax-amount">₹{taxPerUnit.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
 
         {/* Modal Footer */}

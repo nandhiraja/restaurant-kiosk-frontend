@@ -81,6 +81,7 @@
 }
 
 .modal-title {
+  font-family: var(--primary-theme-header);
   font-size: 1.8rem;
   margin: 0 0 1rem 0;
   font-weight: 700;
@@ -133,6 +134,7 @@
 }
 
 .section-title {
+  font-family: var(--secondary-theme-subheading);
   font-size: 1.2rem;
   color: var(--text-primary);
   margin: 0 0 1rem 0;
@@ -212,6 +214,7 @@
 }
 
 .price-highlight {
+  font-family: var(--primary-theme-subheading);
   font-size: 1.6rem;
   font-weight: 700;
 }
@@ -301,6 +304,8 @@
 
 .cancel-btn,
 .add-to-cart-btn {
+    font-family: var(--primary-theme-header);
+
   flex: 1;
   padding: 1rem;
   border: none;

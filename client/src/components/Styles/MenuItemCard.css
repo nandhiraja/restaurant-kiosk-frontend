@@ -1,7 +1,7 @@
 @import './variables.css';
 
 .menu-item-card {
-  background: var(--bg-card);
+  /* background: var(--bg-card); */
   border: 1px solid var(--neutral-200);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -11,6 +11,7 @@
   position: relative;
   min-height: 400px;
   box-shadow: var(--shadow-sm);
+  border: 2px solid rgb(235, 150, 40);
 }
 
 .menu-item-card::before {
@@ -73,7 +74,7 @@
   width: 28px;
   height: 28px;
   border: 2px solid var(--bg-card);
-  background: var(--bg-card);
+  background: white;
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -110,7 +111,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: var(--bg-card);
+  /* background: var(--bg-card); */
+  /* border: 3px ridge rgb(255, 174, 0); */
 }
 
 .item-details {
@@ -118,10 +120,10 @@
 }
 
 .item-name {
-  font-size: 1.4rem;
+  font-family: var(--primary-theme-heading);
+  font-size: 1.2rem;
   color: var(--text-primary);
   margin: 0 0 0.8rem 0;
-  font-weight: 700;
   line-height: 1.3;
 }
 
@@ -166,7 +168,8 @@
 }
 
 .item-price {
-  font-size: 1.6rem;
+  font-family: var(--primary-theme-subheading);
+  font-size: 1.1rem;
   color: var(--text-primary);
   font-weight: 700;
 }
@@ -182,6 +185,8 @@
 }
 
 .total-price {
+  font-family: var(--primary-theme-subheading);
+
   font-size: 0.9rem;
   color: var(--gold-dark);
   font-weight: 600;
@@ -189,6 +194,8 @@
 
 /* Add Button */
 .add-btn {
+  font-family: var(--primary-theme-header);
+
   background: var(--secondary-gradient);
   color: var(--text-on-dark);
   border: none;
