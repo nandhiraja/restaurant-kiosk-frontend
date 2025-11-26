@@ -110,8 +110,8 @@ const MenuItemModal = ({ item, onClose, onAddToCart }) => {
           {/* Price per unit */}
           <div className="modal-section">
             <div className="price-per-unit">
-              <span>Price per unit (incl. tax):</span>
-              <span className="price-highlight">₹{pricePerUnit.toFixed(2)}</span>
+              <span className='price-highlight'>Price per unit (incl. tax):</span>
+              <span className="price-highlight price-amount">₹{pricePerUnit.toFixed(2)}</span>
             </div>
           </div>
 
@@ -184,7 +184,8 @@ const MenuItemModal = ({ item, onClose, onAddToCart }) => {
               Cancel
             </button>
             <button onClick={handleAddToCartClick} className="add-to-cart-btn">
-              Add {quantity} to Cart :  ₹{finalAmount.toFixed(2)}
+              Add 
+              {/* {quantity} to Cart :  ₹{finalAmount.toFixed(2)} */}
             </button>
           </div>
         </div>

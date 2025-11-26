@@ -22,9 +22,9 @@ const Navigation = ({ categoryName, orderType ,description}) => {
   return (
     <nav className="navigation-bar">
       <div className="nav-container">
-        <button className="nav-btn back-button" onClick={handleBack}>
-          <IoMdArrowRoundBack size={20} />
-          {/* <span className="nav-label">Menu</span> */}
+        
+        <button className="back-button-item back-btn" onClick={handleBack}>
+          <IoMdArrowRoundBack size={30} />
         </button>
         
         <div className="nav-center">
@@ -34,14 +34,13 @@ const Navigation = ({ categoryName, orderType ,description}) => {
           )}
         </div>
         
-        <button className="nav-btn back-button" onClick={handleCartClick}>
+        <button className="back-button-item cart-btn" onClick={handleCartClick}>
           <div className="cart-icon-wrapper">
-            <ShoppingCart size={20} />
+            <ShoppingCart size={30} />
             {totalItems > 0 && (
               <span className="cart-badge">{totalItems}</span>
             )}
           </div>
-          {/* <span className="nav-label">Cart</span> */}
 
         </button>
         <div className='description-nav'>

@@ -18,7 +18,7 @@
   align-items: center;
   padding: 1rem 2rem;
   gap: 1rem;
-  border-top: 4px solid var(--overall-border-color);
+  border-bottom: 4px solid var(--overall-border-color);
   background: var(--gold-accent-light);
 }
 
@@ -69,7 +69,7 @@
 }
 
 .order-type-pill {
-  background: var(--secondary-gradient);
+  background: var(--order-type);
   color: var(--text-on-dark);
   padding: 6px 18px;
   border-radius: 20px;
@@ -275,12 +275,13 @@
   grid-column: 1 / -1;
   text-align: center;
   font-family: var(--secondary-theme-header);
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 9  00;
   color: var(--text-primary);
   padding: 0.75rem 1rem 0;
   line-height: 1.5;
   opacity: 0.85;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.2px;
   max-width: 70%;
   margin: 0 auto;
 }

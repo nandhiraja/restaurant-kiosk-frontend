@@ -120,7 +120,7 @@
 }
 
 .item-name {
-  font-family: var(--primary-theme-heading);
+  font-family: var(--primary-theme-header);
   font-size: 1.2rem;
   color: var(--text-primary);
   margin: 0 0 0.8rem 0;
@@ -192,17 +192,21 @@
   font-weight: 600;
 }
 
+
+.add-btn-text{
+  font-family: var(--primary-theme-header);
+  font-size: 1rem;
+
+}
 /* Add Button */
 .add-btn {
-  font-family: var(--primary-theme-header);
 
-  background: var(--secondary-gradient);
-  color: var(--text-on-dark);
+  background: var(--neutral-800);
+  color: var(--text-on-light);
   border: none;
   padding: 0.8rem 1.8rem;
   border-radius: var(--radius-md);
   font-weight: 600;
-  font-size: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -214,6 +218,8 @@
 .add-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  background: var(--neutral-500);
+  color:white;
 }
 
 .add-btn-icon {

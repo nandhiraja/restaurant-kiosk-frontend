@@ -4,8 +4,9 @@
 :root {
   /* Fresh Green Theme */
   --primary-gradient: linear-gradient(135deg, #F7FBF5 0%, #E8F5E3 100%);
-  --secondary-gradient: linear-gradient(135deg, #3d6633 30%, #395f2e 100%);
-  
+  --secondary-gradient: linear-gradient(135deg, #f5a834 30%, #d8aa2d 100%);
+    --order-type: linear-gradient(135deg, #5f3709 30%, #643106 100%);
+
   /* Green Tones */
   --gold-primary: #3D7A4F;
   --gold-dark: #2d6326;
@@ -17,17 +18,21 @@
   
   /* Earthy Neutrals */
   --earth-dark: #ec9a2f;
-  --earth-medium: #516155;
+  --earth-medium: #06571a;
   --earth-light: #7F9383;
-  
+  --card-font : #4a2525;
+
   /* Modern Neutrals */
   --neutral-50: #FAFBF9;
   --neutral-100: #0b130b;
   --neutral-200: #faecc3;
-  --neutral-400:#974446;
+  --neutral-400:#702705;
+  --neutral-500 :#4a2525;
   --neutral-300: #D6DDD6;
   --neutral-800: #e9b526;
   --neutral-900: #95d195;
+    --neutral-700: #772f05;
+
   
   /* Accent Colors */
   --accent-orange: #E89E5F;
@@ -36,7 +41,7 @@
   --accent-olive: #9BA578;
   
   /* Backgrounds */
-  --bg-cream: linear-gradient(180deg, #f3e3af 0%, #eed095 100%);
+  --bg-cream: linear-gradient(180deg, #faf2d8 0%, #f3ecdd 100%);
   --bg-warm: linear-gradient(180deg, #FFF9E5 0%, #FFFAF0 100%);
   /* --bg-card: linear-gradient(1deg, #ec9a2f 75%, #f8bb05 100%); */
   

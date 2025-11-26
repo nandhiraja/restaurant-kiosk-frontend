@@ -74,7 +74,7 @@ const MenuPage = () => {
       {/* Header Section */}
       <div className="menu-header">
         <button className="back-button" onClick={handleBackClick}>
-          <IoMdArrowRoundBack />
+          <IoMdArrowRoundBack size={30}/>
         </button>
         <h1 className="menu-title">Menu</h1>
       </div>
@@ -97,7 +97,9 @@ const MenuPage = () => {
                 }}
               />
               <div className="card-label">
+                 <div className="card-label-inner">
                 <span className="card-title">{category.name}</span>
+                </div>
               </div>
             </div>
           </div>
