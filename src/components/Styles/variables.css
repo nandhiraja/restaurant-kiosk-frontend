@@ -1,0 +1,73 @@
+
+
+
+:root {
+  /* Fresh Green Theme */
+  --primary-gradient: linear-gradient(135deg, #F7FBF5 0%, #E8F5E3 100%);
+  --secondary-gradient: linear-gradient(135deg, #3d6633 30%, #395f2e 100%);
+  
+  /* Green Tones */
+  --gold-primary: #3D7A4F;
+  --gold-dark: #2d6326;
+  --gold-light: #5A9B6E;
+  --gold-accent: #df5e08;
+
+  
+  /* Earthy Neutrals */
+  --earth-dark: #ec9a2f;
+  --earth-medium: #516155;
+  --earth-light: #7F9383;
+  
+  /* Modern Neutrals */
+  --neutral-50: #FAFBF9;
+  --neutral-100: #0b130b;
+  --neutral-200: #faecc3;
+  --neutral-400:#974446;
+  --neutral-300: #D6DDD6;
+  --neutral-800: #e9b526;
+  --neutral-900: #95d195;
+  
+  /* Accent Colors */
+  --accent-orange: #E89E5F;
+  --accent-terracotta: #C18B69;
+  --accent-sage: #8FB89E;
+  --accent-olive: #9BA578;
+  
+  /* Backgrounds */
+  --bg-cream: linear-gradient(180deg, #f3e3af 0%, #eed095 100%);
+  --bg-warm: linear-gradient(180deg, #FFF9E5 0%, #FFFAF0 100%);
+  /* --bg-card: linear-gradient(1deg, #ec9a2f 75%, #f8bb05 100%); */
+  
+  /* Text Colors */
+  --text-primary: #421901;
+  --text-secondary: #361c26;
+  --text-muted: #7A857A;
+  --text-on-dark: #F7FBF5;
+
+
+  --cart-border-color: goldenrod;
+
+  
+  /* Shadows */
+  --shadow-sm: 0 8px 4px rgba(82, 70, 56, 0.199);
+  --shadow-md: 0 4px 12px rgba(44, 62, 47, 0.12);
+  --shadow-lg: 0 10px 24px rgba(44, 62, 47, 0.15);
+  --shadow-xl: 0 20px 40px rgba(44, 62, 47, 0.18);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+
+
+
+  --primary-theme-header:"krt-kiosk-font";
+  --secondary-theme-header:"Inter-bold";
+  --primary-theme-subheading:"krt-kiosk-font-normal";
+  --secondary-theme-subheading:"Inter-normal";
+
+}
+
+

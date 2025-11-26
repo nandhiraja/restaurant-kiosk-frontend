@@ -1,0 +1,38 @@
+@import "tailwindcss";
+:root{
+    ::-webkit-scrollbar{
+        display: none;
+    }
+}
+*{
+    font-family: "Inter-bold";
+}
+
+
+
+@font-face {
+    font-family: "krt-kiosk-font";
+    src: url("./assets/Agrandir-GrandHeavy.otf");
+    font-weight: bold;
+}
+
+
+@font-face {
+    font-family: "krt-kiosk-font-normal";
+    src: url("./assets/Agrandir-GrandHeavy.otf");
+    font-weight: 100;
+    font-size: 30px;
+    
+}
+
+@font-face {
+    font-family: "Inter-bold";
+    src: url("./assets/Inter.ttc");
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: "Inter-normal";
+    src: url("./assets/Inter.ttc");
+    /* font-weight: bold; */
+}

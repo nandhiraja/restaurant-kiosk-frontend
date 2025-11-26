@@ -1,0 +1,47 @@
+0
+: 
+{_id: '69009091aa68762eb72c42bf', name: 'Indian', description: 'Traditional Indian cuisine', legacy_id: 1}
+1
+: 
+{_id: '69009091aa68762eb72c42c0', name: 'Chinese', description: 'Authentic Chinese dishes', legacy_id: 2}
+2
+: 
+{_id: '69009091aa68762eb72c42c1', name: 'Italian', description: 'Classic Italian favorites', legacy_id: 3}
+length
+: 
+3
+
+
+0
+: 
+{_id: '69009091aa68762eb72c42bf', name: 'Indian', description: 'Traditional Indian cuisine', legacy_id: 1}
+1
+: 
+{_id: '69009091aa68762eb72c42c0', name: 'Chinese', description: 'Authentic Chinese dishes', legacy_id: 2}
+2
+: 
+{_id: '69009091aa68762eb72c42c1', name: 'Italian', description: 'Classic Italian favorites', legacy_id: 3}
+3
+: 
+{_id: '69009091aa68762eb72c42c2', name: 'Mexican', description: 'Spicy Mexican delights', legacy_id: 4}
+4
+: 
+{_id: '69009091aa68762eb72c42c3', name: 'American', description: 'American comfort food', legacy_id: 5}
+5
+: 
+{_id: '69009091aa68762eb72c42c4', name: 'Japanese', description: 'Japanese specialties', legacy_id: 6}
+6
+: 
+{_id: '69009091aa68762eb72c42c5', name: 'Thai', description: 'Thai cuisine', legacy_id: 7}
+7
+: 
+{_id: '69009091aa68762eb72c42c6', name: 'Mediterranean', description: 'Mediterranean favorites', legacy_id: 8}
+8
+: 
+{_id: '69009091aa68762eb72c42c7', name: 'Desserts', description: 'Sweet treats', legacy_id: 9}
+9
+: 
+{_id: '69009092aa68762eb72c42c8', name: 'Beverages', description: 'Drinks and refreshments', legacy_id: 10}
+length
+: 
+10
