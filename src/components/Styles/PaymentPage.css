@@ -178,11 +178,11 @@
 }
 
 .transaction-details {
-  background: var(--neutral-50);
+  /* background: var(--neutral-50); */
   padding: 1rem;
   border-radius: var(--radius-md);
   margin-bottom: 1rem;
-  border: 2px dotted var(--earth-dark);
+  /* border: 2px dotted var(--earth-dark); */
 }
 
 .transaction-details p {
@@ -505,7 +505,7 @@
   align-items: center;
   padding: 1.2rem 1rem;
   cursor: default;
-  border-bottom: 2px ridge goldenrod;
+  /* border-bottom: 2px ridge goldenrod; */
 }
 
 .direct-pay-btn {

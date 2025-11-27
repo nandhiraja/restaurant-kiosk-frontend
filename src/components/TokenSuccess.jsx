@@ -84,7 +84,7 @@ const TokenSuccess = ({
 
             <p className="token-instructions">
               Please collect your token<br />
-              and wait for call out (15 min to 20 min)
+              and wait for call out ( Average ~15 min )
             </p>
 
             <div className="token-actions">

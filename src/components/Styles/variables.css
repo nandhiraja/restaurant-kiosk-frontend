@@ -2,27 +2,44 @@
 
 
 :root {
-  /* Fresh Green Theme */
-  --primary-gradient: linear-gradient(135deg, #F7FBF5 0%, #E8F5E3 100%);
-  --secondary-gradient: linear-gradient(135deg, #f5a834 30%, #d8aa2d 100%);
-    --order-type: linear-gradient(135deg, #5f3709 30%, #643106 100%);
 
-  /* Green Tones */
-  --gold-primary: #3D7A4F;
-  --gold-dark: #2d6326;
-  --gold-light: #5A9B6E;
-  --gold-accent: #df5e08;
-    --gold-accent-light: #f7b425;
+/* Theme dark  wooden */
+    /* --order-type: linear-gradient(135deg, #588506 30%, #475a03 100%);
+
+  --secondary-gradient: linear-gradient(135deg, #9b500a 30%, #9e5510 100%);
+  --gold-accent-light: linear-gradient(135deg, #964b0d 30%, #aa4806 100%);
+
+
+
+  --neutral-50: #FAFBF9;
+  --neutral-100: #0b130b;
+  --neutral-200: #faecc3;
+  --neutral-400:#702705;
+  --neutral-300: #D6DDD6;
+  --neutral-800: #bb5917;
+  --neutral-900: #eed859;
+  --neutral-500 :rgb(92, 34, 1);
+
+  --neutral-700: #772f05;
+    --add-minus-buttom: #f3e4e4;
+ --add-minus-count:white;
 
   --overall-border-color :rgb(240, 144, 35);
-  
-  /* Earthy Neutrals */
-  --earth-dark: #ec9a2f;
-  --earth-medium: #06571a;
-  --earth-light: #7F9383;
+  --card-font : #f7f6f6; */
+
+
+
+  /* Fresh yellow Theme */
+
+
+ --secondary-gradient: linear-gradient(135deg, #f5a834 30%, #d8aa2d 100%); 
+  --order-type: linear-gradient(135deg, #5f3709 30%, #643106 100%);
+
+  --gold-accent-light: #f7b425;
+
+    --overall-border-color :rgb(240, 144, 35);
   --card-font : #4a2525;
 
-  /* Modern Neutrals */
   --neutral-50: #FAFBF9;
   --neutral-100: #0b130b;
   --neutral-200: #faecc3;
@@ -32,7 +49,33 @@
   --neutral-900: #eed859;
     --neutral-700: #772f05;
 
+    --add-minus-buttom: #f3e4e4;
+     --add-minus-count:rgb(94, 47, 4);
+
+
   
+  /* --bg-card: linear-gradient(1deg, #ec9a2f 75%, #f8bb05 100%); */
+
+
+
+
+
+  --primary-gradient: linear-gradient(135deg, #F7FBF5 0%, #E8F5E3 100%);
+ 
+  /* Green Tones */
+  --gold-primary: #3D7A4F;
+  --gold-dark: #2d6326;
+  --gold-light: #5A9B6E;
+  --gold-accent: #df5e08;
+
+  
+  /* Earthy Neutrals */
+  --earth-dark: #ec9a2f;
+  --earth-medium: #06571a;
+  --earth-light: #7F9383;
+
+  /* Modern Neutrals */
+
   /* Accent Colors */
   --accent-orange: #E89E5F;
   --accent-terracotta: #C18B69;
@@ -42,7 +85,6 @@
   /* Backgrounds */
   --bg-cream: linear-gradient(180deg, #faf2d8 0%, #f3ecdd 100%);
   --bg-warm: linear-gradient(180deg, #FFF9E5 0%, #FFFAF0 100%);
-  /* --bg-card: linear-gradient(1deg, #ec9a2f 75%, #f8bb05 100%); */
   
   /* Text Colors */
   --text-primary: #421901;

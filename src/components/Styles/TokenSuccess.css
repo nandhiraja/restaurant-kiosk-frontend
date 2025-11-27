@@ -128,8 +128,8 @@
   width: 300px;
   height: 300px;
   padding: 2.5rem 2.5rem;
-  background: white;
-  border: 3px dashed #D4A574; /* Golden dashed border */
+  /* background: white; */
+  border: 1px dashed #f3eee9; /* Golden dashed border */
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   display: flex;

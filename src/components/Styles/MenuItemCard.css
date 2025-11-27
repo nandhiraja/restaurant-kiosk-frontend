@@ -196,6 +196,7 @@
 .add-btn-text{
   font-family: var(--primary-theme-header);
   font-size: 1rem;
+  color : var(--card-font)
 
 }
 /* Add Button */

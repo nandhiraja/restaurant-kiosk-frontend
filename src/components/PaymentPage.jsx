@@ -576,7 +576,8 @@ const handlePrintBill = () => {
       <div className="edc-info">
         <p className="edc-instruction">Please insert or tap your card on the EDC device</p>
         <div className="transaction-details">
-          <p><strong>Amount:</strong> ₹{(parseInt(amountInPaise) / 100).toFixed(2)}</p>
+          <p> ₹{(parseInt(amountInPaise) / 100).toFixed(2)}</p>
+          {/* <strong>Amount:</strong> */}
         </div>
       </div>
       

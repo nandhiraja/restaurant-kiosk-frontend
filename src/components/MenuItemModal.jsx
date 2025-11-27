@@ -77,47 +77,13 @@ const MenuItemModal = ({ item, onClose, onAddToCart }) => {
           <div className="modal-header-content">
             <h2 className="modal-title">{item.itemName}</h2>
             
-            {/* Display tags
-            {item.tags && item.tags.length > 0 && (
-              <div className="modal-tags">
-                {item.tags.map((tag, index) => (
-                  <span key={index} className="modal-tag">{tag}</span>
-                ))}
-              </div>
-            )} */}
+            {/* Display tags */}
+             <div className='price-count-container'>
+              <div className="modal-tags">                  
+                  <span className="price-highlight price-amount modal-tag">₹{pricePerUnit.toFixed(2)}</span>
+                </div>
             
-            {/* <div className="modal-item-info">
-              <div className="modal-base-price">
-                Base Price: ₹{basePrice.toFixed(2)}
-              </div>
-              {item.itemNature && (
-                <div className="modal-item-nature">
-                  Type: {item.itemNature}
-                </div>
-              )}
-              {item.skuCode && (
-                <div className="modal-sku">
-                  SKU: {item.skuCode}
-                </div>
-              )}
-            </div> */}
-          </div>
-        </div>
-
-        {/* Modal Body */}
-        <div className="modal-body">
-
-          {/* Price per unit */}
-          <div className="modal-section">
-            <div className="price-per-unit">
-              <span className='price-highlight'>Price per unit (incl. tax):</span>
-              <span className="price-highlight price-amount">₹{pricePerUnit.toFixed(2)}</span>
-            </div>
-          </div>
-
-          {/* Quantity Selector */}
-          <div className="modal-section">
-            <h3 className="section-title">Quantity</h3>
+            
             <div className="quantity-selector">
               <button
                 onClick={() => handleQuantityChange(-1)}
@@ -133,9 +99,29 @@ const MenuItemModal = ({ item, onClose, onAddToCart }) => {
               >
                 <Plus size={20} />
               </button>
+
+
+            </div>
+            </div>
+
+
+          </div>
+        </div>
+
+       <div className="modal-body">
+
+{/* =          <div className="modal-section">
+            <div className="price-per-unit">
+              <span className='price-highlight'>Price per unit (incl. tax):</span>
+              <span className="price-highlight price-amount">₹{pricePerUnit.toFixed(2)}</span>
             </div>
           </div>
-       
+
+=          <div className="modal-section">
+            <h3 className="section-title">Quantity</h3>
+            
+          </div>
+        */}
 
           
           
