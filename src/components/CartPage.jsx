@@ -118,7 +118,7 @@ const handleProceedToPayment = async () => {
   {/* <div className="cart-header-content"> */}
     <span 
       className="back-button" 
-      onClick={() => navigate(-1)}
+      onClick={() => navigate('/dinein')}
       style={{ cursor: "pointer" }}
     >
       <IoMdArrowRoundBack/>

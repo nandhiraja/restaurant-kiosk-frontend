@@ -300,7 +300,7 @@ useEffect(() => {
  // Replace handlePrintKOT with:
 const handlePrintKOT = () => {
   const kotHTML = generateKOTBill(orderId, kot_code, KDSInvoiceId, orderDetails);
-  openPrintWindow(kotHTML, `KOT - ${orderId}`, 300, 600);
+  openPrintWindow(kotHTML, `KOT - ${orderId}`, 1000, 1250);
 };
 
 // Replace handlePrintBill with:
@@ -313,7 +313,7 @@ const handlePrintBill = () => {
     transactionDetails, 
     whatsappNumber
   );
-  openPrintWindow(billHTML, `Bill - ${orderId}`, 400, 700);
+  openPrintWindow(billHTML, `Bill - ${orderId}`, 1000, 1200);
 };
 
   // Send via WhatsApp

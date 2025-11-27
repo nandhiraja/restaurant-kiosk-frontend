@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useState, } from 'react';
 import './Styles/TokenSuccess.css';
 import { Printer, MessageCircle } from 'lucide-react';
-
+import { IoLogoWhatsapp } from "react-icons/io";
 const TokenSuccess = ({
   token,
   kot_code,
@@ -33,7 +33,7 @@ const TokenSuccess = ({
   return (
     <div className="">
       <div className="kiosk-container">
-        {/* Corner Images - Replace src with your actual images */}
+        {/* Corner Images */}
         <img 
           src="./TOP_LEFT.png" 
           alt="decoration" 
@@ -88,28 +88,35 @@ const TokenSuccess = ({
             </p>
 
             <div className="token-actions">
-              <button className="token-btn" onClick={onPrintKOT}>
-                <Printer size={20} />
-                <span>Print KOT</span>
-              </button>
-              <button className="token-btn" onClick={onPrintBill}>
-                <Printer size={20} />
-                <span>Print Bill</span>
-              </button>
-              <button 
-                className="token-btn token-btn-whatsapp" 
-                onClick={() => setShowWhatsappInput(!showWhatsappInput)}
-              >
-                <MessageCircle size={20} />
-                <span>WhatsApp</span>
-              </button>
+              {/* Print Buttons Group - Horizontal */}
+              <div className="token-actions-print-group">
+                <button className="token-btn" onClick={onPrintKOT}>
+                  <Printer size={20} />
+                  <span>Print KOT</span>
+                </button>
+                <button className="token-btn" onClick={onPrintBill}>
+                  <Printer size={20} />
+                  <span>Print Bill</span>
+                </button>
+              </div>
 
-              <button 
-                className="token-btn  "
-                onClick={() => navigate('/')}
-              >
-                Start New Order
-              </button>
+              {/* Other Actions Group - Vertical */}
+              <div className="token-actions-other-group">
+                <button 
+                  className="token-btn token-btn-whatsapp" 
+                  onClick={() => setShowWhatsappInput(!showWhatsappInput)}
+                >
+                  <IoLogoWhatsapp size={20} color='green'  />
+                  <span>WhatsApp</span>
+                </button>
+
+                <button 
+                  className="token-btn"
+                  onClick={() => navigate('/')}
+                >
+                  Start New Order
+                </button>
+              </div>
             </div>
 
             {showWhatsappInput && (

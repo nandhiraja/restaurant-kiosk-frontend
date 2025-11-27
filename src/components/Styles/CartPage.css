@@ -277,7 +277,7 @@
   box-shadow: var(--shadow-lg);
   position: sticky;
   bottom: 1rem;
-    border: 2px dotted var(--cart-border-color);
+    border: 1px solid var(--cart-border-color);
 
 }
 

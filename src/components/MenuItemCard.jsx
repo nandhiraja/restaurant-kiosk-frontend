@@ -93,7 +93,7 @@ const MenuItemCard = ({ item, onAddClick }) => {
           </button>
         </div>
         
-        {taxes.length > 0 && (
+        {/* {taxes.length > 0 && (
           <div className="tax-breakdown">
             {taxes.map((tax, index) => (
               <span key={index} className="tax-detail">
@@ -101,7 +101,7 @@ const MenuItemCard = ({ item, onAddClick }) => {
               </span>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
