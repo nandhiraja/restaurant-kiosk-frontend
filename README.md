@@ -1,16 +1,116 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+# Restaurant Kiosk Ordering System
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A modern self-service kiosk application for restaurant ordering with token generation, print capabilities, and WhatsApp integration.
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Self-Service Ordering** - User-friendly interface for customers to place orders
+- **Token Generation** - Automated token system for order tracking
+- **Print Integration** - Print KOT (Kitchen Order Token) and bills
+- **WhatsApp Notifications** - Send order details to customer's mobile number
+- **Payment Integration** - Secure payment processing
+- **Responsive Design** - Optimized for kiosk touchscreen displays
+- **Order Management** - Real-time order tracking and status updates
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+**Frontend:**
+- React.js
+- React Router
+- Lucide React (Icons)
+- CSS3 with custom styling
+
+**Backend:**
+- Python
+- FastAPI/Flask
+- KTR Kiosk API integration
+
+## Installation
+
+### Prerequisites
+- Node.js (v14 or higher)
+- Python (v3.8 or higher)
+- npm or yarn
+
+### Frontend Setup
+
+```
+# Clone the repository
+git clone <repository-url>
+cd kiosk-project
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+```
+
+### Backend Setup
+
+```
+# Navigate to backend directory
+cd backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# Windows
+venv\Scripts\activate
+# Linux/Mac
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run backend server
+python app.py
+```
+
+## Project Structure
+
+```
+kiosk-project/
+├── src/
+│   ├── components/
+│   │   ├── TokenSuccess.jsx
+│   │   └── ...
+│   ├── Styles/
+│   │   ├── TokenSuccess.css
+│   │   ├── variables.css
+│   │   └── ...
+│   └── App.js
+├── public/
+│   ├── TOP_LEFT.png
+│   ├── TOP_RIGHT.png
+│   └── ...
+├── backend/
+│   ├── app.py
+│   └── ...
+└── README.md
+```
+
+## Usage
+
+1. Launch the application on the kiosk device
+2. Customer browses menu and adds items to cart
+3. Proceed to checkout and complete payment
+4. System generates token number
+5. Customer can:
+   - Print KOT for kitchen reference
+   - Print bill for records
+   - Receive order details via WhatsApp
+   - Start a new order
+
+## Environment Variables
+
+Create a `.env` file in the root directory:
+
+```
+REACT_APP_API_URL=your_backend_api_url
+REACT_APP_PAYMENT_KEY=your_payment_gateway_key
+```
+
