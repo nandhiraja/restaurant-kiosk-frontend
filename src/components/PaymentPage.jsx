@@ -112,8 +112,14 @@ const PaymentPage = () => {
       
       if (pollCount > maxPolls) {
         clearInterval(pollingRef.current);
-        setPaymentStatus('TIMEOUT');
-        setError('Payment timeout. Please try again.');
+        // setPaymentStatus('TIMEOUT');
+        // setError('Payment timeout. Please try again.');
+
+        setPaymentStatus('FAILED');
+        navigate("/");
+        setError('Payment failed or cancelled. Please try again.');
+        clearInterval(pollingRef.current);
+
         return;
       }
 
@@ -149,11 +155,16 @@ const PaymentPage = () => {
         }
         else if (result.payment_status === 'FAILED') {
         setPaymentStatus('FAILED');
+        navigate("/");
         setError('Payment failed. Please try again.');
         clearInterval(pollingRef.current);
       }
       } catch (error) {
         console.error('Error checking payment status:', error);
+        setPaymentStatus('FAILED');
+        navigate("/");
+        setError('Payment failed or cancelled. Please try again.');
+        clearInterval(pollingRef.current);
       }
     }, 3000); // Poll every 3 seconds
   };
@@ -283,6 +294,10 @@ const startEDCStatusPolling = () => {
       
     } catch (error) {
       console.error('Error checking EDC status:', error);
+        setPaymentStatus('FAILED');
+        navigate("/");
+        setError('Payment failed or cancelled. Please try again.');
+        clearInterval(pollingRef.current);
       // Don't stop polling on network errors, continue trying
     }
   }, 3000);

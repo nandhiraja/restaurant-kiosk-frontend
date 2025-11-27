@@ -324,6 +324,7 @@
 .payment-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: var(--shadow-xl);
+  color: var(--neutral-500);
 }
 
 .payment-btn:disabled {

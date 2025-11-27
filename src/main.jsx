@@ -30,8 +30,9 @@ const router = createBrowserRouter([
       { path: "/", element: <LandingPage/> },
       { path: "/dinein", element: <MenuPage/> },
       { path: `/item/:id`, element: <MenuSection/> },
-        { path: "/cart", element: <CartPage /> },
-      { path: "/payment", element: <PaymentPage /> }
+      { path: "/cart", element: <CartPage /> },
+      { path: "/payment", element: <PaymentPage /> },
+      { path: "*", element: <LandingPage /> }
 
     ]
   }

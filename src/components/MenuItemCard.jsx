@@ -88,8 +88,8 @@ const MenuItemCard = ({ item, onAddClick }) => {
             className="add-btn" 
             onClick={() => onAddClick(item)}
             aria-label={`Add ${itemName} to cart`}
-          >
-            <span className="add-btn-text">Add</span>
+          >Add
+            {/* <span className="add-btn-text"></span> */}
           </button>
         </div>
         

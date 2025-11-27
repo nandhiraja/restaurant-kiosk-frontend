@@ -528,7 +528,7 @@
 
 .direct-pay-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(106, 243, 78, 0.5);
+  box-shadow: 0 4px 12px rgba(152, 153, 152, 0.719);
 }
 
 .direct-pay-btn:active:not(:disabled) {
@@ -549,7 +549,7 @@
 }
 
 .direct-pay-btn.card-pay:hover:not(:disabled) {
-  box-shadow: 0 4px 12px rgba(177, 245, 87, 0.5);
+  box-shadow: 0 4px 12px rgba(125, 126, 124, 0.644);
 }
 
 .spinning {

@@ -121,7 +121,7 @@ const handleProceedToPayment = async () => {
       onClick={() => navigate('/dinein')}
       style={{ cursor: "pointer" }}
     >
-      <IoMdArrowRoundBack/>
+      <IoMdArrowRoundBack size={25}/>
       
     </span>
       <h1 className="nav-title">Your Cart</h1>

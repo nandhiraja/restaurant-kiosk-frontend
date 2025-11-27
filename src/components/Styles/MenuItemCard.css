@@ -199,8 +199,16 @@
   color : var(--card-font)
 
 }
+
+.add-btn-text:hover{
+  
+  color : var(--neutral-50)
+
+}
+
 /* Add Button */
 .add-btn {
+  font-family: var(--primary-theme-header);
 
   background: var(--neutral-800);
   color: var(--text-on-light);
@@ -214,6 +222,8 @@
   gap: 0.5rem;
   transition: all var(--transition);
   box-shadow: var(--shadow-sm);
+    color:var(--neutral-500);
+
 }
 
 .add-btn:hover {

@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Styles/landingpage.css';
+import { useCart } from './CartContext';  
+
 
 const LandingPage = () => {
   const [activeButton, setActiveButton] = useState(null);
   const navigate = useNavigate();
-
+  const { clearCart } = useCart();
   const handleOrderClick = (orderType) => {
     // Navigate to menu page with order type
      navigate('/dinein', { state: { orderType } });
   };
 
+  useEffect(() => {
+    // Clear cart context
+    clearCart();
+    
+    // Clear localStorage
+    localStorage.removeItem('restaurantCart');
+    localStorage.removeItem('orderType'); // If you store order type
+    
+    console.log('Cart cleared - Fresh start for new customer');
+  }, []); // Empty dependency array = runs once on mount
+
+  
   return (
     <div className="kiosk-container">
       {/* Corner Decorative Icons */}
