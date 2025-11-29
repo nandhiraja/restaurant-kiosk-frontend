@@ -1,11 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
 import { CartProvider } from './components/CartContext';
 import{ createBrowserRouter , RouterProvider}  from "react-router-dom"
 import MenuSection from "./components/MenuSection"
-import HomePage from './components/Home';
 import MenuPage from './components/MenuPage'; 
 import LandingPage from './components/Landingpage'; 
 

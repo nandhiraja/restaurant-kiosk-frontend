@@ -78,8 +78,10 @@ const TokenSuccess = ({
               for placing the order!
             </h1>
 
+
             <div className="token-display-box">
-              <div className="token-number">{token}</div>
+              <img  className ="token-image-ktr" src="/Bill-KTR-logo.png" alt="KTR-logo" />
+              <div className="token-number">  {token.slice(3)}</div>
             </div>
 
             <p className="token-instructions">

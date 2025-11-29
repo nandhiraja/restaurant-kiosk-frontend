@@ -1,116 +1,118 @@
 
+# 🍽️ KTR Restaurant Kiosk System
 
-# Restaurant Kiosk Ordering System
+A modern, responsive self-service kiosk application for restaurant ordering with integrated payment processing and kitchen order management.
 
-A modern self-service kiosk application for restaurant ordering with token generation, print capabilities, and WhatsApp integration.
+##  Features
 
-## Features
+- **Intuitive Order Flow**: Seamless ordering experience from menu browsing to payment
+- **Multiple Order Types**: Support for dine-in and takeaway orders
+- **Smart Menu System**: Dynamic category-based menu with real-time data loading
+- **Payment Integration**: UPI/QR code and card payment support via PhonePe
+- **Cart Management**: Full cart functionality with item quantity controls
+- **Token System**: Digital token generation for order tracking
+- **Print Integration**: KOT (Kitchen Order Ticket) and bill printing
+- **WhatsApp Sharing**: Share order details via WhatsApp
+- **Skeleton Loading**: Professional loading states for better UX
+- **Fully Responsive**: Optimized for kiosk displays, tablets, and mobile devices
 
-- **Self-Service Ordering** - User-friendly interface for customers to place orders
-- **Token Generation** - Automated token system for order tracking
-- **Print Integration** - Print KOT (Kitchen Order Token) and bills
-- **WhatsApp Notifications** - Send order details to customer's mobile number
-- **Payment Integration** - Secure payment processing
-- **Responsive Design** - Optimized for kiosk touchscreen displays
-- **Order Management** - Real-time order tracking and status updates
-
-## Tech Stack
+## 🛠️ Tech Stack
 
 **Frontend:**
-- React.js
-- React Router
-- Lucide React (Icons)
-- CSS3 with custom styling
+- React 18 with Vite
+- React Router for navigation
+- Context API for state management
+- CSS3 with custom design system
+- Lucide React icons
 
-**Backend:**
-- Python
-- FastAPI/Flask
-- KTR Kiosk API integration
+**Backend Integration:**
+- RESTful API communication
+- Payment gateway integration (PhonePe)
+- Real-time order processing
 
-## Installation
+**Additional Libraries:**
+- qrcode.react - QR code generation
+- react-icons - Additional iconography
 
-### Prerequisites
-- Node.js (v14 or higher)
-- Python (v3.8 or higher)
+## 📋 Prerequisites
+
+- Node.js (v16 or higher)
 - npm or yarn
+- Backend API server running
 
-### Frontend Setup
+##  Installation
 
+2. Install dependencies:
 ```
-# Clone the repository
-git clone <repository-url>
-cd kiosk-project
-
-# Install dependencies
 npm install
-
-# Start development server
-npm start
 ```
 
-### Backend Setup
-
+3. Create `.env` file in the root directory:
 ```
-# Navigate to backend directory
-cd backend
-
-# Create virtual environment
-python -m venv venv
-
-# Activate virtual environment
-# Windows
-venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Run backend server
-python app.py
+VITE_Base_url=your_backend_api_url
 ```
 
-## Project Structure
+4. Start the development server:
+```
+npm run dev
+```
+
+5. Build for production:
+```
+npm run build
+```
+
+## 📱 Usage
+
+1. **Landing Page**: Select order type (Dine In / Take Away)
+2. **Menu Page**: Browse categories and select items
+3. **Category Items**: View items and add to cart
+4. **Cart**: Review order, adjust quantities, proceed to payment
+5. **Payment**: Choose payment method (UPI QR / Card)
+6. **Token Success**: Receive order token, print receipts
+
+## 📂 Project Structure
 
 ```
-kiosk-project/
-├── src/
-│   ├── components/
-│   │   ├── TokenSuccess.jsx
-│   │   └── ...
-│   ├── Styles/
-│   │   ├── TokenSuccess.css
-│   │   ├── variables.css
-│   │   └── ...
-│   └── App.js
-├── public/
-│   ├── TOP_LEFT.png
-│   ├── TOP_RIGHT.png
+src/
+├── assets/           # Fonts and static assets
+├── components/       # React components
+│   ├── LandingPage.jsx
+│   ├── MenuPage.jsx
+│   ├── MenuSection.jsx
+│   ├── MenuItemCard.jsx
+│   ├── MenuItemModal.jsx
+│   ├── CartPage.jsx
+│   ├── PaymentPage.jsx
+│   ├── TokenSuccess.jsx
+│   ├── NavigationBar.jsx
+│   └── MenuSkeleton.jsx
+├── Styles/          # Component-specific CSS
+│   ├── variables.css
+│   ├── LandingPage.css
+│   ├── MenuPage.css
 │   └── ...
-├── backend/
-│   ├── app.py
-│   └── ...
-└── README.md
+├── utils/           # Utility functions
+│   └── printBillTemplates.js
+├── CartContext.jsx  # Global cart state
+├── App.jsx         # Main app component
+└── main.jsx        # Entry point
 ```
 
-## Usage
+## 🎨 Design Features
 
-1. Launch the application on the kiosk device
-2. Customer browses menu and adds items to cart
-3. Proceed to checkout and complete payment
-4. System generates token number
-5. Customer can:
-   - Print KOT for kitchen reference
-   - Print bill for records
-   - Receive order details via WhatsApp
-   - Start a new order
+- Custom color scheme with golden accents
+- Professional inverted corner card designs
+- Smooth animations and transitions
+- Skeleton screens for loading states
+- Mobile-first responsive design
+- Touch-optimized UI elements
 
-## Environment Variables
+## 🔧 Configuration
 
-Create a `.env` file in the root directory:
-
-```
-REACT_APP_API_URL=your_backend_api_url
-REACT_APP_PAYMENT_KEY=your_payment_gateway_key
-```
-
+Update `src/Styles/variables.css` to customize:
+- Color schemes
+- Typography
+- Spacing system
+- Border radius
+- Shadow effects

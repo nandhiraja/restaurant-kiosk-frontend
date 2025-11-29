@@ -1,5 +1,9 @@
 @import './variables.css';
 
+/* ============================================
+   MENU SECTION - MOBILE FIRST DESIGN
+   ============================================ */
+
 .menu-section-container {
   min-height: 100vh;
   background: var(--bg-warm);
@@ -7,74 +11,351 @@
   flex-direction: column;
 }
 
+/* Main Content - Mobile First (Single Column) */
 .menu-main-content {
-  padding: 2.5rem 2rem;
-  max-width: 1400px;
+  padding: 1.5rem 1rem;
+  max-width: 100%;
   margin: 0 auto;
   width: 100%;
   flex: 1;
 }
 
+/* Menu Items Grid - Start with Single Column */
 .menu-items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: 1fr;
   gap: 2rem;
 }
 
+/* Error and Empty States - Mobile Optimized */
 .error-message,
 .no-items {
   text-align: center;
-  padding: 4rem 2rem;
-  background: var(--bg-card);
+  padding: 2.5rem 1.5rem;
+  background: var(--bg-cream);
   border-radius: var(--radius-lg);
-  margin: 2rem auto;
+  margin: 1.5rem auto;
   color: var(--text-primary);
-  max-width: 600px;
+  max-width: 100%;
   box-shadow: var(--shadow-md);
 }
 
+.error-message p,
+.no-items p {
+  font-size: 1.0625rem;
+  font-family: var(--font-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Error Button - Touch-Friendly */
 .error-message button {
   margin-top: 1.5rem;
   background: var(--secondary-gradient);
   color: var(--text-on-dark);
   border: none;
-  padding: 0.9rem 2.5rem;
+  padding: 1rem 2.5rem;
   border-radius: var(--radius-md);
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: all var(--transition-base);
   box-shadow: var(--shadow-sm);
+  font-family: var(--font-secondary);
+  min-height: 48px;
+  width: 100%;
+  max-width: 280px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .error-message button:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  background: var(--order-type-gradient);
 }
 
+.error-message button:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Footer Styles */
 .menu-footer {
   background: var(--earth-dark);
   color: var(--neutral-100);
   text-align: center;
-  padding: 2rem;
+  padding: 1.5rem 1rem;
   margin-top: auto;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .footer-text {
   margin: 0 0 1rem 0;
   opacity: 0.85;
+  font-size: 0.9375rem;
+  font-family: var(--font-secondary);
+  line-height: 1.5;
 }
 
 .footer-decorative-line {
-  width: 80px;
+  width: 60px;
   height: 3px;
   background: var(--gold-primary);
   margin: 0 auto;
   border-radius: 2px;
 }
 
-@media (max-width: 768px) {
+/* ============================================
+   PROGRESSIVE ENHANCEMENT - LARGER SCREENS
+   ============================================ */
+
+/* iPhone SE and Very Small Phones (375px and below) */
+@media (max-width: 375px) {
+  .menu-main-content {
+    padding: 1.25rem 0.875rem;
+  }
+  
   .menu-items-grid {
-    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  
+  .error-message,
+  .no-items {
+    padding: 2rem 1.25rem;
+  }
+}
+
+/* Extra Small Mobile (360px and below) */
+@media (max-width: 360px) {
+  .menu-main-content {
+    padding: 1rem 0.75rem;
+  }
+  
+  .menu-items-grid {
     gap: 1.5rem;
   }
+  
+  .error-message button {
+    padding: 0.875rem 2rem;
+    font-size: 0.9375rem;
+  }
+}
+
+/* Small Phones in Landscape */
+@media (max-width: 599px) and (orientation: landscape) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1rem;
+  }
+  
+  .menu-main-content {
+    padding: 1rem 1.5rem;
+  }
+}
+
+/* Large Phones and Small Tablets (600px+) - 2 Columns */
+@media (min-width: 600px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1.25rem;
+  }
+  
+  .menu-main-content {
+    padding: 1.75rem 1.25rem;
+  }
+  
+  .error-message,
+  .no-items {
+    max-width: 500px;
+  }
+}
+
+/* Standard Tablets (768px+) - 2 Columns with Better Spacing */
+@media (min-width: 768px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1.5rem;
+  }
+  
+  .menu-main-content {
+    padding: 2rem 1.5rem;
+  }
+  
+  .error-message button {
+    width: auto;
+    max-width: none;
+  }
+  
+  .error-message,
+  .no-items {
+    max-width: 600px;
+  }
+  
+  .footer-text {
+    font-size: 1rem;
+  }
+  
+  .footer-decorative-line {
+    width: 80px;
+  }
+}
+
+/* iPad Air and Similar (820px+) - 2-3 Columns */
+@media (min-width: 820px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2rem 1.5rem;
+  }
+  
+  .menu-main-content {
+    padding: 2.5rem 2rem;
+    max-width: 1200px;
+  }
+}
+
+/* Desktop (1024px+) - 3-4 Columns */
+@media (min-width: 1024px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .menu-main-content {
+    padding: 2.5rem 2rem;
+    max-width: 1400px;
+  }
+  
+  .footer-content {
+    padding: 0 2rem;
+  }
+}
+
+/* Large Desktop (1440px+) - 4 Columns */
+@media (min-width: 1440px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2.5rem;
+  }
+  
+  .menu-main-content {
+    max-width: 1600px;
+    padding: 3rem 2.5rem;
+  }
+}
+
+/* Extra Large Desktop (1920px+) */
+@media (min-width: 1920px) {
+  .menu-main-content {
+    max-width: 1800px;
+  }
+}
+
+/* Tablet Landscape Mode (768px - 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+  .menu-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .menu-main-content {
+    padding: 1.5rem 2rem;
+  }
+}
+
+/* Large Phone Landscape (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) and (orientation: landscape) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem 1.25rem;
+  }
+  
+  .menu-main-content {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+/* ============================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ============================================ */
+
+/* Touch Devices - Larger Hit Areas */
+@media (hover: none) and (pointer: coarse) {
+  .error-message button {
+    min-height: 52px;
+    padding: 1.125rem 2rem;
+  }
+  
+  .menu-items-grid {
+    gap: 2.25rem;
+  }
+}
+
+/* High-Resolution Displays (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .error-message,
+  .no-items {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+  
+  .error-message button {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY & PERFORMANCE
+   ============================================ */
+
+/* Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  .error-message button {
+    transition: none;
+  }
+  
+  .error-message button:hover,
+  .error-message button:active {
+    transform: none;
+  }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  .error-message,
+  .no-items {
+    border: 2px solid var(--text-primary);
+  }
+  
+  .error-message button {
+    border: 2px solid var(--text-on-dark);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .menu-footer {
+    display: none;
+  }
+  
+  .error-message button {
+    display: none;
+  }
+  
+  .menu-main-content {
+    padding: 1rem;
+  }
+  
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+/* Dark Mode Support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+  /* Add dark mode styles here if required */
 }

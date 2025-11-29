@@ -1,14 +1,18 @@
 @import "tailwindcss";
-:root{
-    ::-webkit-scrollbar{
-        display: none;
-    }
-}
-*{
-    font-family: "Inter-bold";
+
+/* Hide scrollbar globally */
+:root {
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }
 
+* {
+  font-family: "Inter-bold";
+  scrollbar-width: none; /* Firefox */
+}
 
+/* Global resets */
 html, body {
   margin: 0;
   padding: 0;
@@ -20,60 +24,42 @@ html, body {
   min-height: 100vh;
 }
 
-/* Border wrapper for all pages */
-.page-border-wrapper {
-  min-height: 100vh;
-  /* border: 5px solid rgb(240, 144, 35);
-  box-shadow: 0 2px 8px rgb(236, 130, 8); */
-  box-sizing: border-box;
-  position: relative;
-}
-
-
+/* ============================================
+   FONT FACES
+   ============================================ */
 
 @font-face {
-    font-family: "krt-kiosk-font";
-    src: url("./assets/Agrandir-GrandHeavy.otf");
-    font-weight: bold;
-}
-
-
-@font-face {
-    font-family: "krt-kiosk-font-normal";
-    src: url("./assets/Agrandir-GrandHeavy.otf");
-    font-weight: 100;
-    font-size: 30px;
-    
+  font-family: "krt-kiosk-font";
+  src: url("./assets/Agrandir-GrandHeavy.otf");
+  font-weight: bold;
 }
 
 @font-face {
-    font-family: "Inter-bold";
-    src: url("./assets/Inter.ttc");
-    font-weight: bold;
+  font-family: "krt-kiosk-font-normal";
+  src: url("./assets/Agrandir-GrandHeavy.otf");
+  font-weight: 100;
 }
 
 @font-face {
-    font-family: "Inter-normal";
-    src: url("./assets/Inter.ttc");
-    /* font-weight: bold; */
+  font-family: "Inter-bold";
+  src: url("./assets/Inter.ttc");
+  font-weight: bold;
 }
 
-.nav-title {
-  position: absolute;
-  left: 50%;
-  font-family: var(--primary-theme-header);
-  transform: translateX(-50%);
-  font-size: 2.5rem;
-  color: var(--card-font);
-  margin: 0;
-  font-weight: 700;
+@font-face {
+  font-family: "Inter-normal";
+  src: url("./assets/Inter.ttc");
+  font-weight: normal;
 }
 
+/* ============================================
+   GLOBAL NAVIGATION HEADER
+   ============================================ */
 
-.nav-header{
- border-bottom: 4px solid var(--overall-border-color);
+.nav-header {
+  border-bottom: 4px solid var(--border-primary);
   position: sticky;
-  color: var(--card-font);
+  color: var(--card-text);
   top: 0;
   z-index: 100;
   background: var(--gold-accent-light);
@@ -83,49 +69,44 @@ html, body {
   align-items: center;
 }
 
+.nav-title {
+  position: absolute;
+  left: 50%;
+  font-family: var(--font-primary);
+  transform: translateX(-50%);
+  font-size: 2.5rem;
+  color: var(--card-text);
+  margin: 0;
+  font-weight: 700;
+}
 
+/* ============================================
+   BACK BUTTONS
+   ============================================ */
 
-
-
+.back-button,
 .back-button-item {
-  /* background:; */
   background: var(--bg-warm);
   border: none;
-  padding: 1.3rem 1.3rem;
+  padding: 1.3rem;
   border-radius: 50%;
-  color: var(--neutral-500 );
+  color: var(--neutral-500);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.back-button-item {
   margin: auto;
 }
 
-
-
-
-
-.back-button {
-  /* background: #F4C430; */
-  background: var(--bg-warm);
-  border: none;
-  padding: 1.3rem 1.3rem;
-  border-radius: 50%;
-  color: var(--neutral-500 );
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
+.back-button:hover,
 .back-button-item:hover {
   background: var(--neutral-500);
   color: aliceblue;
@@ -133,9 +114,36 @@ html, body {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.back-button:hover {
-  background: var(--neutral-500);
-  color: aliceblue;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .nav-header {
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .nav-title {
+    font-size: 2rem;
+  }
+  
+  .back-button,
+  .back-button-item {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-header {
+    padding: 1rem 1rem;
+  }
+  
+  .nav-title {
+    font-size: 1.5rem;
+  }
+  
+  .back-button,
+  .back-button-item {
+    padding: 0.875rem;
+  }
 }

@@ -1,25 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
-import { CreditCard, QrCode, ChevronDown, ChevronUp, Printer, Send, Check, Loader } from 'lucide-react';
+import { CreditCard, QrCode, Loader, Check } from 'lucide-react';
 import './Styles/PaymentPage.css';
 import { useCart } from './CartContext';
-import TokenSuccess from './TokenSuccess'
+import TokenSuccess from './TokenSuccess';
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { openPrintWindow, generateRestaruentBill, generateKOTBill } from './utils/printBillTemplates';
 
 const BASE_URL = import.meta.env.VITE_Base_url;
-
-import {openPrintWindow, generateRestaruentBill,generateKOTBill } from './utils/printBillTemplates';
 
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { clearCart } = useCart();
 
+  // Extract order data from location state
   const { kot_code, orderId, totalAmount, orderDetails } = location.state || {};
+  
+  // State management
   const [showTokenPage, setShowTokenPage] = useState(false);
   const [KDSInvoiceId, setKDSInvoiceId] = useState(null);
-
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [expandedMethod, setExpandedMethod] = useState(null);
   const [qrData, setQrData] = useState(null);
@@ -28,12 +29,11 @@ const PaymentPage = () => {
   const [loadingEDC, setLoadingEDC] = useState(false);
   const [paymentStatus, setPaymentStatus] = useState('PENDING');
   const [transactionDetails, setTransactionDetails] = useState(null);
-  const [whatsappNumber, setWhatsappNumber] = useState('');
-  const [showWhatsappInput, setShowWhatsappInput] = useState(false);
   const [error, setError] = useState(null);
   
   const pollingRef = useRef(null);
 
+  // Cleanup polling on unmount
   useEffect(() => {
     return () => {
       if (pollingRef.current) {
@@ -42,6 +42,7 @@ const PaymentPage = () => {
     };
   }, []);
 
+  // Redirect if no order data
   if (!orderId || !orderDetails) {
     return (
       <div className="payment-root">
@@ -55,15 +56,13 @@ const PaymentPage = () => {
     );
   }
 
-  const handleMethodToggle = (method) => {
-    setSelectedMethod(method);
-    setExpandedMethod(expandedMethod === method ? null : method);
-  };
-
-  // Convert INR to Paise (multiply by 100)
+  // Convert amount to paise (INR * 100)
   const amountInPaise = Math.round(totalAmount * 100).toString();
 
-  // Generate QR Code
+  // ============================================
+  // QR CODE PAYMENT HANDLERS
+  // ============================================
+
   const handleGenerateQR = async () => {
     setLoadingQR(true);
     setError(null);
@@ -71,8 +70,88 @@ const PaymentPage = () => {
     try {
       const response = await fetch(`${BASE_URL}/payments/qr/init`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order_id: orderId,
+          amount_paise: amountInPaise
+        })
+      });
+
+      if (!response.ok) throw new Error('Failed to generate QR code');
+
+      const result = await response.json();
+      setQrData(result);
+      setPaymentStatus('PROCESSING');
+      startQRStatusPolling();
+
+    } catch (error) {
+      console.error('QR Generation Error:', error);
+      setError('Failed to generate QR code. Please try again.');
+      setLoadingQR(false);
+    } finally {
+      setLoadingQR(false);
+    }
+  };
+
+  const startQRStatusPolling = () => {
+    let pollCount = 0;
+    const maxPolls = 120; // 6 minutes timeout
+    
+    pollingRef.current = setInterval(async () => {
+      pollCount++;
+      
+      if (pollCount > maxPolls) {
+        clearInterval(pollingRef.current);
+        setPaymentStatus('FAILED');
+        setError('Payment timeout. Redirecting...');
+        setTimeout(() => navigate('/'), 2000);
+        return;
+      }
+
+      try {
+        const response = await fetch(`${BASE_URL}/payments/qr/status/${orderId}`, {
+          headers: { "ngrok-skip-browser-warning": "true" }
+        });
+        
+        if (!response.ok) throw new Error('Failed to check status');
+
+        const result = await response.json();
+        
+        if (result.payment_status === 'COMPLETED') {
+          setPaymentStatus('SUCCESS');
+          setTransactionDetails(result);
+          setKDSInvoiceId(result.kds_invoice_id);
+          clearCart();
+          localStorage.removeItem('restaurantCart');
+          setShowTokenPage(true);
+          clearInterval(pollingRef.current);
+        } else if (result.payment_status === 'FAILED') {
+          setPaymentStatus('FAILED');
+          setError('Payment failed. Redirecting...');
+          clearInterval(pollingRef.current);
+          setTimeout(() => navigate('/'), 2000);
+        }
+      } catch (error) {
+        console.error('QR Status Check Error:', error);
+        // Continue polling on network errors
+      }
+    }, 3000);
+  };
+
+  // ============================================
+  // EDC CARD PAYMENT HANDLERS
+  // ============================================
+
+  const handleEDCPayment = async () => {
+    setLoadingEDC(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(`${BASE_URL}/payments/edc/init`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "ngrok-skip-browser-warning": "true"
         },
         body: JSON.stringify({
           order_id: orderId,
@@ -80,308 +159,164 @@ const PaymentPage = () => {
         })
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to generate QR code');
-      }
+      if (!response.ok) throw new Error('Failed to initialize EDC payment');
 
       const result = await response.json();
-      console.log('QR Initialized:', result);
-      
-      // Result: { order_id, amount_paise, qr_code, status, timestamp }
-      setQrData(result);
+      setEdcData(result);
       setPaymentStatus('PROCESSING');
       
-      // Start polling for payment status
-      startQRStatusPolling();
+      // Trigger mock payment then start polling
+      await triggerMockPayment();
+      startEDCStatusPolling();
 
     } catch (error) {
-      console.error('Error generating QR:', error);
-      setError('Failed to generate QR code. Please try again.');
+      console.error('EDC Initialization Error:', error);
+      setError('Failed to initialize card payment. Please try again.');
+      setLoadingEDC(false);
     } finally {
-      setLoadingQR(false);
+      setLoadingEDC(false);
     }
   };
 
-  // Poll QR Payment Status
-  const startQRStatusPolling = () => {
+  const triggerMockPayment = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/payments/edc/mock-trigger`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true"
+        },
+        body: JSON.stringify({ order_id: orderId })
+      });
+      
+      if (!response.ok) throw new Error('Failed to trigger mock payment');
+      
+      // Wait for PhonePe processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+    } catch (error) {
+      console.error("Mock Payment Error:", error);
+      setError('Failed to process payment. Please try again.');
+      throw error;
+    }
+  };
+
+  const startEDCStatusPolling = () => {
     let pollCount = 0;
-    const maxPolls = 120; // 6 minutes (120 * 3 seconds)
+    const maxPolls = 120;
     
     pollingRef.current = setInterval(async () => {
       pollCount++;
       
       if (pollCount > maxPolls) {
         clearInterval(pollingRef.current);
-        // setPaymentStatus('TIMEOUT');
-        // setError('Payment timeout. Please try again.');
-
-        setPaymentStatus('FAILED');
-        navigate("/");
-        setError('Payment failed or cancelled. Please try again.');
-        clearInterval(pollingRef.current);
-
+        setPaymentStatus('TIMEOUT');
+        setError('Payment timeout. Redirecting...');
+        setTimeout(() => navigate('/'), 2000);
         return;
       }
 
       try {
-        const response = await fetch(`${BASE_URL}/payments/qr/status/${orderId}`,{
-          headers:{
-              "ngrok-skip-browser-warning": "true"
-          }
+        const response = await fetch(`${BASE_URL}/payments/edc/status/${orderId}`, {
+          headers: { "ngrok-skip-browser-warning": "true" }
         });
-        let raw_data =  await response.text()
-        if (!response.ok) {
-          throw new Error('Failed to check status');
-        }
-
-        const result = JSON.parse(raw_data);
         
-        // const result = await response.json();
-        console.log('QR Status:', result);
-        
-        // Result: { order_id, amount_paise, status, payment_method, transaction_id, payment_timestamp, created_at }
-       // ✅ CORRECTED: Check payment_status instead of status
+        if (!response.ok) throw new Error('Failed to check status');
 
-      if (result.payment_status === 'COMPLETED') {
-          
+        const result = await response.json();
+        
+        if (result.payment_status === 'COMPLETED') {
           setPaymentStatus('SUCCESS');
           setTransactionDetails(result);
-          setKDSInvoiceId(result.kds_invoice_id)
+          setKDSInvoiceId(result.kds_invoice_id);
           clearCart();
           localStorage.removeItem('restaurantCart');
-          // Redirect to Token Page instead of rendering old UI
           setShowTokenPage(true);
           clearInterval(pollingRef.current);
+        } else if (result.payment_status === 'FAILED' || result.payment_status === 'CANCELLED') {
+          setPaymentStatus('FAILED');
+          setError('Payment failed or cancelled. Redirecting...');
+          clearInterval(pollingRef.current);
+          setTimeout(() => navigate('/'), 2000);
         }
-        else if (result.payment_status === 'FAILED') {
-        setPaymentStatus('FAILED');
-        navigate("/");
-        setError('Payment failed. Please try again.');
-        clearInterval(pollingRef.current);
-      }
-      } catch (error) {
-        console.error('Error checking payment status:', error);
-        setPaymentStatus('FAILED');
-        navigate("/");
-        setError('Payment failed or cancelled. Please try again.');
-        clearInterval(pollingRef.current);
-      }
-    }, 3000); // Poll every 3 seconds
-  };
-
- // Initialize EDC Payment
-const handleEDCPayment = async () => {
-  setLoadingEDC(true);
-  setError(null);
-  
-  try {
-    const response = await fetch(`${BASE_URL}/payments/edc/init`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        "ngrok-skip-browser-warning": "true"
-      },
-      body: JSON.stringify({
-        order_id: orderId,
-        amount_paise: amountInPaise
-      })
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to initialize EDC payment');
-    }
-
-    const result = await response.json();
-    console.log('EDC Initialized:', result);
-    
-    setEdcData(result);
-    setPaymentStatus('PROCESSING');
-    
-    // Trigger mock payment FIRST, then start polling
-    await triggerMockPayment();
-    
-    // Start polling AFTER mock payment is triggered
-    startEDCStatusPolling();
-
-  } catch (error) {
-    console.error('Error initializing EDC:', error);
-    setError('Failed to initialize card payment. Please try again.');
-  } finally {
-    setLoadingEDC(false);
-  }
-};
-
-// Trigger mock payment via backend
-const triggerMockPayment = async () => {
-  try {
-    console.log('Triggering mock payment for order:', orderId);
-    
-    const response = await fetch(`${BASE_URL}/payments/edc/mock-trigger`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "ngrok-skip-browser-warning": "true"
-      },
-      body: JSON.stringify({ order_id: orderId })
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to trigger mock payment');
-    }
-    
-    const data = await response.json();
-    console.log("Mock payment triggered successfully:", data);
-    
-    // Wait 2 seconds for PhonePe to process
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-  } catch (err) {
-    console.error("Payment API error:", err);
-    setError('Failed to trigger mock payment. Please try again.');
-    throw err;
-  }
-};
-
-
-
-
-
-// Poll EDC Payment Status
-const startEDCStatusPolling = () => {
-  let pollCount = 0;
-  const maxPolls = 120; // 6 minutes timeout
-  
-  pollingRef.current = setInterval(async () => {
-    pollCount++;
-    
-    if (pollCount > maxPolls) {
-      clearInterval(pollingRef.current);
-      setPaymentStatus('TIMEOUT');
-      setError('Payment timeout. Please try again.');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${BASE_URL}/payments/edc/status/${orderId}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true"
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to check status');
-      }
-
-      const result = await response.json();
-      console.log('EDC Status:', result);
-      
-      // Use consistent field name - confirm with your backend
-      if (result.payment_status === 'COMPLETED') {
-        setPaymentStatus('SUCCESS');
-        setTransactionDetails(result);
-        setKDSInvoiceId(result.kds_invoice_id);
-        clearCart();
-        localStorage.removeItem('restaurantCart');
-        setShowTokenPage(true);
-        clearInterval(pollingRef.current);
         
-      } else if (result.payment_status === 'FAILED' || result.payment_status === 'CANCELLED') {
-        setPaymentStatus('FAILED');
-        navigate("/");
-        setError('Payment failed or cancelled. Please try again.');
-        clearInterval(pollingRef.current);
+      } catch (error) {
+        console.error('EDC Status Check Error:', error);
+        // Continue polling on network errors
       }
-      
-    } catch (error) {
-      console.error('Error checking EDC status:', error);
-        setPaymentStatus('FAILED');
-        navigate("/");
-        setError('Payment failed or cancelled. Please try again.');
-        clearInterval(pollingRef.current);
-      // Don't stop polling on network errors, continue trying
-    }
-  }, 3000);
-};
-
-// Cleanup on unmount
-useEffect(() => {
-  return () => {
-    if (pollingRef.current) {
-      clearInterval(pollingRef.current);
-    }
+    }, 3000);
   };
-}, []);
 
- // Replace handlePrintKOT with:
-const handlePrintKOT = () => {
-  const kotHTML = generateKOTBill(orderId, kot_code, KDSInvoiceId, orderDetails);
-  openPrintWindow(kotHTML, `KOT - ${orderId}`, 1000, 1250);
-};
+  // ============================================
+  // PRINT & SHARE HANDLERS
+  // ============================================
 
-// Replace handlePrintBill with:
-const handlePrintBill = () => {
-  const billHTML = generateRestaruentBill(
-    orderId, 
-    kot_code, 
-    KDSInvoiceId, 
-    orderDetails, 
-    transactionDetails, 
-    whatsappNumber
-  );
-  openPrintWindow(billHTML, `Bill - ${orderId}`, 1000, 1200);
-};
+  const handlePrintKOT = () => {
+    const kotHTML = generateKOTBill(orderId, kot_code, KDSInvoiceId, orderDetails);
+    openPrintWindow(kotHTML, `KOT-${orderId}`, 1000, 1250);
+  };
 
-  // Send via WhatsApp
-  const handleWhatsAppKOT = () => {
-    if (!whatsappNumber || whatsappNumber.length < 10) {
-      alert('Please enter a valid phone number');
+  const handlePrintBill = () => {
+    const billHTML = generateRestaruentBill(
+      orderId, 
+      kot_code, 
+      KDSInvoiceId, 
+      orderDetails, 
+      transactionDetails,
+      '' // WhatsApp number handled by TokenSuccess component
+    );
+    openPrintWindow(billHTML, `Bill-${orderId}`, 1000, 1200);
+  };
+
+  const handleWhatsAppKOT = (phoneNumber) => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert('Please enter a valid 10-digit phone number');
       return;
     }
     
-    const message = `*KITCHEN ORDER TICKET*\n\nOrder ID: ${kot_code}\nTransaction ID: ${transactionDetails?.transaction_id || 'N/A'}\nDate: ${new Date().toLocaleString()}\n\n*Items:*\n${orderDetails.items.map(item => `${item.itemName} x${item.quantity}`).join('\n')}\n\nSubtotal: ₹${orderDetails.subtotal.toFixed(2)}\nTax: ₹${orderDetails.tax.toFixed(2)}\nTotal: ₹${orderDetails.total.toFixed(2)}\n\nThank you for your order!`;
+    const message = `*KITCHEN ORDER TICKET*\n\nOrder ID: ${kot_code}\nTransaction ID: ${transactionDetails?.transaction_id || 'N/A'}\nDate: ${new Date().toLocaleString()}\n\n*Items:*\n${orderDetails.items.map(item => `${item.itemName} x${item.quantity}`).join('\n')}\n\nSubtotal: ₹${orderDetails.subtotal.toFixed(2)}\nTax: ₹${orderDetails.tax.toFixed(2)}\nTotal: ₹${orderDetails.total.toFixed(2)}\n\nThank you!`;
     
-    const whatsappUrl = `https://wa.me/91${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    const whatsappUrl = `https://wa.me/91${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
-    setShowWhatsappInput(false);
-    setWhatsappNumber('');
-  };
- const handleBackCartClick = () => {
-    navigate('/cart');
   };
 
+  // ============================================
+  // RENDER TOKEN SUCCESS PAGE
+  // ============================================
 
   if (showTokenPage) {
+    return (
+      <TokenSuccess
+        token={kot_code}
+        KDSInvoiceId={KDSInvoiceId}
+        orderId={orderId}
+        orderDetails={orderDetails}
+        transactionDetails={transactionDetails}
+        onPrintBill={handlePrintBill}
+        onPrintKOT={handlePrintKOT}
+        onSendWhatsapp={handleWhatsAppKOT}
+      />
+    );
+  }
+
+  // ============================================
+  // RENDER PAYMENT PAGE
+  // ============================================
+
   return (
-    <TokenSuccess
-      token={kot_code} // Use the orderId, or actual token value if different
-      KDSInvoiceId={KDSInvoiceId}
-      orderId={orderId}
-      orderDetails={orderDetails}
-      transactionDetails={transactionDetails}
-      onPrintBill={handlePrintBill}
-      onPrintKOT={handlePrintKOT}
-      onSendWhatsapp={(whatsappNumber) => handleWhatsAppKOT(whatsappNumber)}
-    />
-  );
-}
-
-
-  return (
-
-    
     <div className="payment-root">
+      {/* Header */}
       <div className="nav-header">
-              <button className="back-button" onClick={handleBackCartClick}>
-                <IoMdArrowRoundBack size={30}/>
-              </button>
-              <h1 className="nav-title">payment</h1>
+        <button className="back-button" onClick={() => navigate('/cart')}>
+          <IoMdArrowRoundBack size={30}/>
+        </button>
+        <h1 className="nav-title">Payment</h1>
       </div>
       
       <div className="payment-container">
         {/* Order Summary */}
         <div className="order-summary-compact">
           <h3 className="summary-heading">Order Summary</h3>
-          {/* <p className="order-id-display">Order ID: <strong>{orderId}</strong></p> */}
           
           <div className="summary-items">
             {orderDetails.items.map((item, idx) => {
@@ -413,200 +348,133 @@ const handlePrintBill = () => {
           </div>
         </div>
 
-        {/* Payment Methods */}
+        {/* Payment Methods Section */}
         <div className="payment-methods-section">
+          {/* Error Message */}
           {error && (
-            <div className="error-message" style={{
-              background: 'rgba(244, 67, 54, 0.1)',
-              border: '1px solid rgba(244, 67, 54, 0.3)',
-              color: '#C62828',
-              padding: '1rem',
-              borderRadius: '8px',
-              marginBottom: '1rem'
-            }}>
+            <div className="error-message">
               {error}
             </div>
           )}
 
-          {paymentStatus === 'SUCCESS' ? (
-            // Payment Success Screen
-            <div className="payment-success">
-              <div className="success-icon">
-                <Check size={60} />
+          <h2 className="payment-heading">Select Payment Method</h2>
+
+          {/* QR Code Payment */}
+          <div className={`payment-method-card ${selectedMethod === 'qr' ? 'selected' : ''}`}>
+            <div className="method-header">
+              <div className="method-info">
+                <QrCode size={24} />
+                <span className="method-name">UPI / QR Code</span>
               </div>
-              <h2>Payment Successful!</h2>
-              <p className="order-id">Order ID: <strong>{orderId}</strong></p>
-              {transactionDetails?.transaction_id && (
-                <p className="transaction-id">Transaction ID: <strong>{transactionDetails.transaction_id}</strong></p>
-              )}
               
-              <div className="action-buttons">
-                <button className="action-btn print-kot" onClick={handlePrintKOT}>
-                  <Printer size={20} />
-                  Print KOT
-                </button>
-                
-                <button className="action-btn print-bill" onClick={handlePrintBill}>
-                  <Printer size={20} />
-                  Print Bill
-                </button>
-                
-                <button 
-                  className="action-btn whatsapp-kot" 
-                  onClick={() => setShowWhatsappInput(!showWhatsappInput)}
-                >
-                  <Send size={20} />
-                  Send via WhatsApp
-                </button>
-              </div>
-
-              {showWhatsappInput && (
-                <div className="whatsapp-input-section">
-                  <input
-                    type="tel"
-                    placeholder="Enter WhatsApp Number"
-                    value={whatsappNumber}
-                    onChange={(e) => setWhatsappNumber(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                    className="whatsapp-input"
-                  />
-                  <button className="send-whatsapp-btn" onClick={handleWhatsAppKOT}>
-                    Send
-                  </button>
-                </div>
-              )}
-
               <button 
-                className="new-order-btn"
-                onClick={() => navigate('/')}
+                className="direct-pay-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!qrData && !loadingQR) {
+                    setSelectedMethod('qr');
+                    setExpandedMethod('qr');
+                    handleGenerateQR();
+                  }
+                }}
+                disabled={loadingQR || qrData}
               >
-                Start New Order
+                {loadingQR ? (
+                  <>
+                    <Loader size={18} className="spinning" />
+                    Generating...
+                  </>
+                ) : qrData ? (
+                  <>
+                    <Check size={18} />
+                    QR Ready
+                  </>
+                ) : (
+                  'Pay with UPI'
+                )}
               </button>
             </div>
-          ) : (
-            <>
- <h2 className="payment-heading">Select Payment Method</h2>
+            
+            {expandedMethod === 'qr' && qrData && (
+              <div className="method-content">
+                <div className="qr-container">
+                  <QRCodeSVG 
+                    value={qrData.qr_string}
+                    size={200}
+                    level="H"
+                    includeMargin={true}
+                  />
+                </div>
+                <p className="qr-instruction">Scan this QR code with any UPI app</p>
+                <div className="transaction-details">
+                  <p><strong>Amount:</strong> ₹{(parseInt(amountInPaise) / 100).toFixed(2)}</p>
+                  <p><strong>Expires:</strong> {new Date(qrData.expires_at).toLocaleString()}</p>
+                </div>
+                
+                {paymentStatus === 'PROCESSING' && (
+                  <div className="waiting-indicator">
+                    <div className="spinner"></div>
+                    <p>Waiting for payment confirmation...</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
 
-{/* QR Code Payment */}
-<div className={`payment-method-card ${selectedMethod === 'qr' ? 'selected' : ''}`}>
-  <div className="method-header">
-    <div className="method-info">
-      <QrCode size={24} />
-      <span className="method-name">UPI / QR Code</span>
-    </div>
-    
-    {/* Direct Pay Button */}
-    <button 
-      className="direct-pay-btn"
-      onClick={(e) => {
-        e.stopPropagation();
-        if (!qrData && !loadingQR) {
-          setSelectedMethod('qr');
-          setExpandedMethod('qr');
-          handleGenerateQR();
-        }
-      }}
-      disabled={loadingQR || qrData}
-    >
-      {loadingQR ? (
-        <>
-          <Loader size={18} className="spinning" />
-          Generating...
-        </>
-      ) : qrData ? (
-        <>
-          <Check size={18} />
-          QR Ready
-        </>
-      ) : (
-        'Pay UPI'
-      )}
-    </button>
-  </div>
-  
-  {expandedMethod === 'qr' && qrData && (
-    <div className="method-content">
-      <div className="qr-container">
-        <QRCodeSVG 
-          value={qrData.qr_string}
-          size={200}
-          level="H"
-          includeMargin={true}
-        />
-      </div>
-      <p className="qr-instruction">Scan this QR code with any UPI app</p>
-      <div className="transaction-details">
-        <p><strong>Amount:</strong> ₹{(parseInt(amountInPaise) / 100).toFixed(2)}</p>
-        <p><strong>Expires At:</strong> {new Date(qrData.expires_at).toLocaleString()}</p>
-      </div>
-      
-      {paymentStatus === 'PROCESSING' && (
-        <div className="waiting-indicator">
-          <div className="spinner"></div>
-          <p>Waiting for payment confirmation...</p>
-        </div>
-      )}
-    </div>
-  )}
-</div>
-
-{/* EDC Card Payment */}
-<div className={`payment-method-card ${selectedMethod === 'edc' ? 'selected' : ''}`}>
-  <div className="method-header">
-    <div className="method-info">
-      <CreditCard size={24} />
-      <span className="method-name">Card</span>
-    </div>
-    
-    {/* Direct Pay Button */}
-    <button 
-      className="direct-pay-btn card-pay"
-      onClick={(e) => {
-        e.stopPropagation();
-        if (!edcData && !loadingEDC) {
-          setSelectedMethod('edc');
-          setExpandedMethod('edc');
-          handleEDCPayment();
-        }
-      }}
-      disabled={loadingEDC || edcData}
-    >
-      {loadingEDC ? (
-        <>
-          <Loader size={18} className="spinning" />
-          Initializing...
-        </>
-      ) : edcData ? (
-        <>
-          <Check size={18} />
-          Processing
-        </>
-      ) : (
-        `Pay card`
-      )}
-    </button>
-  </div>
-  
-  {expandedMethod === 'edc' && edcData && (
-    <div className="method-content">
-      <div className="edc-info">
-        <p className="edc-instruction">Please insert or tap your card on the EDC device</p>
-        <div className="transaction-details">
-          <p> ₹{(parseInt(amountInPaise) / 100).toFixed(2)}</p>
-          {/* <strong>Amount:</strong> */}
-        </div>
-      </div>
-      
-      {paymentStatus === 'PROCESSING' && (
-        <div className="waiting-indicator">
-          <div className="spinner"></div>
-          <p>Processing card payment...</p>
-        </div>
-      )}
-    </div>
-  )}
-</div>
-</>
-          )}
+          {/* EDC Card Payment */}
+          <div className={`payment-method-card ${selectedMethod === 'edc' ? 'selected' : ''}`}>
+            <div className="method-header">
+              <div className="method-info">
+                <CreditCard size={24} />
+                <span className="method-name">Card Payment</span>
+              </div>
+              
+              <button 
+                className="direct-pay-btn card-pay"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!edcData && !loadingEDC) {
+                    setSelectedMethod('edc');
+                    setExpandedMethod('edc');
+                    handleEDCPayment();
+                  }
+                }}
+                disabled={loadingEDC || edcData}
+              >
+                {loadingEDC ? (
+                  <>
+                    <Loader size={18} className="spinning" />
+                    Initializing...
+                  </>
+                ) : edcData ? (
+                  <>
+                    <Check size={18} />
+                    Processing
+                  </>
+                ) : (
+                  'Pay with Card'
+                )}
+              </button>
+            </div>
+            
+            {expandedMethod === 'edc' && edcData && (
+              <div className="method-content">
+                <div className="edc-info">
+                  <p className="edc-instruction">Please insert or tap your card on the EDC device</p>
+                  <div className="transaction-details">
+                    <p><strong>Amount:</strong> ₹{(parseInt(amountInPaise) / 100).toFixed(2)}</p>
+                  </div>
+                </div>
+                
+                {paymentStatus === 'PROCESSING' && (
+                  <div className="waiting-indicator">
+                    <div className="spinner"></div>
+                    <p>Processing card payment...</p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

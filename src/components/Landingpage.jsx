@@ -1,85 +1,54 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Styles/landingpage.css';
-import { useCart } from './CartContext';  
-
+import { useCart } from './CartContext';
 
 const LandingPage = () => {
   const [activeButton, setActiveButton] = useState(null);
   const navigate = useNavigate();
   const { clearCart } = useCart();
+
   const handleOrderClick = (orderType) => {
-    // Navigate to menu page with order type
-     navigate('/dinein', { state: { orderType } });
+    navigate('/dinein', { state: { orderType } });
   };
 
   useEffect(() => {
-    // Clear cart context
     clearCart();
-    
-    // Clear localStorage
     localStorage.removeItem('restaurantCart');
-    localStorage.removeItem('orderType'); // If you store order type
-    
+    localStorage.removeItem('orderType');
     console.log('Cart cleared - Fresh start for new customer');
-  }, []); // Empty dependency array = runs once on mount
+  }, []);
 
-  
+  const cornerImages = [
+    { position: 'top-left', src: 'TOP_LEFT.png', alt: 'Top left decoration' },
+    { position: 'top-right', src: 'TOP_RIGHT.png', alt: 'Top right decoration' },
+    { position: 'bottom-left', src: 'BOTTOM_LEFT.png', alt: 'Bottom left decoration' },
+    { position: 'bottom-right', src: 'BOTTOM_RIGHT.png', alt: 'Bottom right decoration' }
+  ];
+
+  const handleImageError = (e) => {
+    e.target.style.display = 'none';
+  };
+
   return (
     <div className="kiosk-container">
       {/* Corner Decorative Icons */}
-      <div className="corner-icon top-left">
-        <img 
-          src={`TOP_LEFT.png`}
-          alt="Corner decoration" 
-          onError={(e) => {
-            e.target.style.display = 'none';
-            console.log('Top left image failed to load');
-          }}
-        />
-      </div>
-      <div className="corner-icon top-right">
-        <img 
-          src={`TOP_RIGHT.png`}
-          alt="Corner decoration" 
-          onError={(e) => {
-            e.target.style.display = 'none';
-            console.log('Top right image failed to load');
-          }}
-        />
-      </div>
-      <div className="corner-icon bottom-left">
-        <img 
-          src={`BOTTOM_LEFT.png`}
-          alt="Corner decoration" 
-          onError={(e) => {
-            e.target.style.display = 'none';
-            console.log('Bottom left image failed to load');
-          }}
-        />
-      </div>
-      <div className="corner-icon bottom-right">
-        <img 
-          src={`BOTTOM_RIGHT.png`}
-          alt="Corner decoration" 
-          onError={(e) => {
-            e.target.style.display = 'none';
-            console.log('Bottom right image failed to load');
-          }}
-        />
-      </div>
+      {cornerImages.map(({ position, src, alt }) => (
+        <div key={position} className={`corner-icon ${position}`}>
+          <img src={src} alt={alt} onError={handleImageError} />
+        </div>
+      ))}
 
       {/* Main Content */}
-      <div className="content-wrapper">
+      <main className="content-wrapper">
         {/* Logo Section */}
         <div className="logo-section">
           <div className="logo-illustration">
             <img 
-              src={`Center-Image-Logo.svg`}
-              alt="Restaurant icon" 
+              src="Center-Image-Logo.svg"
+              alt="Sawagata Restaurant Logo" 
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/300x300?text=Logo';
-                console.log('Logo image failed to load');
               }}
             />
           </div>
@@ -89,18 +58,16 @@ const LandingPage = () => {
         <h1 className="restaurant-name">Sawagata</h1>
 
         {/* Rating Stars */}
-        <div className="rating-stars">
-          <span className="star"><img src="Star-flower.svg" alt="★" /></span>
-          <span className="star"><img src="Star-flower.svg" alt="★" /></span>
-          <span className="star"><img src="Star-flower.svg" alt="★" /></span>
-          <span className="star"><img src="Star-flower.svg" alt="★" /></span>
-          <span className="star"><img src="Star-flower.svg" alt="★" /></span>
-
-
+        <div className="rating-stars" role="img" aria-label="5 star rating">
+          {[...Array(5)].map((_, index) => (
+            <span key={index} className="star">
+              <img src="Star-flower.svg" alt="" />
+            </span>
+          ))}
         </div>
 
         {/* Order Section */}
-        <div className="order-section">
+        <section className="order-section">
           <h2 className="order-title">PLACE ORDER</h2>
           
           <div className="button-container">
@@ -109,9 +76,10 @@ const LandingPage = () => {
               onMouseEnter={() => setActiveButton('having')}
               onMouseLeave={() => setActiveButton(null)}
               onClick={() => handleOrderClick('dine-in')}
+              aria-label="Order for dining in"
             >
               <span className="button-text">Having it here</span>
-              <span className="button-shine"></span>
+              <span className="button-shine" aria-hidden="true"></span>
             </button>
             
             <button 
@@ -119,13 +87,14 @@ const LandingPage = () => {
               onMouseEnter={() => setActiveButton('takeaway')}
               onMouseLeave={() => setActiveButton(null)}
               onClick={() => handleOrderClick('takeaway')}
+              aria-label="Order for takeaway"
             >
               <span className="button-text">Take Away</span>
-              <span className="button-shine"></span>
+              <span className="button-shine" aria-hidden="true"></span>
             </button>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 };

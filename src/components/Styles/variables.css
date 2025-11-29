@@ -1,122 +1,177 @@
-
-
+/* ============================================
+   KIOSK APPLICATION - CSS VARIABLES
+   Production-Ready Color System
+   ============================================ */
 
 :root {
-
-/* Theme dark  wooden */
-    /* --order-type: linear-gradient(135deg, #588506 30%, #475a03 100%);
-
-  --secondary-gradient: linear-gradient(135deg, #9b500a 30%, #9e5510 100%);
-  --gold-accent-light: linear-gradient(135deg, #964b0d 30%, #aa4806 100%);
-
-
-
-  --neutral-50: #FAFBF9;
-  --neutral-100: #0b130b;
-  --neutral-200: #faecc3;
-  --neutral-400:#702705;
-  --neutral-300: #D6DDD6;
-  --neutral-800: #bb5917;
-  --neutral-900: #eed859;
-  --neutral-500 :rgb(92, 34, 1);
-
-  --neutral-700: #772f05;
-    --add-minus-buttom: #f3e4e4;
- --add-minus-count:white;
-
-  --overall-border-color :rgb(240, 144, 35);
-  --card-font : #f7f6f6; */
-
-
-
-  /* Fresh yellow Theme */
-
-
- --secondary-gradient: linear-gradient(135deg, #f5a834 30%, #d8aa2d 100%); 
-  --order-type: linear-gradient(135deg, #5f3709 30%, #643106 100%);
-
-  --gold-accent-light: #f7b425;
-
-    --overall-border-color :rgb(240, 144, 35);
-  --card-font : #4a2525;
-
-  --neutral-50: #FAFBF9;
-  --neutral-100: #0b130b;
-  --neutral-200: #faecc3;
-  --neutral-400:#702705;
-  --neutral-300: #D6DDD6;
-  --neutral-800: #e9b526;
-  --neutral-900: #eed859;
-    --neutral-700: #772f05;
-  --neutral-500 :rgb(92, 34, 1);
-
-    --add-minus-buttom: #f3e4e4;
-     --add-minus-count:rgb(94, 47, 4);
-
-
+  /* ==========================================
+     ACTIVE THEME: Fresh Yellow
+     ========================================== */
   
-  /* --bg-card: linear-gradient(1deg, #ec9a2f 75%, #f8bb05 100%); */
-
-
-
-
-
+  /* Primary Brand Colors */
   --primary-gradient: linear-gradient(135deg, #F7FBF5 0%, #E8F5E3 100%);
- 
-  /* Green Tones */
+  --secondary-gradient: linear-gradient(135deg, #f5a834 30%, #d8aa2d 100%);
+  --order-type-gradient: linear-gradient(135deg, #5f3709 30%, #643106 100%);
+  
+  /* Gold Accent System */
   --gold-primary: #3D7A4F;
   --gold-dark: #2d6326;
   --gold-light: #5A9B6E;
   --gold-accent: #df5e08;
-
+  --gold-accent-light: #f7b425;
   
-  /* Earthy Neutrals */
+  /* Earth Tones */
   --earth-dark: #ec9a2f;
   --earth-medium: #06571a;
   --earth-light: #7F9383;
-
-  /* Modern Neutrals */
-
+  
+  /* Neutral Palette */
+  --neutral-50: #FAFBF9;
+  --neutral-100: #0b130b;
+  --neutral-200: #faecc3;
+  --neutral-300: #D6DDD6;
+  --neutral-400: #702705;
+  --neutral-500: #5c2201;
+  --neutral-700: #772f05;
+  --neutral-800: #e9b526;
+  --neutral-900: #eed859;
+  
   /* Accent Colors */
   --accent-orange: #E89E5F;
   --accent-terracotta: #C18B69;
   --accent-sage: #8FB89E;
   --accent-olive: #9BA578;
   
-  /* Backgrounds */
-  --bg-cream: linear-gradient(180deg, #faf2d8 0%, #f3ecdd 100%);
+  /* Background Gradients */
+  --bg-cream: linear-gradient(180deg, #fdf9eb 0%, #fcf7ec 100%);
   --bg-warm: linear-gradient(180deg, #FFF9E5 0%, #FFFAF0 100%);
   
   /* Text Colors */
-  --text-primary: #421901;
+  --text-primary: #244201;
   --text-secondary: #361c26;
   --text-muted: #7A857A;
   --text-on-dark: #F7FBF5;
-
-
-  --cart-border-color: goldenrod;
-
+  --card-text: #4a2525;
+  
+  /* Component-Specific Colors */
+  --border-primary: #f09023;
+  --cart-border: goldenrod;
+  --button-add-minus-bg: #f3e4e4;
+  --button-add-minus-text: #5e2f04;
+  
+  /* ==========================================
+     ELEVATION & SPACING
+     ========================================== */
   
   /* Shadows */
-  --shadow-sm: 0 8px 4px rgba(82, 70, 56, 0.199);
+  --shadow-sm: 0 2px 4px rgba(82, 70, 56, 0.1);
   --shadow-md: 0 4px 12px rgba(44, 62, 47, 0.12);
   --shadow-lg: 0 10px 24px rgba(44, 62, 47, 0.15);
   --shadow-xl: 0 20px 40px rgba(44, 62, 47, 0.18);
   
+  /* Border Radius */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-xl: 20px;
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-
-
-
-  --primary-theme-header:"krt-kiosk-font";
-  --secondary-theme-header:"Inter-bold";
-  --primary-theme-subheading:"krt-kiosk-font-normal";
-  --secondary-theme-subheading:"Inter-normal";
-
+  --radius-full: 9999px;
+  
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;  /* 4px */
+  --spacing-sm: 0.5rem;   /* 8px */
+  --spacing-md: 1rem;     /* 16px */
+  --spacing-lg: 1.5rem;   /* 24px */
+  --spacing-xl: 2rem;     /* 32px */
+  --spacing-2xl: 3rem;    /* 48px */
+  
+  /* ==========================================
+     TYPOGRAPHY
+     ========================================== */
+  
+  /* Font Families */
+  --font-primary: "krt-kiosk-font";
+  --font-secondary: "Inter";
+  --font-primary-normal: "krt-kiosk-font-normal";
+  --font-secondary-normal: "Inter";
+  
+  /* Font Sizes */
+  --font-xs: 0.75rem;   /* 12px */
+  --font-sm: 0.875rem;  /* 14px */
+  --font-base: 1rem;    /* 16px */
+  --font-lg: 1.125rem;  /* 18px */
+  --font-xl: 1.25rem;   /* 20px */
+  --font-2xl: 1.5rem;   /* 24px */
+  --font-3xl: 1.875rem; /* 30px */
+  --font-4xl: 2.25rem;  /* 36px */
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* ==========================================
+     TRANSITIONS & ANIMATIONS
+     ========================================== */
+  
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* ==========================================
+     Z-INDEX LAYERS
+     ========================================== */
+  
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
 }
 
+/* ============================================
+   ALTERNATIVE THEME: Dark Wooden
+   (Toggle by swapping :root content)
+   ============================================ */
 
+:root[data-theme="dark-wooden"] {
+  --order-type-gradient: linear-gradient(135deg, #588506 30%, #475a03 100%);
+  --secondary-gradient: linear-gradient(135deg, #9b500a 30%, #9e5510 100%);
+  --gold-accent-light: linear-gradient(135deg, #964b0d 30%, #aa4806 100%);
+  
+  --neutral-50: #FAFBF9;
+  --neutral-100: #0b130b;
+  --neutral-200: #faecc3;
+  --neutral-300: #D6DDD6;
+  --neutral-400: #702705;
+  --neutral-500: #5c2201;
+  --neutral-700: #772f05;
+  --neutral-800: #bb5917;
+  --neutral-900: #eed859;
+  
+  --border-primary: #f09023;
+  --card-text: #f7f6f6;
+  --button-add-minus-bg: #f3e4e4;
+  --button-add-minus-text: white;
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+:root {
+  --breakpoint-xs: 320px;
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1440px;
+  --breakpoint-2xl: 1920px;
+}

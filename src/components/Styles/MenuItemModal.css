@@ -1,11 +1,15 @@
 @import './variables.css';
 
+/* ============================================
+   MODAL - MOBILE FIRST DESIGN
+   ============================================ */
+
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(28, 25, 23, 0.8);
+  background: rgba(28, 25, 23, 0.85);
   backdrop-filter: blur(8px);
-  z-index: 3000;
+  z-index: var(--z-modal-backdrop);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +26,7 @@
   background: var(--bg-warm);
   border-radius: var(--radius-xl);
   max-width: 650px;
-  color: var(--card-font);
+  color: var(--card-text);
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
@@ -43,13 +47,13 @@
   }
 }
 
-/* Modal Header */
+/* MODAL HEADER */
 .modal-header {
   position: sticky;
   top: 0;
   background: var(--secondary-gradient);
   color: var(--text-on-dark);
-  padding: 2rem;
+  padding: 1.5rem 1rem;
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   z-index: 10;
   display: flex;
@@ -59,20 +63,22 @@
 
 .modal-close-btn {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   background: rgba(255, 255, 255, 0.2);
   border: none;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  color: var(--card-font);
+  color: var(--card-text);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition);
+  transition: all var(--transition-base);
   backdrop-filter: blur(10px);
+  min-height: 44px;
+  min-width: 44px;
 }
 
 .modal-close-btn:hover {
@@ -80,189 +86,76 @@
   transform: rotate(90deg);
 }
 
-/* .modal-header-content {
-  /* padding-right: 3rem; */
-  /* display: flex;
-  justify-content: center; */
-/* }  */
+.modal-header-content {
+  width: 100%;
+  padding-right: 2rem;
+}
 
 .modal-title {
-  font-family: var(--primary-theme-header);
-  font-size: 1.8rem;
-    color: var(--card-font);
+  font-family: var(--font-primary);
+  font-size: 1.35rem;
+  color: var(--card-text);
+  margin: 0 0 0.75rem 0;
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  text-align: center;
+}
 
-  margin: 0 0 1rem 0;
-  font-weight: 700;
-  line-height: 1.3;
+.price-count-container {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .modal-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin: auto;
+  justify-content: center;
 }
 
 .modal-tag {
   background: rgba(231, 236, 221, 0.87);
   color: var(--text-on-dark);
-  padding: 0.4rem 1rem;
+  padding: 0.5rem 1.25rem;
   border-radius: 16px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
   backdrop-filter: blur(10px);
-    margin: auto;
-
 }
 
-.price-count-container{
-margin-top: 2rem;
-}
-.modal-item-info {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  opacity: 0.9;
-}
-
-.modal-base-price {
-  font-size: 1.1rem;
-  font-weight: 600;
-}
-
-.modal-item-nature,
-.modal-sku {
-  font-size: 0.85rem;
-  opacity: 0.85;
-}
-
-/* Modal Body */
-.modal-body {
-  padding: 2rem;
-}
-
-.modal-section {
-  margin-bottom: 2rem;
-}
-
-.section-title {
-  font-family: var(--secondary-theme-subheading);
-  font-size: 1.2rem;
-  color: var(--text-primary);
-  margin: 0 0 1rem 0;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.section-title::before {
-  content: '';
-  width: 4px;
-  height: 20px;
-  background: var(--secondary-gradient);
-  border-radius: 2px;
-}
-
-/* Tax Details */
-.tax-details {
-  background: var(--neutral-50);
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
-  /* border: 1px solid var(--neutral-200); */
-    border: 1px dotted var(--cart-border-color);
-
-}
-
-.tax-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 0;
-}
-
-.tax-item:not(:last-child) {
-  border-bottom: 1px solid var(--neutral-200);
-}
-
-.tax-item.total-tax {
-  border-top: 2px solid var(--gold-light);
-  padding-top: 1rem;
-  margin-top: 0.5rem;
-  font-weight: 700;
-  color: var(--gold-dark);
-}
-
-.tax-name {
-  flex: 1;
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-}
-
-.tax-rate {
-  margin: 0 1rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  background: var(--bg-card);
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  border: 1px solid var(--neutral-200);
-}
-
-.tax-amount {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-/* Price Highlight */
-.price-per-unit {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem;
-  background: var(--secondary-gradient);
-  color: var(--text-on-dark);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  box-shadow: var(--shadow-md);
-}
-.price-amount{
-font-family: var(--primary-theme-subheading);
-  font-size: 1.6rem;
-  font-weight: 700;
+.price-amount {
+  font-family: var(--font-primary-normal);
+  font-size: 1.4rem;
+  font-weight: var(--font-weight-bold);
 }
 
 .price-highlight {
-    color: var(--card-font);
-
-  
+  color: var(--card-text);
 }
 
-/* Quantity Selector */
+/* QUANTITY SELECTOR */
 .quantity-selector {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 2rem;
-  /* background: var(--neutral-50); */
-  padding: 1.2rem;
-  /* border-radius: var(--radius-md); */
-  /* border: 1px solid var(--neutral-800); */
+  gap: 1.5rem;
+  padding: 1rem;
 }
 
 .quantity-btn {
-  background: var(--add-minus-buttom);
-  color: var(--card-font);
+  background: var(--button-add-minus-bg);
+  color: var(--card-text);
   border: none;
-  width: 45px;
-  height: 45px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--transition);
+  transition: all var(--transition-base);
   box-shadow: var(--shadow-sm);
 }
 
@@ -277,29 +170,108 @@ font-family: var(--primary-theme-subheading);
 }
 
 .quantity-display {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: var(--add-minus-count);
-  min-width: 50px;
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--button-add-minus-text);
+  min-width: 45px;
   text-align: center;
 }
 
-/* Modal Footer */
+/* MODAL BODY */
+.modal-body {
+  padding: 1.5rem 1rem;
+}
+
+.modal-section {
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-family: var(--font-secondary);
+  font-size: 1.125rem;
+  color: var(--text-primary);
+  margin: 0 0 0.875rem 0;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-title::before {
+  content: '';
+  width: 4px;
+  height: 18px;
+  background: var(--secondary-gradient);
+  border-radius: 2px;
+}
+
+/* TAX DETAILS */
+.tax-details {
+  background: var(--neutral-50);
+  padding: 1.25rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px dotted var(--cart-border);
+}
+
+.tax-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.65rem 0;
+  gap: 0.5rem;
+}
+
+.tax-item:not(:last-child) {
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.tax-item.total-tax {
+  border-top: 2px solid var(--gold-light);
+  padding-top: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--gold-dark);
+}
+
+.tax-name {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.tax-rate {
+  margin: 0 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  background: var(--bg-cream);
+  padding: 0.25rem 0.65rem;
+  border-radius: 12px;
+  border: 1px solid var(--neutral-200);
+  white-space: nowrap;
+}
+
+.tax-amount {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+}
+
+/* MODAL FOOTER */
 .modal-footer {
   position: sticky;
   bottom: 0;
   background: var(--bg-cream);
-  padding: 1.5rem 2rem;
-  /* border-top: 3px  var(--neutral-800); */
+  padding: 1.25rem 1rem;
   border-radius: 0 0 var(--radius-xl) var(--radius-xl);
 }
 
 .price-breakdown {
   background: var(--neutral-50);
-  padding: 1.25rem;
+  padding: 1rem;
   border-radius: var(--radius-md);
-  margin-bottom: 1.5rem;
-  border: 1px solid var(--cart-border-color);
+  margin-bottom: 1.25rem;
+  border: 1px solid var(--cart-border);
 }
 
 .price-row {
@@ -307,34 +279,37 @@ font-family: var(--primary-theme-subheading);
   justify-content: space-between;
   padding: 0.5rem 0;
   color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: var(--line-height-normal);
 }
 
 .price-row.total {
   border-top: 2px solid var(--gold-light);
-  padding-top: 1rem;
+  padding-top: 0.875rem;
   margin-top: 0.5rem;
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-size: 1.185rem;
+  font-weight: var(--font-weight-bold);
   color: var(--text-primary);
 }
 
+/* FOOTER BUTTONS */
 .footer-actions {
   display: flex;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 
 .cancel-btn,
 .add-to-cart-btn {
-    font-family: var(--primary-theme-header);
-
+  font-family: var(--font-primary);
   flex: 1;
   padding: 1rem;
   border: none;
   border-radius: var(--radius-md);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   font-size: 1rem;
   cursor: pointer;
-  transition: all var(--transition);
+  transition: all var(--transition-base);
+  min-height: 48px;
 }
 
 .cancel-btn {
@@ -350,7 +325,7 @@ font-family: var(--primary-theme-subheading);
 
 .add-to-cart-btn {
   background: var(--neutral-800);
-  color: var(--card-font);
+  color: var(--card-text);
   box-shadow: var(--shadow-sm);
 }
 
@@ -361,8 +336,166 @@ font-family: var(--primary-theme-subheading);
   box-shadow: var(--shadow-md);
 }
 
-@media (max-width: 768px) {
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Small Phones (375px and below) */
+@media (max-width: 375px) {
+  .modal-container {
+    border-radius: var(--radius-lg);
+  }
+  
+  .modal-header {
+    padding: 1.25rem 0.875rem;
+  }
+  
+  .modal-title {
+    font-size: 1.185rem;
+  }
+  
+  .modal-body {
+    padding: 1.25rem 0.875rem;
+  }
+  
+  .quantity-selector {
+    gap: 1.25rem;
+  }
+  
+  .tax-item {
+    font-size: 0.8125rem;
+  }
+  
+  .tax-name {
+    font-size: 0.8125rem;
+  }
+  
+  .price-row {
+    font-size: 0.875rem;
+  }
+  
   .footer-actions {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+/* Tablets and Up (600px+) */
+@media (min-width: 600px) {
+  .modal-header {
+    padding: 1.75rem 1.5rem;
+  }
+  
+  .modal-title {
+    font-size: 1.625rem;
+  }
+  
+  .price-count-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+  }
+  
+  .quantity-selector {
+    gap: 2rem;
+    padding: 0;
+  }
+  
+  .quantity-btn {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .quantity-display {
+    font-size: 1.75rem;
+    min-width: 50px;
+  }
+  
+  .modal-body {
+    padding: 2rem 1.5rem;
+  }
+  
+  .tax-details {
+    padding: 1.5rem;
+  }
+  
+  .modal-footer {
+    padding: 1.5rem 2rem;
+  }
+  
+  .price-breakdown {
+    padding: 1.25rem;
+  }
+}
+
+/* Desktop (768px+) */
+@media (min-width: 768px) {
+  .modal-header {
+    padding: 2rem;
+  }
+  
+  .modal-title {
+    font-size: 1.8rem;
+  }
+  
+  .price-amount {
+    font-size: 1.6rem;
+  }
+  
+  .modal-body {
+    padding: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+  
+  .price-row.total {
+    font-size: 1.3rem;
+  }
+  
+  .footer-actions {
+    gap: 1rem;
+  }
+}
+
+/* Touch Device Optimization */
+@media (hover: none) and (pointer: coarse) {
+  .quantity-btn {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .modal-close-btn {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .cancel-btn,
+  .add-to-cart-btn {
+    min-height: 52px;
+    font-size: 1.0625rem;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .modal-container {
+    animation: none;
+  }
+  
+  .modal-close-btn:hover {
+    transform: none;
+  }
+  
+  .quantity-btn:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .cancel-btn:hover,
+  .add-to-cart-btn:hover {
+    transform: none;
   }
 }
