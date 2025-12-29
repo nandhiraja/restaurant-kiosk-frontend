@@ -180,7 +180,7 @@ export const generateRestaruentBill = (
           width: 90mm;
           margin: 0 auto;
           padding: 22px 26px 26px;
-          border: 2px solid #000;
+         /* border: 2px solid #000;   Note :  outer boder command*/   
         }
         .center { text-align: center; }
 
@@ -313,7 +313,7 @@ export const generateRestaruentBill = (
           <div class="address-line">
             Versova, Andheri West, Mumbai, Maharashtra 400061
           </div>
-          <div class="section-title">TAX INVOICE</div>
+          <!-- <div class="section-title">TAX INVOICE</div> -->
         </div>
 
         <div class="divider-full"></div>
