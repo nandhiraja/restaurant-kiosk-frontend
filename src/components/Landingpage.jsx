@@ -9,7 +9,8 @@ const LandingPage = () => {
   const { clearCart } = useCart();
 
   const handleOrderClick = (orderType) => {
-    navigate('/dinein', { state: { orderType } });
+    localStorage.setItem('orderType', orderType);
+    navigate('/category', { state: { orderType } });
   };
 
   useEffect(() => {

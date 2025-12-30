@@ -152,6 +152,7 @@ export const generateRestaruentBill = (
   kot_code,
   KDSInvoiceId,
   orderDetails,
+  orderType,
   transactionDetails,
   whatsappNumber
 ) => {
@@ -325,14 +326,12 @@ export const generateRestaruentBill = (
 
         <div class="divider-full"></div>
 
-        <div class="bill-info">BILL NO: KTR-${orderId.slice(4,10)}</div>
-        <div class="bill-info">Order No:</div>
-        <br/>
+        <div class="bill-info">BILL NO: ${orderId}</div>
+       <!-- <br/> -->
         <div class="bill-info">DATE: ${new Date().toLocaleDateString('en-GB')}</div>
         <div class="bill-info">TIME: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
-        <div class="bill-info">TYPE: ${orderDetails.billType || 'DINE IN'}</div>
+        <div class="bill-info">TYPE: ${orderType}</div>
         <div class="bill-info">KIOSK: ${orderDetails.kiosk || 'KTR1'}</div>
-        <div class="bill-info">PAYMENT Mode:</div>
 
         <div class="divider-full"></div>
 

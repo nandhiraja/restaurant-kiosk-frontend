@@ -10,11 +10,11 @@ const Navigation = ({ categoryName, orderType ,description}) => {
   const { cart } = useCart();
 
   const handleCartClick = () => {
-    navigate('/cart'); // Route to cart page instead of modal
+    navigate('/cart', { state: { orderType } }); // Route to cart page instead of modal
   };
 
   const handleBack = () => {
-    navigate('/dinein');
+    navigate('/category');
   };
 
   const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);

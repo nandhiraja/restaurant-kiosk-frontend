@@ -149,7 +149,7 @@ if (error) {
             >
               <div className="card-inner">
                 <img 
-                  src={`./Menu/${category.name}.jpg`}
+                  src={ category.imageURL || `./Menu/${category.name}.jpg`}
                   alt={`${category.name} category`}
                   className="card-image"
                   onError={(e) => {

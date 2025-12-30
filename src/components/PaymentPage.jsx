@@ -257,11 +257,15 @@ const PaymentPage = () => {
   };
 
   const handlePrintBill = () => {
+// 
+    const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN': "TAKE AWAY";
+    console.log("orderId have got : ",orderType)
     const billHTML = generateRestaruentBill(
       orderId, 
       kot_code, 
       KDSInvoiceId, 
       orderDetails, 
+      orderType,
       transactionDetails,
       '' // WhatsApp number handled by TokenSuccess component
     );

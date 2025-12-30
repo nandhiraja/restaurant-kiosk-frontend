@@ -13,7 +13,7 @@ const MenuSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
-
+  console.log("state in menupage : ",state)
   const {
     category,
     items = [],
@@ -68,7 +68,7 @@ const MenuSection = () => {
         <Navigation />
         <div className="error-message">
           <p>No data available. Please go back and select a category.</p>
-          <button onClick={() => navigate('/dinein')}>Back to Menu</button>
+          <button onClick={() => navigate('/category')}>Back to Menu</button>
         </div>
       </div>
     );
@@ -88,6 +88,7 @@ const MenuSection = () => {
                           served with grated dry coconut chutney.
                           Its available in below.`}
         orderType={orderTypeDisplay}
+      
       />
 
       {/* Menu Items Grid */}

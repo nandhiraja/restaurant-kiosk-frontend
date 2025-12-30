@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Minus, Trash, Loader } from 'lucide-react';
 import './Styles/CartPage.css';
 import { useCart } from './CartContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { IoMdArrowRoundBack } from "react-icons/io";
 
 const BASE_URL = import.meta.env.VITE_Base_url;
@@ -12,6 +12,19 @@ function CartPage() {
   const { cart, removeItem, updateQuantity } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { state } = useLocation();
+    
+
+  console.log("state in cartpage : ",state)
+
+ const {  
+    orderType = 'Dine In'
+  } = state || {};
+
+
+
+
+
 
   // Calculate totals properly
   const calculateItemTotal = (item) => {
@@ -42,7 +55,9 @@ const handleProceedToPayment = async () => {
     alert('Your cart is empty!');
     return;
   }
+  const orderTypePayload = orderType === 'Dine In' ? 'DINEIN' : 'TAKEAWAY';
 
+  console.log("ordertype : ",orderTypePayload )
   setLoading(true);
   setError(null);
 
@@ -53,6 +68,7 @@ const handleProceedToPayment = async () => {
   // Prepare order payload exactly as per API spec
   const orderPayload = {
     channel: "Palas Kiosk",
+    order_type : orderTypePayload,
     items: cart.items.map(item => ({
       item_skuid: item.skuCode || item.itemId.toString(),
       quantity: item.quantity
@@ -118,7 +134,7 @@ const handleProceedToPayment = async () => {
   {/* <div className="cart-header-content"> */}
     <span 
       className="back-button" 
-      onClick={() => navigate('/dinein')}
+      onClick={() => navigate('/category')}
       style={{ cursor: "pointer" }}
     >
       <IoMdArrowRoundBack size={25}/>
@@ -153,7 +169,7 @@ const handleProceedToPayment = async () => {
             <div className="empty-cart">
               <p>Your cart is empty</p>
               <button 
-                onClick={() => navigate('/dinein')}
+                onClick={() => navigate('/category')}
                 style={{
                   marginTop: '1rem',
                   padding: '0.75rem 2rem',
