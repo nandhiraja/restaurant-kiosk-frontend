@@ -166,7 +166,7 @@ const PaymentPage = () => {
       setPaymentStatus('PROCESSING');
       
       // Trigger mock payment then start polling
-      await triggerMockPayment();
+      // await triggerMockPayment();                   // mock pay trigger shutdown
       startEDCStatusPolling();
 
     } catch (error) {
