@@ -16,7 +16,9 @@
 .menu-item-card::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 4px;
   background: var(--secondary-gradient);
   transform: scaleX(0);
@@ -46,7 +48,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menu-item-card:hover .item-image {
@@ -76,11 +78,27 @@
   box-shadow: var(--shadow-md);
 }
 
-.food-type-badge.veg { border-color: #4CAF50; }
-.food-type-badge.non-veg { border-color: #F44336; }
-.food-indicator { width: 12px; height: 12px; border-radius: 50%; }
-.food-type-badge.veg .food-indicator { background: #4CAF50; }
-.food-type-badge.non-veg .food-indicator { background: #F44336; }
+.food-type-badge.veg {
+  border-color: #4CAF50;
+}
+
+.food-type-badge.non-veg {
+  border-color: #F44336;
+}
+
+.food-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.food-type-badge.veg .food-indicator {
+  background: #4CAF50;
+}
+
+.food-type-badge.non-veg .food-indicator {
+  background: #F44336;
+}
 
 /* CONTENT SECTION */
 .item-content {
@@ -90,7 +108,9 @@
   flex-direction: column;
 }
 
-.item-details { flex: 1; }
+.item-details {
+  flex: 1;
+}
 
 .item-name {
   font-family: var(--font-primary);
@@ -227,29 +247,173 @@
 }
 
 /* RESPONSIVE */
+
+/* Specific for 480x960 resolution - 2 Column Grid Optimization */
+@media (min-width: 480px) and (max-width: 599px) {
+  .menu-item-card {
+    min-height: 300px;
+  }
+
+  .item-image-container {
+    height: 140px;
+  }
+
+  /* Food Type Badge - Reduced Size */
+  .food-type-badge {
+    width: 22px;
+    height: 22px;
+    top: 8px;
+    right: 8px;
+    border-width: 1.5px;
+  }
+
+  .food-indicator {
+    width: 10px;
+    height: 10px;
+  }
+
+  .item-content {
+    padding: 0.85rem 0.75rem 0.75rem 0.75rem;
+  }
+
+  .item-name {
+    font-size: 0.875rem;
+    margin-bottom: 0.45rem;
+    line-height: 1.3;
+  }
+
+  .item-tags {
+    gap: 0.35rem;
+    margin: 0.45rem 0 0.15rem 0;
+  }
+
+  .tag-badge {
+    padding: 0.22rem 0.55rem;
+    font-size: 0.65rem;
+  }
+
+  .item-nature {
+    font-size: 0.72rem;
+    margin: 0.25rem 0 0 0;
+  }
+
+  .item-footer {
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    gap: 0.4rem;
+  }
+
+  .price-container {
+    gap: 0.1rem;
+  }
+
+  .item-price {
+    font-size: 0.95rem;
+  }
+
+  .currency-symbol {
+    font-size: 1.05rem;
+    margin-right: 1px;
+  }
+
+  .tax-info {
+    font-size: 0.65rem;
+  }
+
+  .total-price {
+    font-size: 0.82rem;
+  }
+
+  .add-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.82rem;
+    min-height: 38px;
+    min-width: 75px;
+    gap: 0.4rem;
+  }
+
+  .add-btn-text {
+    font-size: 0.82rem;
+  }
+
+  /* Tax Breakdown - Compact */
+  .tax-breakdown {
+    gap: 0.35rem;
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+  }
+
+  .tax-detail {
+    font-size: 0.65rem;
+    padding: 0.22rem 0.55rem;
+  }
+}
+
 @media (min-width: 600px) {
-  .item-image-container { height: 200px; }
-  .item-name { font-size: 1.1rem; }
-  .add-btn { padding: 0.8rem 2rem; }
+  .item-image-container {
+    height: 200px;
+  }
+
+  .item-name {
+    font-size: 1.1rem;
+  }
+
+  .add-btn {
+    padding: 0.8rem 2rem;
+  }
 }
 
 @media (min-width: 768px) {
-  .menu-item-card { min-height: 400px; }
-  .item-image-container { height: 220px; }
-  .item-content { padding: 1.5rem; }
-  .item-name { font-size: 1.16rem; }
+  .menu-item-card {
+    min-height: 400px;
+  }
+
+  .item-image-container {
+    height: 220px;
+  }
+
+  .item-content {
+    padding: 1.5rem;
+  }
+
+  .item-name {
+    font-size: 1.16rem;
+  }
 }
 
 @media (min-width: 1024px) {
-  .menu-item-card { min-height: 430px; }
-  .item-image-container { height: 240px; }
-  .item-content { padding: 1.6rem 1.3rem 1.1rem 1.3rem; }
-  .add-btn { font-size: 1.08rem; }
+  .menu-item-card {
+    min-height: 430px;
+  }
+
+  .item-image-container {
+    height: 240px;
+  }
+
+  .item-content {
+    padding: 1.6rem 1.3rem 1.1rem 1.3rem;
+  }
+
+  .add-btn {
+    font-size: 1.08rem;
+  }
 }
 
 @media (max-width: 375px) {
-  .item-image-container { height: 140px; }
-  .item-content { padding: 0.85rem; }
-  .add-btn { padding: 0.7rem 1.2rem; font-size: 0.95rem; }
-  .item-name { font-size: 1rem; }
+  .item-image-container {
+    height: 140px;
+  }
+
+  .item-content {
+    padding: 0.85rem;
+  }
+
+  .add-btn {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  .item-name {
+    font-size: 1rem;
+  }
 }

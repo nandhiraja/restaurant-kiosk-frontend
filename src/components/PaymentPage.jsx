@@ -6,7 +6,7 @@ import './Styles/PaymentPage.css';
 import { useCart } from './CartContext';
 import TokenSuccess from './TokenSuccess';
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { openPrintWindow, generateRestaruentBill, generateKOTBill, printAllBills } from './utils/printBillTemplates';
+import { openPrintWindow, generateRestaruentBill, generateKOTBill, printAllBills, downloadAllBills } from './utils/printBillTemplates';
 
 const BASE_URL = import.meta.env.VITE_Base_url;
 
@@ -652,7 +652,7 @@ const PaymentPage = () => {
                     <input
                       type="password"
                       className="pin-input"
-                      placeholder="Enter PIN"
+                      placeholder="PIN"
                       value={cashPin}
                       onChange={(e) => setCashPin(e.target.value)}
                       onKeyPress={handleCashPinSubmit}

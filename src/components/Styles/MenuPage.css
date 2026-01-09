@@ -60,16 +60,16 @@
   min-width: 80%;
   text-align: center;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  
-  mask: 
+
+  mask:
     radial-gradient(circle 15px at 0 0, transparent 0, transparent 15px, black 15px) top left,
     radial-gradient(circle 15px at 100% 0, transparent 0, transparent 15px, black 15px) top right,
     radial-gradient(circle 15px at 0 100%, transparent 0, transparent 15px, black 15px) bottom left,
     radial-gradient(circle 15px at 100% 100%, transparent 0, transparent 15px, black 15px) bottom right;
   mask-size: 51% 51%;
   mask-repeat: no-repeat;
-  
-  -webkit-mask: 
+
+  -webkit-mask:
     radial-gradient(circle 15px at 0 0, transparent 0, transparent 15px, black 16px) top left,
     radial-gradient(circle 15px at 100% 0, transparent 0, transparent 15px, black 16px) top right,
     radial-gradient(circle 15px at 0 100%, transparent 0, transparent 15px, black 16px) bottom left,
@@ -84,16 +84,16 @@
   padding: 0.875rem 1.5rem;
   width: 100%;
   text-align: center;
-  
-  mask: 
+
+  mask:
     radial-gradient(circle 12px at 0 0, transparent 0, transparent 12px, black 13px) top left,
     radial-gradient(circle 12px at 100% 0, transparent 0, transparent 12px, black 13px) top right,
     radial-gradient(circle 12px at 0 100%, transparent 0, transparent 12px, black 13px) bottom left,
     radial-gradient(circle 12px at 100% 100%, transparent 0, transparent 12px, black 13px) bottom right;
   mask-size: 51% 51%;
   mask-repeat: no-repeat;
-  
-  -webkit-mask: 
+
+  -webkit-mask:
     radial-gradient(circle 12px at 0 0, transparent 0, transparent 13px, black 14px) top left,
     radial-gradient(circle 12px at 100% 0, transparent 0, transparent 13px, black 14px) top right,
     radial-gradient(circle 12px at 0 100%, transparent 0, transparent 13px, black 14px) bottom left,
@@ -128,6 +128,42 @@
    PROGRESSIVE ENHANCEMENT - LARGER SCREENS
    ============================================ */
 
+/* Specific for 480x960 and similar - 2 Columns */
+@media (min-width: 480px) and (max-width: 599px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1.25rem;
+    padding: 1.75rem 1rem 2.5rem;
+    max-width: 95%;
+  }
+
+  .menu-card {
+    min-height: 240px;
+    padding-bottom: 30px;
+  }
+
+  .card-image {
+    height: 200px;
+  }
+
+  .card-title {
+    font-size: 0.95rem;
+  }
+
+  .menu-title {
+    font-size: 1.6rem;
+  }
+
+  .card-label {
+    min-width: 85%;
+    bottom: -25px;
+  }
+
+  .card-label-inner {
+    padding: 0.7rem 1.2rem;
+  }
+}
+
 /* Small Tablets and Above - 2 Columns */
 @media (min-width: 600px) {
   .menu-grid {
@@ -135,11 +171,11 @@
     gap: 2rem 1.5rem;
     padding: 2rem 1.5rem 3rem;
   }
-  
+
   .card-image {
     height: 240px;
   }
-  
+
   .card-title {
     font-size: 1.15rem;
   }
@@ -152,27 +188,27 @@
     gap: 2.5rem 2rem;
     padding: 2.5rem 2rem 3.5rem;
   }
-  
+
   .card-image {
     height: 280px;
   }
-  
+
   .menu-title {
     font-size: 2rem;
   }
-  
+
   .card-title {
     font-size: 1.2rem;
   }
-  
+
   .card-label {
     min-width: 75%;
   }
-  
+
   .menu-card:hover {
     transform: translateY(-8px);
   }
-  
+
   .menu-card:hover .card-image {
     transform: scale(1.05);
   }
@@ -184,15 +220,15 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 3rem 2rem;
   }
-  
+
   .card-image {
     height: 300px;
   }
-  
+
   .menu-title {
     font-size: 2.2rem;
   }
-  
+
   .card-label {
     min-width: 70%;
   }
@@ -206,15 +242,15 @@
     padding: 3rem 2rem 4rem;
     max-width: 1400px;
   }
-  
+
   .card-image {
     height: 320px;
   }
-  
+
   .menu-title {
     font-size: 2.5rem;
   }
-  
+
   .card-title {
     font-size: 1.3rem;
   }
@@ -234,19 +270,19 @@
     padding: 1.25rem 0.875rem 2rem;
     gap: 2.25rem;
   }
-  
+
   .card-image {
     height: 240px;
   }
-  
+
   .card-title {
     font-size: 1.125rem;
   }
-  
+
   .menu-title {
     font-size: 1.5rem;
   }
-  
+
   .card-label-inner {
     padding: 0.75rem 1.25rem;
   }
@@ -257,7 +293,7 @@
   .card-image {
     height: 220px;
   }
-  
+
   .card-title {
     font-size: 1.0625rem;
   }
@@ -303,6 +339,7 @@
     opacity: 0;
     transform: translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -316,9 +353,19 @@
 }
 
 @keyframes errorShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-10px); }
-  75% { transform: translateX(10px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-10px);
+  }
+
+  75% {
+    transform: translateX(10px);
+  }
 }
 
 .error-title {
@@ -406,23 +453,23 @@
   .error-card {
     padding: 2rem 1.5rem;
   }
-  
+
   .error-icon {
     font-size: 3rem;
   }
-  
+
   .error-title {
     font-size: 1.5rem;
   }
-  
+
   .error-message {
     font-size: 0.9375rem;
   }
-  
+
   .error-actions {
     gap: 0.875rem;
   }
-  
+
   .retry-button,
   .back-home-button {
     padding: 0.875rem 1.5rem;
@@ -434,11 +481,11 @@
   .error-state-container {
     padding: 1.5rem 1rem;
   }
-  
+
   .error-card {
     padding: 1.75rem 1.25rem;
   }
-  
+
   .error-title {
     font-size: 1.25rem;
   }

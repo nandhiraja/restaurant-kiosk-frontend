@@ -191,6 +191,39 @@
    RESPONSIVE BREAKPOINTS
    ============================================ */
 
+/* Specific for 480x960 resolution - 2 Columns */
+@media (min-width: 480px) and (max-width: 599px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1.25rem;
+    padding: 1.75rem 1rem 2.5rem;
+    max-width: 95%;
+  }
+
+  .skeleton-card {
+    min-height: 240px;
+    padding-bottom: 30px;
+  }
+
+  .skeleton-image {
+    height: 200px;
+  }
+
+  .skeleton-title {
+    width: 150px;
+    height: 26px;
+  }
+
+  .skeleton-label {
+    min-width: 85%;
+    bottom: -25px;
+  }
+
+  .skeleton-label-inner {
+    padding: 0.7rem 1.2rem;
+  }
+}
+
 /* Small Tablets - 2 Columns */
 @media (min-width: 600px) {
   .menu-grid {

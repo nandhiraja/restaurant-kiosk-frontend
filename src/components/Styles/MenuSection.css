@@ -119,11 +119,11 @@
   .menu-main-content {
     padding: 1.25rem 0.875rem;
   }
-  
+
   .menu-items-grid {
     gap: 1.75rem;
   }
-  
+
   .error-message,
   .no-items {
     padding: 2rem 1.25rem;
@@ -135,14 +135,32 @@
   .menu-main-content {
     padding: 1rem 0.75rem;
   }
-  
+
   .menu-items-grid {
     gap: 1.5rem;
   }
-  
+
   .error-message button {
     padding: 0.875rem 2rem;
     font-size: 0.9375rem;
+  }
+}
+
+/* Specific for 480x960 resolution - 2 Columns Portrait */
+@media (min-width: 480px) and (max-width: 599px) {
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.75rem 1.25rem;
+  }
+
+  .menu-main-content {
+    padding: 1.75rem 1rem;
+    max-width: 95%;
+  }
+
+  .error-message,
+  .no-items {
+    padding: 2rem 1.25rem;
   }
 }
 
@@ -152,7 +170,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem 1rem;
   }
-  
+
   .menu-main-content {
     padding: 1rem 1.5rem;
   }
@@ -164,11 +182,11 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1.75rem 1.25rem;
   }
-  
+
   .menu-main-content {
     padding: 1.75rem 1.25rem;
   }
-  
+
   .error-message,
   .no-items {
     max-width: 500px;
@@ -181,25 +199,25 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem 1.5rem;
   }
-  
+
   .menu-main-content {
     padding: 2rem 1.5rem;
   }
-  
+
   .error-message button {
     width: auto;
     max-width: none;
   }
-  
+
   .error-message,
   .no-items {
     max-width: 600px;
   }
-  
+
   .footer-text {
     font-size: 1rem;
   }
-  
+
   .footer-decorative-line {
     width: 80px;
   }
@@ -211,7 +229,7 @@
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem 1.5rem;
   }
-  
+
   .menu-main-content {
     padding: 2.5rem 2rem;
     max-width: 1200px;
@@ -224,12 +242,12 @@
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
   }
-  
+
   .menu-main-content {
     padding: 2.5rem 2rem;
     max-width: 1400px;
   }
-  
+
   .footer-content {
     padding: 0 2rem;
   }
@@ -241,7 +259,7 @@
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 2.5rem;
   }
-  
+
   .menu-main-content {
     max-width: 1600px;
     padding: 3rem 2.5rem;
@@ -261,7 +279,7 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
   }
-  
+
   .menu-main-content {
     padding: 1.5rem 2rem;
   }
@@ -273,7 +291,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem 1.25rem;
   }
-  
+
   .menu-main-content {
     padding: 1.25rem 1.5rem;
   }
@@ -289,19 +307,21 @@
     min-height: 52px;
     padding: 1.125rem 2rem;
   }
-  
+
   .menu-items-grid {
     gap: 2.25rem;
   }
 }
 
 /* High-Resolution Displays (Retina) */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+
   .error-message,
   .no-items {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   }
-  
+
   .error-message button {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   }
@@ -316,7 +336,7 @@
   .error-message button {
     transition: none;
   }
-  
+
   .error-message button:hover,
   .error-message button:active {
     transform: none;
@@ -325,11 +345,12 @@
 
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
+
   .error-message,
   .no-items {
     border: 2px solid var(--text-primary);
   }
-  
+
   .error-message button {
     border: 2px solid var(--text-on-dark);
   }
@@ -340,15 +361,15 @@
   .menu-footer {
     display: none;
   }
-  
+
   .error-message button {
     display: none;
   }
-  
+
   .menu-main-content {
     padding: 1rem;
   }
-  
+
   .menu-items-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
