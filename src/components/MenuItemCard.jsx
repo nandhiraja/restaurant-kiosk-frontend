@@ -73,13 +73,13 @@ const MenuItemCard = ({ item, onAddClick }) => {
             
             {taxAmount > 0 && (
               <span className="tax-info">
-                + ₹{taxAmount.toFixed(2)} tax
+                {/* + ₹{taxAmount.toFixed(2)} tax */}
               </span>
             )}
             
             {taxAmount > 0 && (
               <span className="total-price">
-                Total: ₹{totalPrice.toFixed(2)}
+                {/* Total: ₹{totalPrice.toFixed(2)} */}
               </span>
             )}
           </div>

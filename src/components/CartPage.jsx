@@ -203,15 +203,15 @@ const handleProceedToPayment = async () => {
     />
     <div className="cart-item-info">
       <div className="cart-item-title">{item.itemName}</div>
-      {item.tags && item.tags.length > 0 && (
+      {/* {item.tags && item.tags.length > 0 && (
         <div className="cart-item-tags">
           {item.tags.slice(0, 2).map((tag, i) => (
             <span key={i} className="tag-small">{tag}</span>
           ))}
         </div>
-      )}
+      )} */}
       <div className="cart-item-price-info">
-        Base: ₹{item.price.toFixed(2)} + Tax: ₹{(item.taxAmount || 0).toFixed(2)}
+        {/* Base: ₹{item.price.toFixed(2)} + Tax: ₹{(item.taxAmount || 0).toFixed(2)} */}
       </div>
     </div>
   </div>
