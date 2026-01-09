@@ -28,10 +28,25 @@
   border: 8px solid #ff9b00;
 }
 
-.corner-top-left { top: -10px; left: -10px; }
-.corner-top-right { top: -10px; right: -10px; }
-.corner-bottom-left { bottom: -10px; left: -10px; }
-.corner-bottom-right { bottom: -10px; right: -10px; }
+.corner-top-left {
+  top: -10px;
+  left: -10px;
+}
+
+.corner-top-right {
+  top: -10px;
+  right: -10px;
+}
+
+.corner-bottom-left {
+  bottom: -10px;
+  left: -10px;
+}
+
+.corner-bottom-right {
+  bottom: -10px;
+  right: -10px;
+}
 
 /* Border Frame - Original */
 .token-border-frame {
@@ -56,15 +71,20 @@
   z-index: 5;
 }
 
-.center-top { top: -50px; }
-.center-bottom { bottom: -30px; }
+.center-top {
+  top: -50px;
+}
+
+.center-bottom {
+  bottom: -30px;
+}
 
 .decoration-image {
   margin-top: 3em;
   width: 100px;
   height: 100px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
 }
 
 /* Content - Original */
@@ -89,7 +109,7 @@
   letter-spacing: 0.5px;
 }
 
-/* Token Box - Original with Fixed Logo/Number Balance */
+/* Token Box - Vertical Layout (logo top, number bottom) */
 .token-display-box {
   position: relative;
   width: 350px;
@@ -100,10 +120,11 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  /* Vertical stack */
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 15px;
 }
 
 .token-display-box::before {
@@ -120,30 +141,29 @@
   color: #B8860B;
   letter-spacing: 2px;
   border: 1px solid #f0c568;
-
+  z-index: 10;
 }
 
-/* FIXED: Logo and Number Balance */
+/* Logo - Top position, centered */
 .token-image-ktr {
-  width: 100%;
-  max-width: 160px;
+  width: 140px;
+  /* Fixed width */
   height: auto;
+  max-height: 80px;
   object-fit: contain;
   display: block;
 }
 
+/* Number - Below logo, centered */
 .token-number {
-  margin: auto;
-  padding-top: 0.15em;
   font-size: 4rem;
   font-weight: 800;
   font-family: var(--font-primary);
   text-transform: uppercase;
-  justify-content: center;
-  align-items: center;
   color: black;
   line-height: 1;
   white-space: nowrap;
+  text-align: center;
 }
 
 /* Instructions - Original */
@@ -200,6 +220,7 @@
   transition: all var(--transition-base);
   box-shadow: var(--shadow-sm);
   white-space: nowrap;
+
 }
 
 .token-btn:hover {
@@ -220,6 +241,21 @@
   color: white;
 }
 
+/* Print All Button - Prominent styling */
+.token-btn-print-all {
+  background: linear-gradient(135deg, #ee800a 0%, #e6aa14 100%);
+  border-color: #d35d0f;
+  color: var(--text-on-dark);
+  font-weight: 700;
+  min-width: 200px;
+}
+
+.token-btn-print-all:hover {
+  background: linear-gradient(135deg, #bd8b0d 0%, #8B6914 100%);
+  border-color: #a85a10;
+  color: var(--text-on-dark);
+}
+
 /* WhatsApp - Original */
 .whatsapp-section {
   display: flex;
@@ -230,8 +266,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .whatsapp-input {
@@ -280,9 +323,10 @@
     border: 8px solid #ff9b00;
     box-shadow: inset 0 0 0 4px #FFF9E5, inset 0 0 0 12px #ff9b00;
   }
-  
+
   .token-border-frame {
-    width: calc(100% - 40px);  /* Account for border spacing */
+    width: calc(100% - 40px);
+    /* Account for border spacing */
     height: calc(100% - 40px);
     padding: 3.5rem 2.5rem;
     margin: auto;
@@ -295,7 +339,7 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .token-content {
     margin-top: 100px;
     display: flex;
@@ -306,34 +350,36 @@
     width: 100%;
     max-width: 450px;
   }
-  
+
   .center-top {
     top: -60px;
     position: absolute;
   }
-  
+
   .decoration-image {
     width: 120px;
     height: 120px;
     margin-top: 3em;
   }
-  
+
   .token-display-box {
     width: 300px;
     height: 300px;
   }
-  
+
   .token-image-ktr {
-    max-width: 140px;
+    width: 35%;
+    max-height: 75%;
   }
-  
+
   .token-number {
-    font-size: 4rem;
+    font-size: 3.5rem;
+    width: 45%;
   }
 }
 
 
-   
+
 
 @media (max-width: 768px) {
   .corner-decoration {
@@ -341,29 +387,31 @@
     height: 60px;
     border-width: 5px;
   }
-  
+
   .token-border-frame {
     padding: 3rem 2rem 2rem;
   }
-  
+
   .token-thank-you {
     font-size: 1.4rem;
   }
-  
+
   .token-display-box {
     width: 240px;
     height: 240px;
     padding: 2rem;
   }
-  
+
   .token-image-ktr {
-    max-width: 120px;
+    width: 6rem;
+    max-height: 70%;
   }
-  
+
   .token-number {
-    font-size: 2rem;
+    font-size: 2.8rem;
+    width: 45%;
   }
-  
+
   .token-actions-print-group {
     flex-direction: row;
     max-width: 280px;
@@ -375,50 +423,53 @@
     border-width: 5px;
     padding: 1rem 0.5rem;
   }
-  
-  .corner-decoration {
+
+  /* .corner-decoration {
     width: 45px;
     height: 45px;
     border-width: 4px;
-  }
-  
+    padding: auto;
+  } */
+
   .token-border-frame {
     padding: 2.5rem 1.5rem 1.5rem;
   }
-  
+
   .decoration-image {
     width: 70px;
     height: 70px;
     margin-top: 2em;
   }
-  
+
   .token-thank-you {
     font-size: 1.2rem;
   }
-  
+
   .token-display-box {
     width: 200px;
     height: 200px;
     padding: 1.5rem;
   }
-  
+
   .token-image-ktr {
-    max-width: 110px;
+    width: 6rem;
+    max-height: 65%;
   }
-  
+
   .token-number {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
+    width: 48%;
   }
-  
+
   .token-instructions {
     font-size: 0.95rem;
   }
-  
+
   .token-btn {
     padding: 0.85rem 1.25rem;
     font-size: 0.95rem;
   }
-  
+
   .whatsapp-section {
     flex-direction: column;
   }

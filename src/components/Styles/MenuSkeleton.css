@@ -29,13 +29,11 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: linear-gradient(
-    90deg,
-    #e0e0e0 0%,
-    #f0f0f0 20%,
-    #e0e0e0 40%,
-    #e0e0e0 100%
-  );
+  background: linear-gradient(90deg,
+      #e0e0e0 0%,
+      #f0f0f0 20%,
+      #e0e0e0 40%,
+      #e0e0e0 100%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
   flex-shrink: 0;
@@ -48,13 +46,11 @@
   width: 200px;
   height: 36px;
   border-radius: 8px;
-  background: linear-gradient(
-    90deg,
-    #e0e0e0 0%,
-    #f0f0f0 20%,
-    #e0e0e0 40%,
-    #e0e0e0 100%
-  );
+  background: linear-gradient(90deg,
+      #e0e0e0 0%,
+      #f0f0f0 20%,
+      #e0e0e0 40%,
+      #e0e0e0 100%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
 }
@@ -64,6 +60,7 @@
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1000px 0;
   }
@@ -75,7 +72,7 @@
   grid-template-columns: 1fr;
   gap: 2.5rem;
   padding: 1.5rem 1rem 2.5rem;
-  max-width: 100%;
+  max-width: 85%;
   margin: 0 auto;
   width: 100%;
 }
@@ -89,8 +86,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .skeleton-card-inner {
@@ -107,13 +109,11 @@
   width: 100%;
   height: 260px;
   border-radius: 12px;
-  background: linear-gradient(
-    90deg,
-    #e0e0e0 0%,
-    #f0f0f0 20%,
-    #e0e0e0 40%,
-    #e0e0e0 100%
-  );
+  background: linear-gradient(90deg,
+      #e0e0e0 0%,
+      #f0f0f0 20%,
+      #e0e0e0 40%,
+      #e0e0e0 100%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
 }
@@ -130,16 +130,16 @@
   min-width: 80%;
   text-align: center;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  
-  mask: 
+
+  mask:
     radial-gradient(circle 15px at 0 0, transparent 0, transparent 15px, black 15px) top left,
     radial-gradient(circle 15px at 100% 0, transparent 0, transparent 15px, black 15px) top right,
     radial-gradient(circle 15px at 0 100%, transparent 0, transparent 15px, black 15px) bottom left,
     radial-gradient(circle 15px at 100% 100%, transparent 0, transparent 15px, black 15px) bottom right;
   mask-size: 51% 51%;
   mask-repeat: no-repeat;
-  
-  -webkit-mask: 
+
+  -webkit-mask:
     radial-gradient(circle 15px at 0 0, transparent 0, transparent 15px, black 16px) top left,
     radial-gradient(circle 15px at 100% 0, transparent 0, transparent 15px, black 16px) top right,
     radial-gradient(circle 15px at 0 100%, transparent 0, transparent 15px, black 16px) bottom left,
@@ -154,16 +154,16 @@
   padding: 0.875rem 1.5rem;
   width: 100%;
   text-align: center;
-  
-  mask: 
+
+  mask:
     radial-gradient(circle 12px at 0 0, transparent 0, transparent 12px, black 13px) top left,
     radial-gradient(circle 12px at 100% 0, transparent 0, transparent 12px, black 13px) top right,
     radial-gradient(circle 12px at 0 100%, transparent 0, transparent 12px, black 13px) bottom left,
     radial-gradient(circle 12px at 100% 100%, transparent 0, transparent 12px, black 13px) bottom right;
   mask-size: 51% 51%;
   mask-repeat: no-repeat;
-  
-  -webkit-mask: 
+
+  -webkit-mask:
     radial-gradient(circle 12px at 0 0, transparent 0, transparent 13px, black 14px) top left,
     radial-gradient(circle 12px at 100% 0, transparent 0, transparent 13px, black 14px) top right,
     radial-gradient(circle 12px at 0 100%, transparent 0, transparent 13px, black 14px) bottom left,
@@ -178,13 +178,11 @@
   height: 20px;
   margin: 0 auto;
   border-radius: 4px;
-  background: linear-gradient(
-    90deg,
-    #d0d0d0 0%,
-    #e0e0e0 20%,
-    #d0d0d0 40%,
-    #d0d0d0 100%
-  );
+  background: linear-gradient(90deg,
+      #d0d0d0 0%,
+      #e0e0e0 20%,
+      #d0d0d0 40%,
+      #d0d0d0 100%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite linear;
 }
@@ -200,7 +198,7 @@
     gap: 2rem 1.5rem;
     padding: 2rem 1.5rem 3rem;
   }
-  
+
   .skeleton-image {
     height: 240px;
   }
@@ -213,16 +211,16 @@
     gap: 2.5rem 2rem;
     padding: 2.5rem 2rem 3.5rem;
   }
-  
+
   .skeleton-image {
     height: 280px;
   }
-  
+
   .skeleton-title {
     width: 180px;
     height: 32px;
   }
-  
+
   .skeleton-label {
     min-width: 75%;
   }
@@ -233,15 +231,15 @@
   .menu-grid {
     gap: 3rem 2rem;
   }
-  
+
   .skeleton-image {
     height: 300px;
   }
-  
+
   .skeleton-title {
     width: 200px;
   }
-  
+
   .skeleton-label {
     min-width: 70%;
   }
@@ -255,11 +253,11 @@
     padding: 3rem 2rem 4rem;
     max-width: 1400px;
   }
-  
+
   .skeleton-image {
     height: 320px;
   }
-  
+
   .skeleton-title {
     width: 220px;
     height: 36px;
@@ -279,26 +277,26 @@
   .menu-header {
     padding: 1.25rem 1rem;
   }
-  
+
   .skeleton-back-btn {
     width: 44px;
     height: 44px;
   }
-  
+
   .skeleton-title {
     width: 150px;
     height: 28px;
   }
-  
+
   .menu-grid {
     padding: 1.25rem 0.875rem 2rem;
     gap: 2.25rem;
   }
-  
+
   .skeleton-image {
     height: 240px;
   }
-  
+
   .skeleton-label-inner {
     padding: 0.75rem 1.25rem;
   }

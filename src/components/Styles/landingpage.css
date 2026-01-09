@@ -320,9 +320,12 @@
   .kiosk-container {
     padding: var(--spacing-sm);
   }
-  
+  .logo-illustration img{
+    width: 75%;
+  }
   .content-wrapper {
     padding: var(--spacing-md);
+    width: 90%;
   }
   
   .rating-stars {
@@ -331,7 +334,7 @@
   
   .order-button {
     padding: 1rem 2rem;
-    font-size: 1rem;
+    font-size: .7rem;
   }
 }
 
@@ -355,6 +358,8 @@
   .order-button {
     min-width: 140px;
     padding: 0.875rem 1.5rem;
+    font-size: .5rem;
+
   }
 }
 

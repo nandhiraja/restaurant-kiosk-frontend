@@ -224,7 +224,8 @@
 
 .direct-pay-btn.card-pay {
   background: var(--gold-dark);
-}
+}  
+
 
 /* METHOD CONTENT */
 .method-content {
@@ -504,3 +505,162 @@
     border-top-color: var(--gold-primary);
   }
 }
+
+
+
+.timer-display {
+  color: #ff6b35;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+/* ============================================
+   CASH PAYMENT STYLES
+   ============================================ */
+
+.cash-info {
+  text-align: center;
+}
+
+.cash-instruction {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+  font-family: var(--font-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.pin-input-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.pin-input {
+  width: 140px;
+  padding: 0.875rem;
+  font-size: 1.25rem;
+  text-align: center;
+  letter-spacing: 8px;
+  border: 2px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  transition: all var(--transition-base);
+}
+
+.pin-input:focus {
+  outline: none;
+  border-color: var(--gold-primary);
+  box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.1);
+}
+
+.submit-pin-btn {
+  padding: 0.875rem 1.75rem;
+  background: var(--gold-dark);
+  color: var(--text-on-dark);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--font-secondary);
+  box-shadow: var(--shadow-sm);
+  min-height: 44px;
+}
+
+.submit-pin-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.submit-pin-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   CANCEL BUTTON STYLES
+   ============================================ */
+
+.cancel-payment-btn {
+  width: 100%;
+  background: #dc3545;
+  color: white;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-family: var(--font-secondary);
+  box-shadow: var(--shadow-sm);
+  margin-top: 1rem;
+}
+
+.cancel-payment-btn:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.cancel-payment-btn:active {
+  transform: translateY(0);
+}
+
+/* ============================================
+   DISABLED PAYMENT METHOD STATE
+   ============================================ */
+
+.payment-method-card.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* .payment-method-card.disabled .method-header {
+  background: var(--neutral-100);
+} */
+
+.payment-method-card.disabled .direct-pay-btn {
+  /* background: var(--neutral-400); */
+  cursor: not-allowed;
+}
+
+/* ============================================
+   RESPONSIVE - CASH PAYMENT
+   ============================================ */
+
+@media (max-width: 375px) {
+  .pin-input-container {
+    gap: 0.75rem;
+  }
+  
+  .pin-input {
+    width: 120px;
+    font-size: 1.125rem;
+    letter-spacing: 6px;
+  }
+  
+  .submit-pin-btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (min-width: 600px) {
+  .pin-input {
+    width: 160px;
+    padding: 1rem;
+  }
+  
+  .submit-pin-btn {
+    padding: 1rem 2rem;
+  }
+}
+

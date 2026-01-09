@@ -56,7 +56,7 @@ const LandingPage = () => {
         </div>
 
         {/* Restaurant Name */}
-        <h1 className="restaurant-name">Sawagata</h1>
+        <h1 className="restaurant-name">Swagata</h1>
 
         {/* Rating Stars */}
         <div className="rating-stars" role="img" aria-label="5 star rating">

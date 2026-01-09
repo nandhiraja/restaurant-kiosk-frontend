@@ -68,7 +68,7 @@
 /* MAIN CONTENT - Mobile First */
 .cart-content {
   flex: 1;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 2rem;
   max-width: 600px;
   margin: 0 auto;
   width: 100%;
@@ -306,7 +306,9 @@
 /* PAYMENT BUTTON */
 .payment-btn {
   font-family: var(--font-primary-normal);
-  width: 100%;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
   padding: 1rem;
   background: var(--secondary-gradient);
   color: var(--text-on-dark);

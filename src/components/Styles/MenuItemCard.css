@@ -10,7 +10,7 @@
   position: relative;
   min-height: 340px;
   background: var(--neutral-50);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--sh1000adow-sm);
 }
 
 .menu-item-card::before {

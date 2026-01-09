@@ -25,7 +25,7 @@ export const generateKOTBill = (orderId, kot_code, KDSInvoiceId, orderDetails) =
           width: 90mm;
           margin: 0 auto;
           padding: 12px 14px 18px;
-          border: 2px solid #000;
+          /*border: 2px solid #000;*/
           border-radius: 15px;
         }
         .center {
@@ -108,7 +108,7 @@ export const generateKOTBill = (orderId, kot_code, KDSInvoiceId, orderDetails) =
             <span class="label">BILL TYPE:</span> ${orderDetails.billType || 'Dine In'}
           </div>
           <div class="info-line">
-            <span class="label">BILL NO:</span> KTR-${orderId.slice(4,10)}
+            <span class="label">BILL NO:</span> KTR-${orderId.slice(4, 10)}
           </div>
           <div class="info-line">
             <span class="label">DATE:</span> ${new Date().toLocaleDateString('en-GB')}
@@ -320,13 +320,14 @@ export const generateRestaruentBill = (
         <div class="divider-full"></div>
 
         <div class="kot-block">
-          <div>KOT-ID: ${kot_code}</div>
-          <div>KDS Invoice ID: ${KDSInvoiceId}</div>
+          <div>KOT: ${kot_code}</div>
         </div>
 
         <div class="divider-full"></div>
 
         <div class="bill-info">BILL NO: ${orderId}</div>
+        <div>KDS Invoice ID: ${KDSInvoiceId}</div>
+
        <!-- <br/> -->
         <div class="bill-info">DATE: ${new Date().toLocaleDateString('en-GB')}</div>
         <div class="bill-info">TIME: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}</div>
@@ -343,9 +344,9 @@ export const generateRestaruentBill = (
         </div>
 
         ${orderDetails.items.map(item => {
-          const itemPrice = item.price;
-          const itemTotal = itemPrice * item.quantity;
-          return `
+    const itemPrice = item.price;
+    const itemTotal = itemPrice * item.quantity;
+    return `
           <div class="item-row">
             <div class="col-desc">${item.itemName}</div>
             <div class="col-qty">${item.quantity}</div>
@@ -353,7 +354,7 @@ export const generateRestaruentBill = (
             <div class="col-amt">${itemTotal.toFixed(2)}</div>
           </div>
           `;
-        }).join('')}
+  }).join('')}
 
         <div class="totals">
           <div class="total-row">
@@ -388,6 +389,395 @@ export const generateRestaruentBill = (
   </html>
   `;
 };
+// Coffee Category ID (from backend) - Only coffee, not beverages
+const COFFEE_CATEGORY_ID = "6868ca5dc29c8ed4d3c98dd8";
+
+// Generate KOT for non-coffee (food + beverage) items
+export const generateFoodKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) => {
+  // Filter out only coffee items (beverages stay with food)
+  const foodItems = orderDetails.items.filter(item =>
+    item.categoryId !== COFFEE_CATEGORY_ID
+  );
+
+  if (foodItems.length === 0) {
+    return null; // No food items to print
+  }
+
+  return `
+  <html>
+    <head>
+      <title>Food KOT - ${kot_code}</title>
+      <style>
+            @page {
+          size: 80mm auto;
+          margin: 3mm;
+          }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 13px;
+          line-height: 1.5;
+          margin: 0;
+          padding: 10px;
+        }
+        .page {
+          width: 90mm;
+          margin: 0 auto;
+          padding: 12px 14px 18px;
+          border-radius: 15px;
+        }
+        .center {
+          text-align: center;
+        }
+        .restaurant-name {
+          font-size: 14px;
+          font-weight: bold;
+          margin-bottom: 6px;
+        }
+        .kot-box-wrapper {
+          margin-top: 6px;
+          display: flex;
+          justify-content: center;
+        }
+        .kot-box {
+          border: 2px solid #000;
+          border-radius: 10px;
+          padding: 6px 18px;
+          display: inline-block;
+          font-weight: bold;
+          font-size: 8px;
+          text-transform:uppercase;
+        }
+        .token-no{
+            font-family: poppins;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column; /* Vertical stack */
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .logo-wrapper {
+          margin: 4px 0;
+          display: flex;
+          justify-content: center;
+        }
+        .kot-logo {
+          height: 28px; /* Logo size */
+          width: auto; /* Maintain aspect ratio */
+          object-fit: contain;
+        }
+        .info-line {
+          font-size: 11px;
+          margin: 2px 0;
+        }
+        .label {
+          display: inline-block;
+          min-width: 85px;
+        }
+        .divider {
+          margin: 8px 0;
+          border-bottom: 1px dashed #666;
+        }
+        .items-header,
+        .item-row {
+          font-size: 11px;
+        }
+        .token-number {
+        font-size: 2rem;
+          font-weight: 900;
+          font-family: poppins;
+          text-align: center;
+        }
+        .items-header {
+          margin: 6px 0 4px;
+          border-bottom: 1px dashed #333;
+          padding-bottom: 3px;
+          font-weight:bold;
+        }
+        .items-header span:first-child,
+        .item-row span:first-child {
+          display: inline-block;
+          width: 30px;
+        }
+        .instruction-title {
+          margin-top: 10px;
+          font-size: 11px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="page">
+        <div class="center">
+          <div class="restaurant-name">Karnataka Tiffin Room (Versova)</div>
+          <div class="logo-wrapper">
+           
+          </div>
+        </div>
+
+        <div class="kot-box-wrapper">
+          <div class="kot-box">
+          <center>
+            <div class="token-no">
+              <img class="kot-logo" src="/Bill-KTR-logo.png" alt="KTR Logo" />
+              <span class="token-number">${kot_code.slice(4)}</span>
+            </div>
+            </center>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <div class="info-line">
+            <span class="label">BILL TYPE:</span> ${orderDetails.billType || 'Dine In'}
+          </div>
+          <div class="info-line">
+            <span class="label">BILL NO:</span> KTR-${orderId.slice(4, 10)}
+          </div>
+          <div class="info-line">
+            <span class="label">DATE:</span> ${new Date().toLocaleDateString('en-GB')}
+            &nbsp;&nbsp;TIME: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
+          </div>
+          <div class="info-line">
+            <span class="label">KIOSK:</span> ${orderDetails.kiosk || 'KTR1'}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="items-header">
+          <span>QTY</span>
+          <span>ITEMS</span>
+        </div>
+
+        ${foodItems.map(item => `
+          <div class="item-row">
+            <span>${item.quantity}</span>
+            <span>${item.itemName}</span>
+          </div>
+        `).join('')}
+
+        <div class="divider"></div>
+
+        <div class="instruction-title">
+          Instruction:
+        </div>
+      </div>
+    </body>
+  </html>
+  `;
+};
+
+
+// Generate KOT for coffee items only (not beverages)
+export const generateCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) => {
+  // Filter only coffee items using categoryId (not beverages)
+  const coffeeItems = orderDetails.items.filter(item =>
+    item.categoryId === COFFEE_CATEGORY_ID
+  );
+
+  if (coffeeItems.length === 0) {
+    return null; // No coffee items to print
+  }
+
+  return `
+  <html>
+    <head>
+      <title>Coffee KOT - ${kot_code}</title>
+      <style>
+            @page {
+          size: 80mm auto;
+          margin: 3mm;
+          }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 13px;
+          line-height: 1.5;
+          margin: 0;
+          padding: 10px;
+        }
+        .page {
+          width: 90mm;
+          margin: 0 auto;
+          padding: 12px 14px 18px;
+          border-radius: 15px;
+        }
+        .center {
+          text-align: center;
+        }
+        .restaurant-name {
+          font-size: 14px;
+          font-weight: bold;
+          margin-bottom: 6px;
+        }
+        .kot-box-wrapper {
+          margin-top: 6px;
+          display: flex;
+          justify-content: center;
+        }
+        .kot-box {
+          border: 2px solid #000;
+          border-radius: 10px;
+          padding: 6px 18px;
+          display: inline-block;
+          font-weight: bold;
+          font-size: 8px;
+          text-transform:uppercase;
+          background-color: #fff8dc;
+        }
+        .token-no{
+            font-family: poppins;
+            font-size: 22px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column; /* Vertical stack */
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .logo-wrapper {
+          margin: 4px 0;
+          display: flex;
+          justify-content: center;
+        }
+        .kot-logo {
+          height: 28px; /* Logo size */
+          width: auto; /* Maintain aspect ratio */
+          object-fit: contain;
+        }
+        .info-line {
+          font-size: 11px;
+          margin: 2px 0;
+        }
+        .label {
+          display: inline-block;
+          min-width: 85px;
+        }
+        .divider {
+          margin: 8px 0;
+          border-bottom: 1px dashed #666;
+        }
+        .items-header,
+        .item-row {
+          font-size: 11px;
+}
+        .items-header {
+          margin: 6px 0 4px;
+          border-bottom: 1px dashed #333;
+          padding-bottom: 3px;
+          font-weight:bold;
+        }
+        .items-header span:first-child,
+        .item-row span:first-child {
+          display: inline-block;
+          width: 30px;
+        }
+        .instruction-title {
+          margin-top: 10px;
+          font-size: 11px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="page">
+        <div class="center">
+          <div class="restaurant-name">Karnataka Tiffin Room (Versova)</div>
+        </div>
+
+        <div class="kot-box-wrapper">
+          <div class="kot-box">
+           <center> 
+            <div class="token-no">
+              <img class="kot-logo" src="/Bill-KTR-logo.png" alt="KTR Logo" />
+              <span class="token-number">${kot_code.slice(4)}</span>
+            </div>
+            </center>
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <div class="info-line">
+            <span class="label">BILL TYPE:</span> ${orderDetails.billType || 'Dine In'}
+          </div>
+          <div class="info-line">
+            <span class="label">BILL NO:</span> KTR-${orderId.slice(4, 10)}
+          </div>
+          <div class="info-line">
+            <span class="label">DATE:</span> ${new Date().toLocaleDateString('en-GB')}
+            &nbsp;&nbsp;TIME: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
+          </div>
+          <div class="info-line">
+            <span class="label">KIOSK:</span> ${orderDetails.kiosk || 'KTR1'}
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="items-header">
+          <span>QTY</span>
+          <span>COFFEE ITEMS</span>
+        </div>
+
+        ${coffeeItems.map(item => `
+          <div class="item-row">
+            <span>${item.quantity}</span>
+            <span>${item.itemName}</span>
+          </div>
+        `).join('')}
+
+        <div class="divider"></div>
+
+        <div class="instruction-title">
+          Instruction: COFFEE COUNTER
+        </div>
+      </div>
+    </body>
+  </html>
+  `;
+};
+
+
+// Master function to print all bills - FIXED to avoid popup blocking
+export const printAllBills = (orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails) => {
+  // Generate all HTML content first
+  const billHTML = generateRestaruentBill(
+    orderId,
+    kot_code,
+    KDSInvoiceId,
+    orderDetails,
+    orderType,
+    transactionDetails,
+    ''
+  );
+
+  const foodKOTHTML = generateFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+  const coffeeKOTHTML = generateCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+
+  // Open all windows immediately (no setTimeout) to avoid popup blocking
+  // 1. Print customer bill
+  openPrintWindow(billHTML, `Bill-${orderId}`, 1000, 1200, true);
+
+  // 2. Print food KOT (if exists) - open immediately
+  if (foodKOTHTML) {
+    openPrintWindow(foodKOTHTML, `Food-KOT-${orderId}`, 1000, 1250, true);
+  }
+
+  // 3. Print coffee KOT (if exists) - open immediately
+  if (coffeeKOTHTML) {
+    openPrintWindow(coffeeKOTHTML, `Coffee-KOT-${orderId}`, 1000, 1250, true);
+  }
+};
 
 
 
@@ -403,7 +793,7 @@ export const generateRestaruentBill = (
 // };
 
 
-export const openPrintWindow = (htmlContent, title, width, height) => {
+export const openPrintWindow = (htmlContent, title, width, height, autoPrint = false) => {
   const features = [
     width ? `width=${width}` : '',
     height ? `height=${height}` : ''
@@ -413,5 +803,15 @@ export const openPrintWindow = (htmlContent, title, width, height) => {
   printWindow.document.write(htmlContent);
   printWindow.document.close();
   printWindow.focus();
-  printWindow.print();
+
+  if (autoPrint) {
+    // Auto-print: trigger print dialog immediately after content loads
+    setTimeout(() => {
+      printWindow.print();
+      // Optional: close window after printing (may not work in all browsers)
+      // printWindow.onafterprint = () => printWindow.close();
+    }, 250); // Small delay to ensure content is fully rendered
+  } else {
+    printWindow.print();
+  }
 };

@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import React, { useState, } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Styles/TokenSuccess.css';
 import { Printer, MessageCircle } from 'lucide-react';
 import { IoLogoWhatsapp } from "react-icons/io";
@@ -10,15 +10,23 @@ const TokenSuccess = ({
   orderId,
   orderDetails,
   transactionDetails,
-  onPrintBill,
-  onPrintKOT,
+  onPrintAll,
   onSendWhatsapp
 }) => {
 
-    const navigate = useNavigate();
-  
+  const navigate = useNavigate();
+
   const [showWhatsappInput, setShowWhatsappInput] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState('');
+
+  // Auto-navigation timer - 100 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/');
+    }, 1000000); // 1000 seconds = 100000ms
+
+    return () => clearTimeout(timer); // Cleanup on unmount
+  }, [navigate]);
 
   const handleWhatsappSend = () => {
     if (whatsappNumber && whatsappNumber.length >= 10) {
@@ -29,42 +37,31 @@ const TokenSuccess = ({
       alert('Please enter a valid 10-digit phone number');
     }
   };
+ const cornerImages = [
+    { position: 'top-left', src: 'TOP_LEFT.png', alt: 'Top left decoration' },
+    { position: 'top-right', src: 'TOP_RIGHT.png', alt: 'Top right decoration' },
+    { position: 'bottom-left', src: 'BOTTOM_LEFT.png', alt: 'Bottom left decoration' },
+    { position: 'bottom-right', src: 'BOTTOM_RIGHT.png', alt: 'Bottom right decoration' }
+  ];
 
+  const handleImageError = (e) => {
+    e.target.style.display = 'none';
+  };
   return (
     <div className="">
       <div className="kiosk-container">
-        {/* Corner Images */}
-        <img 
-          src="./TOP_LEFT.png" 
-          alt="decoration" 
-          className="corner-decoration corner-top-left"
-          onError={(e) => e.target.style.display = 'none'}
-        />
-        <img 
-          src="./TOP_RIGHT.png" 
-          alt="decoration" 
-          className="corner-decoration corner-top-right"
-          onError={(e) => e.target.style.display = 'none'}
-        />
-        <img 
-          src="./BOTTOM_LEFT.png" 
-          alt="decoration" 
-          className="corner-decoration corner-bottom-left"
-          onError={(e) => e.target.style.display = 'none'}
-        />
-        <img 
-          src="./BOTTOM_RIGHT.png" 
-          alt="decoration" 
-          className="corner-decoration corner-bottom-right"
-          onError={(e) => e.target.style.display = 'none'}
-        />
+       {cornerImages.map(({ position, src, alt }) => (
+        <div key={position} className={`corner-icon ${position}`}>
+          <img src={src} alt={alt} onError={handleImageError} />
+        </div>
+      ))}
 
         {/* Border Frame */}
         <div className="token-border-frame">
           {/* Top Center Image */}
           <div className="center-decoration center-top">
-            <img 
-              src="./Token_Success_Center_Image.png" 
+            <img
+              src="./Token_Success_Center_Image.png"
               alt="decoration"
               className="decoration-image"
               onError={(e) => e.target.style.display = 'none'}
@@ -80,8 +77,8 @@ const TokenSuccess = ({
 
 
             <div className="token-display-box">
-              <img  className ="token-image-ktr" src="/Bill-KTR-logo.png" alt="KTR-logo" />
-              <div className="token-number">  {token.slice(3)}</div>
+              <img className="token-image-ktr" src="/Bill-KTR-logo.png" alt="KTR-logo" />
+              <div className="token-number">{token.slice(4)}</div>
             </div>
 
             <p className="token-instructions">
@@ -90,29 +87,26 @@ const TokenSuccess = ({
             </p>
 
             <div className="token-actions">
-              {/* Print Buttons Group - Horizontal */}
+              {/* Single Print All Bills Button */}
               <div className="token-actions-print-group">
-                <button className="token-btn" onClick={onPrintKOT}>
+                <button className="token-btn token-btn-print-all" onClick={onPrintAll}>
                   <Printer size={20} />
-                  <span>Print KOT</span>
-                </button>
-                <button className="token-btn" onClick={onPrintBill}>
-                  <Printer size={20} />
-                  <span>Print Bill</span>
+                  <span>Print Bill & KOT</span>
                 </button>
               </div>
 
-              {/* Other Actions Group - Vertical */}
+              {/* Other Actions Group */}
               <div className="token-actions-other-group">
-                <button 
+                {/* WhatsApp Button - Commented Out */}
+                {/* <button 
                   className="token-btn token-btn-whatsapp" 
                   onClick={() => setShowWhatsappInput(!showWhatsappInput)}
                 >
                   <IoLogoWhatsapp size={20} color='green'  />
                   <span>WhatsApp</span>
-                </button>
+                </button> */}
 
-                <button 
+                <button
                   className="token-btn"
                   onClick={() => navigate('/')}
                 >
@@ -121,7 +115,8 @@ const TokenSuccess = ({
               </div>
             </div>
 
-            {showWhatsappInput && (
+            {/* WhatsApp Input Section - Commented Out */}
+            {/* {showWhatsappInput && (
               <div className="whatsapp-section">
                 <input
                   type="tel"
@@ -135,13 +130,13 @@ const TokenSuccess = ({
                   Send
                 </button>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Bottom Center Image */}
           <div className="center-decoration center-bottom">
-            <img 
-              src="/images/bottom-decoration.png" 
+            <img
+              src="/images/bottom-decoration.png"
               alt="decoration"
               className="decoration-image"
               onError={(e) => e.target.style.display = 'none'}

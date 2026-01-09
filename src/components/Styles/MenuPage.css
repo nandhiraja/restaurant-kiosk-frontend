@@ -13,7 +13,7 @@
   grid-template-columns: 1fr;
   gap: 2.5rem;
   padding: 1.5rem 1rem 2.5rem;
-  max-width: 100%;
+  max-width: 85%;
   margin: 0 auto;
   width: 100%;
 }
@@ -104,7 +104,7 @@
 
 /* Larger, More Readable Text on Mobile */
 .card-title {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-family: var(--font-primary);
   color: var(--neutral-500);
   font-weight: 700;
