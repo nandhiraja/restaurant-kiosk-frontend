@@ -6,7 +6,7 @@ import './Styles/PaymentPage.css';
 import { useCart } from './CartContext';
 import TokenSuccess from './TokenSuccess';
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { openPrintWindow, generateRestaruentBill, generateKOTBill, printAllBills, downloadAllBills } from './utils/printBillTemplates';
+import { openPrintWindow, generateRestaruentBill, generateKOTBill, printAllBills } from './utils/printBillTemplates';
 
 const BASE_URL = import.meta.env.VITE_Base_url;
 
@@ -85,6 +85,21 @@ const PaymentPage = () => {
     );
   }
 
+  // Helper function to get store configuration from localStorage
+  const getStoreConfig = () => {
+    const config = localStorage.getItem('kiosk_config');
+    return config ? JSON.parse(config) : { store_id: 'default' };
+  };
+
+  // Check if store configuration exists, redirect to config if not
+  useEffect(() => {
+    const config = localStorage.getItem('kiosk_config');
+    if (!config) {
+      alert('Please configure your EDC machine first');
+      navigate('/config');
+    }
+  }, [navigate]);
+
   // Convert amount to paise (INR * 100)
   const amountInPaise = Math.round(totalAmount * 100).toString();
 
@@ -97,12 +112,15 @@ const PaymentPage = () => {
     setError(null);
 
     try {
+      const config = getStoreConfig();
+
       const response = await fetch(`${BASE_URL}/payments/qr/init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           order_id: orderId,
-          amount_paise: amountInPaise
+          amount_paise: amountInPaise,
+          store_id: config.store_id
         })
       });
 
@@ -178,6 +196,8 @@ const PaymentPage = () => {
     setError(null);
 
     try {
+      const config = getStoreConfig();
+
       const response = await fetch(`${BASE_URL}/payments/edc/init`, {
         method: 'POST',
         headers: {
@@ -186,7 +206,8 @@ const PaymentPage = () => {
         },
         body: JSON.stringify({
           order_id: orderId,
-          amount_paise: amountInPaise
+          amount_paise: amountInPaise,
+          store_id: config.store_id
         })
       });
 
@@ -294,6 +315,8 @@ const PaymentPage = () => {
     setError(null);
 
     try {
+      const config = getStoreConfig();
+
       const response = await fetch(`${BASE_URL}/payments/cash/init`, {
         method: 'POST',
         headers: {
@@ -303,7 +326,7 @@ const PaymentPage = () => {
         body: JSON.stringify({
           order_id: orderId,
           amount_paise: amountInPaise,
-          store_id: "teststore1",
+          store_id: config.store_id,
           pin: cashPin
         })
       });

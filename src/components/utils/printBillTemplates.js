@@ -748,7 +748,8 @@ export const generateCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails)
 };
 
 
-// Master function to print all bills - FIXED to avoid popup blocking
+
+// Master function to print all bills - with delays to prevent popup blocking
 export const printAllBills = (orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails) => {
   // Generate all HTML content first
   const billHTML = generateRestaruentBill(
@@ -764,18 +765,22 @@ export const printAllBills = (orderId, kot_code, KDSInvoiceId, orderDetails, ord
   const foodKOTHTML = generateFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
   const coffeeKOTHTML = generateCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
 
-  // Open all windows immediately (no setTimeout) to avoid popup blocking
-  // 1. Print customer bill
+  // Open bills with delays to prevent popup blocking
+  // 1. Print customer bill immediately
   openPrintWindow(billHTML, `Bill-${orderId}`, 1000, 1200, true);
 
-  // 2. Print food KOT (if exists) - open immediately
+  // 2. Print food KOT after 500ms delay (if exists)
   if (foodKOTHTML) {
-    openPrintWindow(foodKOTHTML, `Food-KOT-${orderId}`, 1000, 1250, true);
+    setTimeout(() => {
+      openPrintWindow(foodKOTHTML, `Food-KOT-${orderId}`, 1000, 1250, true);
+    }, 500);
   }
 
-  // 3. Print coffee KOT (if exists) - open immediately
+  // 3. Print coffee KOT after 1000ms delay (if exists)
   if (coffeeKOTHTML) {
-    openPrintWindow(coffeeKOTHTML, `Coffee-KOT-${orderId}`, 1000, 1250, true);
+    setTimeout(() => {
+      openPrintWindow(coffeeKOTHTML, `Coffee-KOT-${orderId}`, 1000, 1250, true);
+    }, 1000);
   }
 };
 
@@ -815,131 +820,3 @@ export const openPrintWindow = (htmlContent, title, width, height, autoPrint = f
     printWindow.print();
   }
 };
-
-// Import html2pdf library dynamically
-const loadHtml2Pdf = async () => {
-  if (typeof window.html2pdf === 'undefined') {
-    return import('html2pdf.js').then(module => module.default);
-  }
-  return window.html2pdf;
-};
-
-// Function to download bill as PDF automatically
-export const downloadBillAsPDF = async (htmlContent, filename) => {
-  try {
-    const html2pdf = await loadHtml2Pdf();
-
-    // Create a temporary container for the HTML content
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlContent;
-    tempDiv.style.position = 'absolute';
-    tempDiv.style.left = '-9999px';
-    tempDiv.style.top = '0';
-    tempDiv.style.width = '80mm';
-    document.body.appendChild(tempDiv);
-
-    // Wait for images to load
-    const images = tempDiv.getElementsByTagName('img');
-    const imageLoadPromises = Array.from(images).map(img => {
-      return new Promise((resolve) => {
-        if (img.complete) {
-          resolve();
-        } else {
-          img.onload = resolve;
-          img.onerror = resolve; // Resolve even on error to not block
-        }
-      });
-    });
-
-    await Promise.all(imageLoadPromises);
-
-    // Small delay to ensure full rendering
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Configure html2pdf options for thermal printer format
-    const options = {
-      margin: 3,
-      filename: filename,
-      image: {
-        type: 'jpeg',
-        quality: 0.95
-      },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        letterRendering: true,
-        logging: false,
-        scrollY: 0,
-        scrollX: 0
-      },
-      jsPDF: {
-        unit: 'mm',
-        format: [80, 200], // 80mm width x 200mm height
-        orientation: 'portrait'
-      }
-    };
-
-    // Generate and download PDF
-    const worker = html2pdf();
-    await worker.set(options).from(tempDiv).save();
-
-    // Clean up temporary div after a delay
-    setTimeout(() => {
-      document.body.removeChild(tempDiv);
-    }, 1000);
-
-    return true;
-  } catch (error) {
-    console.error('Error generating PDF:', error);
-    alert('Failed to download bill. Please try again.');
-    return false;
-  }
-};
-
-// Master function to download all bills as PDFs
-export const downloadAllBills = async (orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails) => {
-  try {
-    // Generate all HTML content
-    const billHTML = generateRestaruentBill(
-      orderId,
-      kot_code,
-      KDSInvoiceId,
-      orderDetails,
-      orderType,
-      transactionDetails,
-      ''
-    );
-
-    const foodKOTHTML = generateFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
-    const coffeeKOTHTML = generateCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
-
-    // Download bills sequentially to avoid browser blocking
-    console.log('Starting bill downloads...');
-
-    // 1. Download customer bill
-    await downloadBillAsPDF(billHTML, `Bill-${orderId}.pdf`);
-
-    // Delay between downloads
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // 2. Download food KOT (if exists)
-    if (foodKOTHTML) {
-      await downloadBillAsPDF(foodKOTHTML, `Food-KOT-${orderId}.pdf`);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-
-    // 3. Download coffee KOT (if exists)
-    if (coffeeKOTHTML) {
-      await downloadBillAsPDF(coffeeKOTHTML, `Coffee-KOT-${orderId}.pdf`);
-    }
-
-    console.log('All bills downloaded successfully');
-    return true;
-  } catch (error) {
-    console.error('Error downloading bills:', error);
-    alert('Failed to download all bills. Please try again.');
-    return false;
-  }
-};
-

@@ -2,20 +2,20 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { CartProvider } from './components/CartContext';
-import{ createBrowserRouter , RouterProvider}  from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import MenuSection from "./components/MenuSection"
-import MenuPage from './components/MenuPage'; 
-import LandingPage from './components/Landingpage'; 
-
+import MenuPage from './components/MenuPage';
+import LandingPage from './components/Landingpage';
 import CartPage from './components/CartPage';
 import PaymentPage from './components/PaymentPage'; // Create this
+import ConfigPage from './components/ConfigPage'; // Admin config page
 
 import { Outlet } from 'react-router-dom';
 
 const Layout = () => (
   <CartProvider>
     <div className="page-border-wrapper">
-    <Outlet />
+      <Outlet />
     </div>
   </CartProvider>
 );
@@ -25,11 +25,12 @@ const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
-      { path: "/", element: <LandingPage/> },
-      { path: "/category", element: <MenuPage/> },
-      { path: `/item/:id`, element: <MenuSection/> },
+      { path: "/", element: <LandingPage /> },
+      { path: "/category", element: <MenuPage /> },
+      { path: `/item/:id`, element: <MenuSection /> },
       { path: "/cart", element: <CartPage /> },
       { path: "/payment", element: <PaymentPage /> },
+      { path: "/config", element: <ConfigPage /> }, // Admin config route
       { path: "*", element: <LandingPage /> }
 
     ]
@@ -39,6 +40,6 @@ const router = createBrowserRouter([
 // Render without CartProvider wrapper
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router}/>
+    <RouterProvider router={router} />
   </StrictMode>
 );
