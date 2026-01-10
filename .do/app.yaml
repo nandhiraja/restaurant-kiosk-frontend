@@ -1,0 +1,15 @@
+name: restaurant-kiosk-frontend
+region: blr
+
+static_sites:
+  - name: kiosk-frontend
+    github:
+      branch: main
+      deploy_on_push: true
+    build_command: npm run build
+    output_dir: dist
+    routes:
+      - path: /
+    error_document: index.html
+    # This ensures all routes go to index.html for React Router
+    catchall_document: index.html
