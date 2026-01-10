@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Styles/MenuPage.css';
 import { IoMdArrowRoundBack } from "react-icons/io";
-import MenuSkeleton from './MenuSkeleton'; 
+import MenuSkeleton from './MenuSkeleton';
 const BASE_URL = import.meta.env.VITE_Base_url;
 
 const MenuPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const orderType = location.state?.orderType || 'dine-in';
-  
+
   const [allMenuData, setAllMenuData] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,17 +22,19 @@ const MenuPage = () => {
     const categoryItems = allMenuData.items.filter(
       item => item.categoryId === category.categoryId
     );
-    
-    navigate(`/item/${category.categoryId}`, { 
-      state: { 
+
+    navigate(`/item/${category.categoryId}`, {
+      state: {
         category,
         items: categoryItems,
+        allCategories: allMenuData.categories, // All categories for switcher
+        allMenuData: allMenuData, // Full menu data for filtering
         itemTags: allMenuData.itemTags,
         taxTypes: allMenuData.taxTypes,
         charges: allMenuData.charges,
         discounts: allMenuData.discounts,
-        orderType 
-      } 
+        orderType
+      }
     });
   };
 
@@ -44,7 +46,7 @@ const MenuPage = () => {
     const fetchMenuData = async () => {
       try {
         console.log("Fetching category data from backend...", BASE_URL);
-        
+
         const response = await fetch(`${BASE_URL}/catalog/?channel=Palas Kiosk`, {
           headers: {
             "ngrok-skip-browser-warning": "true"
@@ -70,59 +72,59 @@ const MenuPage = () => {
     fetchMenuData();
   }, []);
 
-   if (loading) {
+  if (loading) {
     return <MenuSkeleton />;
   }
 
-if (error) {
-  return (
-    <div className="menu-container">
-      <div className="menu-header">
-        <button className="back-button" onClick={() => navigate('/')}>
-          <IoMdArrowRoundBack size={30}/>
-        </button>
-        <h1 className="nav-title">Menu</h1>
-      </div>
-      
-      <div className="error-state-container">
-        <div className="error-card">
-          {/* <div className="error-icon">⚠️</div> */}
-          <h2 className="error-title">Unable to Load Menu</h2>
-          <p className="error-message">{error}</p>
-          
-          <div className="error-actions">
-            <button 
-              className="retry-button" 
-              onClick={() => window.location.reload()}
-            >
-              <span></span>
-              Try Again
-            </button>
-            
-            <button 
-              className="back-home-button" 
-              onClick={() => navigate('/')}
-            >
-              <span></span>
-              Back to Home
-            </button>
+  if (error) {
+    return (
+      <div className="menu-container">
+        <div className="menu-header">
+          <button className="back-button" onClick={() => navigate('/')}>
+            <IoMdArrowRoundBack size={30} />
+          </button>
+          <h1 className="nav-title">Menu</h1>
+        </div>
+
+        <div className="error-state-container">
+          <div className="error-card">
+            {/* <div className="error-icon">⚠️</div> */}
+            <h2 className="error-title">Unable to Load Menu</h2>
+            <p className="error-message">{error}</p>
+
+            <div className="error-actions">
+              <button
+                className="retry-button"
+                onClick={() => window.location.reload()}
+              >
+                <span></span>
+                Try Again
+              </button>
+
+              <button
+                className="back-home-button"
+                onClick={() => navigate('/')}
+              >
+                <span></span>
+                Back to Home
+              </button>
+            </div>
+
+            <p className="error-hint">
+              Please check your internet connection or contact staff for assistance
+            </p>
           </div>
-          
-          <p className="error-hint">
-            Please check your internet connection or contact staff for assistance
-          </p>
         </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   return (
     <div className="menu-container">
       {/* Header Section */}
       <header className="nav-header">
-        <button 
-          className="back-button" 
+        <button
+          className="back-button"
           onClick={handleBackClick}
           aria-label="Go back to order type selection"
         >
@@ -136,7 +138,7 @@ if (error) {
         {categories.length > 0 ? (
           categories.map((category) => (
             <article
-              key={category.categoryId} 
+              key={category.categoryId}
               className="menu-card"
               onClick={() => handleCardClick(category)}
               role="button"
@@ -148,8 +150,8 @@ if (error) {
               }}
             >
               <div className="card-inner">
-                <img 
-                  src={ category.imageURL || `./Menu/${category.name}.jpg`}
+                <img
+                  src={category.imageURL || `./Menu/${category.name}.jpg`}
                   alt={`${category.name} category`}
                   className="card-image"
                   onError={(e) => {

@@ -4,23 +4,31 @@ import MenuItemCard from './MenuItemCard';
 import MenuItemModal from './MenuItemModal';
 import Navigation from './NavigationBar';
 import NotificationToast from './Notification';
+import CategorySelector from './CategorySelector';
 import './Styles/MenuSection.css';
 
 const MenuSection = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
   const [showNotification, setShowNotification] = useState(false);
-  console.log("state in menupage : ",state)
+
+  console.log("state in menupage : ", state)
   const {
     category,
     items = [],
+    allCategories = [],
+    allMenuData,
     itemTags = [],
     taxTypes = [],
     orderType = 'dine-in'
   } = state || {};
+
+  // State for category switching
+  const [activeCategory, setActiveCategory] = useState(category);
+  const [displayedItems, setDisplayedItems] = useState(items);
 
   const getItemTags = (itemTagIds = []) => {
     return itemTagIds.map(tagId => {
@@ -36,16 +44,33 @@ const MenuSection = () => {
     }).filter(Boolean);
   };
 
-  const enrichedItems = items.map(item => ({
-    ...item,
-    tags: getItemTags(item.itemTagIds),
-    taxes: getItemTaxes(item.taxTypeIds),
-    taxAmount: item.taxTypeIds ? 
-      item.taxTypeIds.reduce((sum, taxId) => {
-        const tax = taxTypes.find(t => t.taxTypeId === taxId);
-        return sum + (tax ? (item.price * tax.percentage / 100) : 0);
-      }, 0) : 0
-  }));
+  const enrichItems = (itemsToEnrich) => {
+    return itemsToEnrich.map(item => ({
+      ...item,
+      tags: getItemTags(item.itemTagIds),
+      taxes: getItemTaxes(item.taxTypeIds),
+      taxAmount: item.taxTypeIds ?
+        item.taxTypeIds.reduce((sum, taxId) => {
+          const tax = taxTypes.find(t => t.taxTypeId === taxId);
+          return sum + (tax ? (item.price * tax.percentage / 100) : 0);
+        }, 0) : 0
+    }));
+  };
+
+  const enrichedItems = enrichItems(displayedItems);
+
+  // Handle category switching
+  const handleCategoryChange = (newCategory) => {
+    setActiveCategory(newCategory);
+
+    if (allMenuData) {
+      const categoryItems = allMenuData.items.filter(
+        item => item.categoryId === newCategory.categoryId
+      );
+      setDisplayedItems(categoryItems);
+    }
+  };
+
   console.log(items, enrichedItems)
   const openModalWithItem = (item) => {
     setSelectedMenuItem(item);
@@ -80,26 +105,36 @@ const MenuSection = () => {
   return (
     <div className="menu-section-container">
       {/* Navigation with category name and order type */}
-      <Navigation 
-        categoryName={category?.name} 
-        description = {`OG Benne has a recipe
-                          from the small town of Davangere in Karnataka.
-                          This will be a soft and slightly crunchy dose
-                          served with grated dry coconut chutney.
-                          Its available in below.`}
+      <Navigation
+        categoryName={activeCategory?.name}
+        // description={`OG Benne has a recipe
+        //                   from the small town of Davangere in Karnataka.
+        //                   This will be a soft and slightly crunchy dose
+        //                   served with grated dry coconut chutney.
+        //                   Its available in below.`}
+                        
         orderType={orderTypeDisplay}
-      
+
       />
+
+      {/* Category Selector - Horizontal Scrolling Pills */}
+      {allCategories.length > 0 && (
+        <CategorySelector
+          categories={allCategories}
+          activeCategory={activeCategory}
+          onSelectCategory={handleCategoryChange}
+        />
+      )}
 
       {/* Menu Items Grid */}
       <main className="menu-main-content">
         <div className="menu-items-grid">
           {enrichedItems.length > 0 ? (
             enrichedItems.map((item) => (
-              <MenuItemCard 
-                key={item.itemId} 
-                item={item} 
-                onAddClick={openModalWithItem} 
+              <MenuItemCard
+                key={item.itemId}
+                item={item}
+                onAddClick={openModalWithItem}
               />
             ))
           ) : (
@@ -111,9 +146,9 @@ const MenuSection = () => {
       </main>
 
       {isModalOpen && selectedMenuItem && (
-        <MenuItemModal 
-          item={selectedMenuItem} 
-          onClose={closeModal} 
+        <MenuItemModal
+          item={selectedMenuItem}
+          onClose={closeModal}
           onAddToCart={handleAddToCart}
         />
       )}
@@ -123,7 +158,7 @@ const MenuSection = () => {
         isVisible={showNotification}
         onClose={() => setShowNotification(false)}
       />
-{/* 
+      {/* 
       <footer className="menu-footer">
         <div className="footer-content">
           <p className="footer-text">Explore our delicious menu</p>

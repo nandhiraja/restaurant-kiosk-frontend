@@ -60,9 +60,9 @@ const MenuItemCard = ({ item, onAddClick }) => {
       
       {/* Item Details and Action */}
       <div className="item-content">
-        <div className="item-details">
+        {/* <div className="item-details"> */}
           <h3 className="item-name">{itemName}</h3>
-        </div>
+        {/* </div> */}
         
         <div className="item-footer">
           <div className="price-container">
@@ -71,17 +71,7 @@ const MenuItemCard = ({ item, onAddClick }) => {
               {price.toFixed(2)}
             </span>
             
-            {taxAmount > 0 && (
-              <span className="tax-info">
-                {/* + ₹{taxAmount.toFixed(2)} tax */}
-              </span>
-            )}
             
-            {taxAmount > 0 && (
-              <span className="total-price">
-                {/* Total: ₹{totalPrice.toFixed(2)} */}
-              </span>
-            )}
           </div>
           
           <button 
