@@ -1,0 +1,26 @@
+/* Print Page Container */
+.print-page-container {
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+  background: #f5f5f5;
+}
+
+/* Hide everything except print content when printing */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .print-page-container {
+    background: white;
+    overflow: visible;
+  }
+
+  /* Ensure no unwanted margins or padding */
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

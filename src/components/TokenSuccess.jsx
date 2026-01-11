@@ -19,11 +19,11 @@ const TokenSuccess = ({
   const [showWhatsappInput, setShowWhatsappInput] = useState(false);
   const [whatsappNumber, setWhatsappNumber] = useState('');
 
-  // Auto-navigation timer - 100 seconds
+  // Auto-navigation timer - 10 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       navigate('/');
-    }, 1000000); // 1000 seconds = 100000ms
+    }, 10000); // 10 seconds = 10000ms
 
     return () => clearTimeout(timer); // Cleanup on unmount
   }, [navigate]);
@@ -37,7 +37,7 @@ const TokenSuccess = ({
       alert('Please enter a valid 10-digit phone number');
     }
   };
- const cornerImages = [
+  const cornerImages = [
     { position: 'top-left', src: 'TOP_LEFT.png', alt: 'Top left decoration' },
     { position: 'top-right', src: 'TOP_RIGHT.png', alt: 'Top right decoration' },
     { position: 'bottom-left', src: 'BOTTOM_LEFT.png', alt: 'Bottom left decoration' },
@@ -50,11 +50,11 @@ const TokenSuccess = ({
   return (
     <div className="">
       <div className="kiosk-container">
-       {cornerImages.map(({ position, src, alt }) => (
-        <div key={position} className={`corner-icon ${position}`}>
-          <img src={src} alt={alt} onError={handleImageError} />
-        </div>
-      ))}
+        {cornerImages.map(({ position, src, alt }) => (
+          <div key={position} className={`corner-icon ${position}`}>
+            <img src={src} alt={alt} onError={handleImageError} />
+          </div>
+        ))}
 
         {/* Border Frame */}
         <div className="token-border-frame">

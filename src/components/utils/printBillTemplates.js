@@ -749,74 +749,48 @@ export const generateCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails)
 
 
 
-// Master function to print all bills - with delays to prevent popup blocking
-export const printAllBills = (orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails) => {
-  // Generate all HTML content first
-  const billHTML = generateRestaruentBill(
-    orderId,
-    kot_code,
-    KDSInvoiceId,
-    orderDetails,
-    orderType,
-    transactionDetails,
-    ''
-  );
+/**
+ * Navigation-based print helper for kiosk mode
+ * This function initiates the print sequence by navigating to the first print page
+ * Each print page will auto-print and navigate to the next in the queue
+ * 
+ * @param {Function} navigate - React Router navigate function
+ * @param {string} orderId - Order ID
+ * @param {string} kot_code - KOT code
+ * @param {string} KDSInvoiceId - KDS Invoice ID
+ * @param {Object} orderDetails - Order details object
+ * @param {string} orderType - Order type (DINE IN / TAKE AWAY)
+ * @param {Object} transactionDetails - Transaction details
+ * @param {string} returnPath - Path to return after all prints complete
+ */
+export const startPrintSequence = (navigate, orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails, returnPath = '/payment') => {
+  // Build print queue based on what items exist
+  const printQueue = [];
 
-  const foodKOTHTML = generateFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
-  const coffeeKOTHTML = generateCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+  // Check if food items exist (non-coffee)
+  const COFFEE_CATEGORY_ID = "6868ca5dc29c8ed4d3c98dd8";
+  const hasFoodItems = orderDetails.items.some(item => item.categoryId !== COFFEE_CATEGORY_ID);
+  const hasCoffeeItems = orderDetails.items.some(item => item.categoryId === COFFEE_CATEGORY_ID);
 
-  // Open bills with delays to prevent popup blocking
-  // 1. Print customer bill immediately
-  openPrintWindow(billHTML, `Bill-${orderId}`, 1000, 1200, true);
-
-  // 2. Print food KOT after 500ms delay (if exists)
-  if (foodKOTHTML) {
-    setTimeout(() => {
-      openPrintWindow(foodKOTHTML, `Food-KOT-${orderId}`, 1000, 1250, true);
-    }, 500);
+  if (hasFoodItems) {
+    printQueue.push('food-kot');
   }
 
-  // 3. Print coffee KOT after 1000ms delay (if exists)
-  if (coffeeKOTHTML) {
-    setTimeout(() => {
-      openPrintWindow(coffeeKOTHTML, `Coffee-KOT-${orderId}`, 1000, 1250, true);
-    }, 1000);
+  if (hasCoffeeItems) {
+    printQueue.push('coffee-kot');
   }
+
+  // Start the print sequence by navigating to bill page
+  navigate(`/print/bill/${orderId}`, {
+    state: {
+      kot_code,
+      KDSInvoiceId,
+      orderDetails,
+      orderType,
+      transactionDetails,
+      printQueue,
+      returnPath
+    }
+  });
 };
 
-
-
-// utils/printTemplates.js
-
-
-
-// export const openPrintWindow = (htmlContent, title, width = 300, height = 600) => {
-//   const printWindow = window.open('', '', `width=${width},height=${height}`);
-//   printWindow.document.write(htmlContent);
-//   printWindow.document.close();
-//   printWindow.print();
-// };
-
-
-export const openPrintWindow = (htmlContent, title, width, height, autoPrint = false) => {
-  const features = [
-    width ? `width=${width}` : '',
-    height ? `height=${height}` : ''
-  ].filter(Boolean).join(',');
-
-  const printWindow = window.open('', '', features);
-  printWindow.document.write(htmlContent);
-  printWindow.document.close();
-  printWindow.focus();
-
-  if (autoPrint) {
-    // Auto-print: trigger print dialog immediately after content loads
-    setTimeout(() => {
-      printWindow.print();
-      // Optional: close window after printing (may not work in all browsers)
-      // printWindow.onafterprint = () => printWindow.close();
-    }, 250); // Small delay to ensure content is fully rendered
-  } else {
-    printWindow.print();
-  }
-};
