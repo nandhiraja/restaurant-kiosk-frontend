@@ -6,7 +6,7 @@ import './Styles/PaymentPage.css';
 import { useCart } from './CartContext';
 import TokenSuccess from './TokenSuccess';
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { openPrintWindow, generateRestaruentBill, generateKOTBill, printAllBills } from './utils/printBillTemplates';
+import { silentPrintAll } from './utils/silentPrint';
 
 const BASE_URL = import.meta.env.VITE_Base_url;
 
@@ -172,8 +172,8 @@ const PaymentPage = () => {
           setKDSInvoiceId(result.kds_invoice_id);
           clearCart();
           localStorage.removeItem('restaurantCart');
-          setShowTokenPage(true);
           clearInterval(pollingRef.current);
+          setShowTokenPage(true);
         } else if (result.payment_status === 'FAILED') {
           setPaymentStatus('FAILED');
           setError('Payment failed. Redirecting...');
@@ -285,8 +285,8 @@ const PaymentPage = () => {
           setKDSInvoiceId(result.kds_invoice_id);
           clearCart();
           localStorage.removeItem('restaurantCart');
-          setShowTokenPage(true);
           clearInterval(pollingRef.current);
+          setShowTokenPage(true);
         } else if (result.payment_status === 'FAILED' || result.payment_status === 'CANCELLED') {
           setPaymentStatus('FAILED');
           setError('Payment failed or cancelled. Redirecting...');
@@ -377,40 +377,12 @@ const PaymentPage = () => {
   };
 
   // ============================================
-  // PRINT & SHARE HANDLERS
+  // PRINT HANDLERS - Silent Background Printing
   // ============================================
-
-  const handlePrintKOT = () => {
-    const kotHTML = generateKOTBill(orderId, kot_code, KDSInvoiceId, orderDetails);
-    openPrintWindow(kotHTML, `KOT-${orderId}`, 1000, 1250);
-  };
-
-  const handlePrintBill = () => {
-    // 
-    const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
-    console.log("orderId have got : ", orderType)
-    const billHTML = generateRestaruentBill(
-      orderId,
-      kot_code,
-      KDSInvoiceId,
-      orderDetails,
-      orderType,
-      transactionDetails,
-      '' // WhatsApp number handled by TokenSuccess component
-    );
-    openPrintWindow(billHTML, `Bill-${orderId}`, 1000, 1200);
-  };
 
   const handlePrintAll = () => {
     const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
-    printAllBills(
-      orderId,
-      kot_code,
-      KDSInvoiceId,
-      orderDetails,
-      orderType,
-      transactionDetails
-    );
+    silentPrintAll(orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails);
   };
 
   const handleWhatsAppKOT = (phoneNumber) => {
