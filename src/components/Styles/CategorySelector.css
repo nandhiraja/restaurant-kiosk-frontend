@@ -35,19 +35,16 @@
     /* Chrome/Safari */
 }
 
-/* Category Pills */
+/* Category Pills - Double Layer with Cut Corners */
 .category-pill {
     flex-shrink: 0;
     min-width: 120px;
-    height: 40px;
-    padding: 0 1.25rem;
-    border: 2px solid var(--neutral-300);
-    border-radius: 20px;
-    background: white;
-    color: var(--text-primary);
-    font-family: var(--font-secondary);
-    font-size: 0.95rem;
-    font-weight: 600;
+    height: auto;
+    padding: 6px;
+    border: none;
+    border-radius: var(--radius-lg);
+    background: #e4a022;
+    /* Gold outer background */
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
@@ -56,12 +53,59 @@
     justify-content: center;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    box-shadow: var(--shadow-sm);
+
+    /* Outer layer mask - gold background shows through */
+    mask:
+        radial-gradient(circle 15px at 0 0, transparent 0, transparent 15px, black 15px) top left,
+        radial-gradient(circle 15px at 100% 0, transparent 0, transparent 15px, black 15px) top right,
+        radial-gradient(circle 15px at 0 100%, transparent 0, transparent 15px, black 15px) bottom left,
+        radial-gradient(circle 15px at 100% 100%, transparent 0, transparent 15px, black 15px) bottom right;
+    mask-size: 51% 51%;
+    mask-repeat: no-repeat;
+
+    -webkit-mask:
+        radial-gradient(circle 15px at 0 0, transparent 0, transparent 15px, black 16px) top left,
+        radial-gradient(circle 15px at 100% 0, transparent 0, transparent 15px, black 16px) top right,
+        radial-gradient(circle 15px at 0 100%, transparent 0, transparent 15px, black 16px) bottom left,
+        radial-gradient(circle 15px at 100% 100%, transparent 0, transparent 15px, black 16px) bottom right;
+    -webkit-mask-size: 51% 51%;
+    -webkit-mask-repeat: no-repeat;
+}
+
+/* Inner pill - white background with smaller cut corners */
+.category-pill-inner {
+    position: relative;
+    background: white;
+    padding: 0.75rem 1.25rem;
+    width: 100%;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 1.085rem;
+    font-weight: 600;
+    text-align: center;
+
+    /* Inner layer mask - slightly smaller to show gold border */
+    mask:
+        radial-gradient(circle 12px at 0 0, transparent 0, transparent 12px, black 13px) top left,
+        radial-gradient(circle 12px at 100% 0, transparent 0, transparent 12px, black 13px) top right,
+        radial-gradient(circle 12px at 0 100%, transparent 0, transparent 12px, black 13px) bottom left,
+        radial-gradient(circle 12px at 100% 100%, transparent 0, transparent 12px, black 13px) bottom right;
+    mask-size: 51% 51%;
+    mask-repeat: no-repeat;
+
+    -webkit-mask:
+        radial-gradient(circle 12px at 0 0, transparent 0, transparent 13px, black 14px) top left,
+        radial-gradient(circle 12px at 100% 0, transparent 0, transparent 13px, black 14px) top right,
+        radial-gradient(circle 12px at 0 100%, transparent 0, transparent 13px, black 14px) bottom left,
+        radial-gradient(circle 12px at 100% 100%, transparent 0, transparent 13px, black 14px) bottom right;
+    -webkit-mask-size: 51% 51%;
+    -webkit-mask-repeat: no-repeat;
 }
 
 .category-pill:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: var(--gold-light);
 }
 
 .category-pill:active {
@@ -71,9 +115,12 @@
 /* Active State */
 .category-pill.active {
     background: var(--secondary-gradient);
-    border-color: var(--gold-primary);
-    color: white;
     box-shadow: 0 2px 8px rgba(218, 165, 32, 0.3);
+}
+
+.category-pill.active .category-pill-inner {
+    color: white;
+    background: transparent;
 }
 
 .category-pill.active:hover {
@@ -97,9 +144,11 @@
 
     .category-pill {
         min-width: 100px;
-        height: 38px;
-        font-size: 0.875rem;
-        padding: 0 1rem;
+    }
+
+    .category-pill-inner {
+        font-size: 0.95rem;
+        padding: 0.65rem 1rem;
     }
 }
 
@@ -115,9 +164,11 @@
 
     .category-pill {
         min-width: 85px;
-        height: 36px;
-        font-size: 0.8rem;
-        padding: 0 0.875rem;
+    }
+
+    .category-pill-inner {
+        font-size: 0.875rem;
+        padding: 0.6rem 0.875rem;
     }
 }
 
@@ -125,8 +176,10 @@
 @media (max-width: 320px) {
     .category-pill {
         min-width: 75px;
-        height: 34px;
-        font-size: 0.75rem;
-        padding: 0 0.75rem;
+    }
+
+    .category-pill-inner {
+        font-size: 0.8rem;
+        padding: 0.55rem 0.75rem;
     }
 }

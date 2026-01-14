@@ -27,7 +27,9 @@ const CategorySelector = ({ categories, activeCategory, onSelectCategory }) => {
                             }`}
                         onClick={() => onSelectCategory(category)}
                     >
-                        {category.name}
+                        <div className="category-pill-inner">
+                            {category.name}
+                        </div>
                     </button>
                 ))}
             </div>
