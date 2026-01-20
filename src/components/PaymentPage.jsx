@@ -6,7 +6,7 @@ import './Styles/PaymentPage.css';
 import { useCart } from './CartContext';
 import TokenSuccess from './TokenSuccess';
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { silentPrintAll } from './utils/silentPrint';
+import { startPrintSequence } from './utils/printBillTemplates';
 
 const BASE_URL = import.meta.env.VITE_Base_url;
 
@@ -382,7 +382,17 @@ const PaymentPage = () => {
 
   const handlePrintAll = () => {
     const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
-    silentPrintAll(orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails);
+    // Use navigation-based print sequence which calls backend API
+    startPrintSequence(
+      navigate,
+      orderId,
+      kot_code,
+      KDSInvoiceId,
+      orderDetails,
+      orderType,
+      transactionDetails,
+      '/payment'  // Return path after printing
+    );
   };
 
   const handleWhatsAppKOT = (phoneNumber) => {
