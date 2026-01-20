@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { generateFoodKOT } from './utils/printBillTemplates';
-import './Styles/PrintPage.css';
 
 const PrintFoodKOTPage = () => {
     const location = useLocation();
@@ -25,41 +23,48 @@ const PrintFoodKOTPage = () => {
             return;
         }
 
-        // Check if there are food items to print
-        const foodKOTHTML = generateFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
-
-        if (!foodKOTHTML) {
-            // No food items, skip to next in queue
-            const nextInQueue = printQueue[0];
-            const remainingQueue = printQueue.slice(1);
-
-            if (nextInQueue === 'coffee-kot') {
-                navigate(`/print/coffee-kot/${orderId}`, {
-                    state: {
-                        kot_code,
-                        KDSInvoiceId,
-                        orderDetails,
-                        orderType,
-                        transactionDetails,
-                        printQueue: remainingQueue,
-                        returnPath
-                    }
-                });
-            } else {
-                navigate(returnPath);
-            }
-            return;
-        }
-
-        // Set document title for PDF save
+        // Set document title
         document.title = `Food-KOT-${orderId}`;
 
-        // Trigger print after content loads
-        const printTimer = setTimeout(() => {
-            window.print();
-        }, 300);
+        // Call backend print service
+        const printFoodKOT = async () => {
+            try {
+                console.log('[PrintFoodKOTPage] Sending print request to backend...');
 
-        // Handle after print event
+                const response = await fetch('http://localhost:9100/print/food-kot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderId,
+                        kot_code,
+                        KDSInvoiceId,
+                        orderDetails
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    if (result.skipped) {
+                        console.log('[PrintFoodKOTPage] ⚠ No food items to print');
+                    } else {
+                        console.log('[PrintFoodKOTPage] ✓ Food KOT print successful');
+                    }
+                } else {
+                    console.error('[PrintFoodKOTPage] ✗ Print failed:', result.error);
+                    alert('Print service error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('[PrintFoodKOTPage] ✗ Print service connection error:', error);
+                alert('Could not connect to print service. Please ensure the service is running.');
+            } finally {
+                // Navigate to next in queue regardless of print success
+                handleAfterPrint();
+            }
+        };
+
         const handleAfterPrint = () => {
             const nextInQueue = printQueue[0];
             const remainingQueue = printQueue.slice(1);
@@ -81,11 +86,13 @@ const PrintFoodKOTPage = () => {
             }
         };
 
-        window.addEventListener('afterprint', handleAfterPrint);
+        // Trigger print after small delay
+        const printTimer = setTimeout(() => {
+            printFoodKOT();
+        }, 300);
 
         return () => {
             clearTimeout(printTimer);
-            window.removeEventListener('afterprint', handleAfterPrint);
         };
     }, [orderId, orderDetails, navigate, printQueue, returnPath, kot_code, KDSInvoiceId, orderType, transactionDetails]);
 
@@ -93,17 +100,21 @@ const PrintFoodKOTPage = () => {
         return null;
     }
 
-    const foodKOTHTML = generateFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
-
-    if (!foodKOTHTML) {
-        return null;
-    }
-
     return (
-        <div
-            className="print-page-container"
-            dangerouslySetInnerHTML={{ __html: foodKOTHTML }}
-        />
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            flexDirection: 'column',
+            fontFamily: 'Arial, sans-serif'
+        }}>
+            <div style={{ fontSize: '24px', marginBottom: '16px' }}>🍴</div>
+            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>Printing Food KOT...</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>
+                KOT: {kot_code}
+            </div>
+        </div>
     );
 };
 

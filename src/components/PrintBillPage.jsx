@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { generateRestaruentBill } from './utils/printBillTemplates';
-import './Styles/PrintPage.css';
 
 const PrintBillPage = () => {
     const location = useLocation();
@@ -25,22 +23,53 @@ const PrintBillPage = () => {
             return;
         }
 
-        // Set document title for PDF save
+        // Set document title
         document.title = `Bill-${orderId}`;
 
-        // Trigger print after content loads
-        const printTimer = setTimeout(() => {
-            window.print();
-        }, 300);
+        // Call backend print service instead of window.print()
+        const printBill = async () => {
+            try {
+                console.log('[PrintBillPage] Sending print request to backend...');
 
-        // Handle after print event
+                const response = await fetch('http://localhost:9100/print/bill', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        orderId,
+                        kot_code,
+                        KDSInvoiceId,
+                        orderDetails,
+                        orderType,
+                        transactionDetails,
+                        whatsappNumber: ''
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    console.log('[PrintBillPage] ✓ Bill print successful');
+                } else {
+                    console.error('[PrintBillPage] ✗ Print failed:', result.error);
+                    alert('Print service error: ' + result.error);
+                }
+            } catch (error) {
+                console.error('[PrintBillPage] ✗ Print service connection error:', error);
+                alert('Could not connect to print service. Please ensure the service is running.');
+            } finally {
+                // Navigate to next in queue regardless of print success
+                handleAfterPrint();
+            }
+        };
+
         const handleAfterPrint = () => {
             // Determine next destination
-            const nextInQueue = printQueue[0]; // Get first item in queue
-            const remainingQueue = printQueue.slice(1); // Remove first item
+            const nextInQueue = printQueue[0];
+            const remainingQueue = printQueue.slice(1);
 
             if (nextInQueue === 'food-kot') {
-                // Navigate to food KOT print
                 navigate(`/print/food-kot/${orderId}`, {
                     state: {
                         kot_code,
@@ -53,7 +82,6 @@ const PrintBillPage = () => {
                     }
                 });
             } else if (nextInQueue === 'coffee-kot') {
-                // Navigate to coffee KOT print
                 navigate(`/print/coffee-kot/${orderId}`, {
                     state: {
                         kot_code,
@@ -71,11 +99,13 @@ const PrintBillPage = () => {
             }
         };
 
-        window.addEventListener('afterprint', handleAfterPrint);
+        // Trigger print after small delay to ensure component mounted
+        const printTimer = setTimeout(() => {
+            printBill();
+        }, 300);
 
         return () => {
             clearTimeout(printTimer);
-            window.removeEventListener('afterprint', handleAfterPrint);
         };
     }, [orderId, orderDetails, navigate, printQueue, returnPath, kot_code, KDSInvoiceId, orderType, transactionDetails]);
 
@@ -84,22 +114,22 @@ const PrintBillPage = () => {
         return null;
     }
 
-    // Generate the bill HTML
-    const billHTML = generateRestaruentBill(
-        orderId,
-        kot_code,
-        KDSInvoiceId,
-        orderDetails,
-        orderType,
-        transactionDetails,
-        ''
-    );
-
+    // Show loading state while print is processing
     return (
-        <div
-            className="print-page-container"
-            dangerouslySetInnerHTML={{ __html: billHTML }}
-        />
+        <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            flexDirection: 'column',
+            fontFamily: 'Arial, sans-serif'
+        }}>
+            <div style={{ fontSize: '24px', marginBottom: '16px' }}>🖨️</div>
+            <div style={{ fontSize: '18px', fontWeight: 'bold' }}>Printing Bill...</div>
+            <div style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>
+                Order: {orderId}
+            </div>
+        </div>
     );
 };
 
