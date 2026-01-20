@@ -6,7 +6,6 @@ import './Styles/PaymentPage.css';
 import { useCart } from './CartContext';
 import TokenSuccess from './TokenSuccess';
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { startPrintSequence } from './utils/printBillTemplates';
 
 const BASE_URL = import.meta.env.VITE_Base_url;
 
@@ -380,19 +379,66 @@ const PaymentPage = () => {
   // PRINT HANDLERS - Silent Background Printing
   // ============================================
 
-  const handlePrintAll = () => {
+  const handlePrintAll = async () => {
     const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
-    // Use navigation-based print sequence which calls backend API
-    startPrintSequence(
-      navigate,
-      orderId,
-      kot_code,
-      KDSInvoiceId,
-      orderDetails,
-      orderType,
-      transactionDetails,
-      '/payment'  // Return path after printing
-    );
+
+    console.log('[PaymentPage] Starting background print sequence...');
+
+    try {
+      // Print Bill
+      console.log('[PaymentPage] Printing bill...');
+      const billResponse = await fetch('http://localhost:9100/print/bill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          kot_code,
+          KDSInvoiceId,
+          orderDetails,
+          orderType,
+          transactionDetails,
+          whatsappNumber: ''
+        })
+      });
+      const billResult = await billResponse.json();
+      console.log('[PaymentPage] Bill print result:', billResult);
+
+      // Print Food KOT
+      console.log('[PaymentPage] Printing food KOT...');
+      const foodResponse = await fetch('http://localhost:9100/print/food-kot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          kot_code,
+          KDSInvoiceId,
+          orderDetails
+        })
+      });
+      const foodResult = await foodResponse.json();
+      console.log('[PaymentPage] Food KOT print result:', foodResult);
+
+      // Print Coffee KOT
+      console.log('[PaymentPage] Printing coffee KOT...');
+      const coffeeResponse = await fetch('http://localhost:9100/print/coffee-kot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId,
+          kot_code,
+          KDSInvoiceId,
+          orderDetails
+        })
+      });
+      const coffeeResult = await coffeeResponse.json();
+      console.log('[PaymentPage] Coffee KOT print result:', coffeeResult);
+
+      console.log('[PaymentPage] ✅ All prints completed successfully!');
+
+    } catch (error) {
+      console.error('[PaymentPage] ✗ Print service error:', error);
+      // Don't show alert - just log error, user stays on success page
+    }
   };
 
   const handleWhatsAppKOT = (phoneNumber) => {
