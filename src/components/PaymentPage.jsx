@@ -382,11 +382,16 @@ const PaymentPage = () => {
   const handlePrintAll = async () => {
     const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
 
-    console.log('[PaymentPage] Starting background print sequence...');
+    console.log('\n' + '='.repeat(60));
+    console.log('🖨️  PRINT SERVICE - Starting Print Jobs');
+    console.log('='.repeat(60));
+
+    let pdfCount = 0;
+    let printCount = 0;
 
     try {
       // Print Bill
-      console.log('[PaymentPage] Printing bill...');
+      console.log('\n[1/3] Printing Bill...');
       const billResponse = await fetch('http://localhost:9100/print/bill', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -401,10 +406,18 @@ const PaymentPage = () => {
         })
       });
       const billResult = await billResponse.json();
-      console.log('[PaymentPage] Bill print result:', billResult);
+
+      if (billResult.success) {
+        console.log('  ✅ PDF saved to Downloads');
+        pdfCount++;
+        if (billResult.printedToDevice) {
+          console.log('  ✅ Sent to thermal printer');
+          printCount++;
+        }
+      }
 
       // Print Food KOT
-      console.log('[PaymentPage] Printing food KOT...');
+      console.log('\n[2/3] Printing Food KOT...');
       const foodResponse = await fetch('http://localhost:9100/print/food-kot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -416,10 +429,22 @@ const PaymentPage = () => {
         })
       });
       const foodResult = await foodResponse.json();
-      console.log('[PaymentPage] Food KOT print result:', foodResult);
+
+      if (foodResult.success) {
+        if (foodResult.skipped) {
+          console.log('  ⚠️  No food items to print');
+        } else {
+          console.log('  ✅ PDF saved to Downloads');
+          pdfCount++;
+          if (foodResult.printedToDevice) {
+            console.log('  ✅ Sent to thermal printer');
+            printCount++;
+          }
+        }
+      }
 
       // Print Coffee KOT
-      console.log('[PaymentPage] Printing coffee KOT...');
+      console.log('\n[3/3] Printing Coffee KOT...');
       const coffeeResponse = await fetch('http://localhost:9100/print/coffee-kot', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -431,13 +456,36 @@ const PaymentPage = () => {
         })
       });
       const coffeeResult = await coffeeResponse.json();
-      console.log('[PaymentPage] Coffee KOT print result:', coffeeResult);
 
-      console.log('[PaymentPage] ✅ All prints completed successfully!');
+      if (coffeeResult.success) {
+        if (coffeeResult.skipped) {
+          console.log('  ⚠️  No coffee items to print');
+        } else {
+          console.log('  ✅ PDF saved to Downloads');
+          pdfCount++;
+          if (coffeeResult.printedToDevice) {
+            console.log('  ✅ Sent to thermal printer');
+            printCount++;
+          }
+        }
+      }
+
+      console.log('\n' + '='.repeat(60));
+      console.log('✅ PRINT SERVICE - All Jobs Completed!');
+      console.log('='.repeat(60));
+      console.log(`\n📊 Summary:`);
+      console.log(`  📁 PDFs created: ${pdfCount}`);
+      console.log(`  📂 Location: Downloads/KioskPrints/`);
+      console.log(`  🖨️  Printed to device: ${printCount > 0 ? 'YES (' + printCount + ')' : 'NO (PDFs only)'}`);
+      console.log('');
 
     } catch (error) {
-      console.error('[PaymentPage] ✗ Print service error:', error);
-      // Don't show alert - just log error, user stays on success page
+      console.error('\n' + '='.repeat(60));
+      console.error('❌ PRINT SERVICE - Connection Error');
+      console.error('='.repeat(60));
+      console.error('Could not connect to print service at localhost:9100');
+      console.error('Make sure the backend service is running!');
+      console.error('='.repeat(60) + '\n');
     }
   };
 
