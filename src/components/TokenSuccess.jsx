@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './Styles/TokenSuccess.css';
 import { Printer, MessageCircle } from 'lucide-react';
 import { IoLogoWhatsapp } from "react-icons/io";
+import { silentPrintBill, silentPrintFoodKOT, silentPrintCoffeeKOT } from './utils/silentPrint';
 const TokenSuccess = ({
   token,
   kot_code,
@@ -20,6 +21,8 @@ const TokenSuccess = ({
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [printError, setPrintError] = useState(null); // Error state for print failures
   const [isPrintSuccess, setIsPrintSuccess] = useState(false); // Track successful print
+  const [printStatus, setPrintStatus] = useState('idle'); // 'idle', 'printing', 'success', 'error'
+  const [printNotification, setPrintNotification] = useState(''); // User-facing notification message
 
   // Auto-navigation timer - Only redirect if no errors
   useEffect(() => {
@@ -33,13 +36,16 @@ const TokenSuccess = ({
     }
   }, [navigate, printError, isPrintSuccess]);
 
-  // 🔥 AUTOMATED PARALLEL PRINTING - Triggered automatically on page load
+  // 🔥 AUTOMATED PARALLEL PRINTING WITH FALLBACK - Triggered automatically on page load
   useEffect(() => {
     const autoPrintAll = async () => {
       try {
+        // Set printing status and show notification
+        setPrintStatus('printing');
+        setPrintNotification('Bills are printing...');
         console.log('[TokenSuccess] 🖨️ Starting automated parallel printing...');
 
-        // ✅ FAST (Parallel) - All print requests sent simultaneously
+        // ✅ PRIMARY METHOD: Backend Print Service (Parallel)
         const printResults = await Promise.all([
           fetch('http://localhost:9100/print/food-kot', {
             method: 'POST',
@@ -81,40 +87,92 @@ const TokenSuccess = ({
           printResults.map(res => res.json())
         );
 
-        // Check for any failures
-        const errors = [];
-        if (!foodKotResult.success && !foodKotResult.skipped) {
-          errors.push(`Food KOT: ${foodKotResult.error || 'Unknown error'}`);
-        }
-        if (!coffeeKotResult.success && !coffeeKotResult.skipped) {
-          errors.push(`Coffee KOT: ${coffeeKotResult.error || 'Unknown error'}`);
-        }
-        if (!billResult.success) {
-          errors.push(`Bill: ${billResult.error || 'Unknown error'}`);
-        }
+        // Track which prints failed for fallback
+        const failedPrints = {
+          foodKot: !foodKotResult.success && !foodKotResult.skipped,
+          coffeeKot: !coffeeKotResult.success && !coffeeKotResult.skipped,
+          bill: !billResult.success
+        };
 
         // Log results
         console.log('[TokenSuccess] 📄 Food KOT:', foodKotResult.success ? '✓ Success' : '✗ Failed');
         console.log('[TokenSuccess] ☕ Coffee KOT:', coffeeKotResult.success ? '✓ Success' : '✗ Failed');
         console.log('[TokenSuccess] 🧾 Bill:', billResult.success ? '✓ Success' : '✗ Failed');
 
-        if (errors.length > 0) {
-          // Show error modal and stop auto-redirect
-          setPrintError(errors);
-          console.error('[TokenSuccess] ✗ Print errors occurred:', errors);
+        // ⚠️ FALLBACK METHOD: Browser Print (if backend failed)
+        const hasFailures = failedPrints.foodKot || failedPrints.coffeeKot || failedPrints.bill;
+
+        if (hasFailures) {
+          console.log('[TokenSuccess] ⚡ Backend print failed, attempting browser print fallback...');
+
+          try {
+            // Attempt browser print for failed items
+            if (failedPrints.foodKot) {
+              console.log('[TokenSuccess] 🔄 Fallback: Printing Food KOT via browser...');
+              silentPrintFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+            }
+            if (failedPrints.coffeeKot) {
+              console.log('[TokenSuccess] 🔄 Fallback: Printing Coffee KOT via browser...');
+              silentPrintCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+            }
+            if (failedPrints.bill) {
+              console.log('[TokenSuccess] 🔄 Fallback: Printing Bill via browser...');
+              silentPrintBill(orderId, kot_code, KDSInvoiceId, orderDetails, orderDetails?.orderType, transactionDetails);
+            }
+
+            // Assume fallback succeeded (browser print doesn't return status)
+            console.log('[TokenSuccess] ✅ Fallback print triggered successfully');
+            setPrintStatus('success');
+            setPrintNotification('Bills printed successfully, please collect them');
+            setIsPrintSuccess(true);
+          } catch (fallbackError) {
+            console.error('[TokenSuccess] ✗ Fallback print also failed:', fallbackError);
+            // Both methods failed - show error
+            const errors = [];
+            if (failedPrints.foodKot) errors.push(`Food KOT: Backend and browser print failed`);
+            if (failedPrints.coffeeKot) errors.push(`Coffee KOT: Backend and browser print failed`);
+            if (failedPrints.bill) errors.push(`Bill: Backend and browser print failed`);
+
+            setPrintError(errors);
+            setPrintStatus('error');
+            setPrintNotification('');
+          }
         } else {
-          // All successful - enable auto-redirect
+          // All backend prints successful
+          console.log('[TokenSuccess] ✅ All print jobs completed successfully via backend');
+          setPrintStatus('success');
+          setPrintNotification('Bills printed successfully, please collect them');
           setIsPrintSuccess(true);
-          console.log('[TokenSuccess] ✅ All print jobs completed successfully (parallel execution)');
         }
       } catch (error) {
-        console.error('[TokenSuccess] ✗ Auto-print connection error:', error);
-        // Show error modal for connection failure
-        setPrintError([
-          'Could not connect to print service',
-          'Please ensure the print service is running',
-          `Details: ${error.message}`
-        ]);
+        console.error('[TokenSuccess] ✗ Backend print service connection error:', error);
+
+        // ⚠️ FALLBACK: Try browser print when backend is unreachable
+        console.log('[TokenSuccess] ⚡ Backend unreachable, attempting browser print fallback...');
+
+        try {
+          silentPrintFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+          setTimeout(() => {
+            silentPrintCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+          }, 500);
+          setTimeout(() => {
+            silentPrintBill(orderId, kot_code, KDSInvoiceId, orderDetails, orderDetails?.orderType, transactionDetails);
+          }, 1000);
+
+          console.log('[TokenSuccess] ✅ Fallback print triggered successfully');
+          setPrintStatus('success');
+          setPrintNotification('Bills printed successfully, please collect them');
+          setIsPrintSuccess(true);
+        } catch (fallbackError) {
+          console.error('[TokenSuccess] ✗ Both backend and browser print failed:', fallbackError);
+          setPrintError([
+            'Could not connect to print service',
+            'Browser print fallback also failed',
+            `Details: ${error.message}`
+          ]);
+          setPrintStatus('error');
+          setPrintNotification('');
+        }
       }
     };
 
@@ -189,6 +247,21 @@ const TokenSuccess = ({
               Please collect your token<br />
               and wait for call out ( Average ~15 min )
             </p>
+
+            {/* 🔔 PRINT STATUS NOTIFICATION */}
+            {printNotification && (
+              <div className={`print-notification ${printStatus}`}>
+                <div className="print-notification-content">
+                  {printStatus === 'printing' && (
+                    <div className="print-spinner"></div>
+                  )}
+                  {printStatus === 'success' && (
+                    <span className="print-icon">✓</span>
+                  )}
+                  <span className="print-message">{printNotification}</span>
+                </div>
+              </div>
+            )}
 
             <div className="token-actions">
               {/* ======================================== */}

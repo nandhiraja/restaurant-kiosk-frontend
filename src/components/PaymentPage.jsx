@@ -509,6 +509,7 @@ const PaymentPage = () => {
     return (
       <TokenSuccess
         token={kot_code}
+        kot_code={kot_code}
         KDSInvoiceId={KDSInvoiceId}
         orderId={orderId}
         orderDetails={orderDetails}
@@ -705,7 +706,7 @@ const PaymentPage = () => {
             )}
           </div>
 
-       
+
         </div>
       </div>
     </div>
