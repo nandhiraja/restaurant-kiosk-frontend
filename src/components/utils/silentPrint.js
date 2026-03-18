@@ -1,15 +1,8 @@
-/**
- * Silent print utility using hidden iframes
- * Prints documents in background without showing them to the user
- */
+
 
 import { generateRestaruentBill, generateFoodKOT, generateCoffeeKOT } from './printBillTemplates';
 
-/**
- * Print HTML content in a hidden iframe
- * @param {string} htmlContent - HTML content to print
- * @param {string} documentTitle - Title for the document (used for PDF filename)
- */
+
 function printInHiddenIframe(htmlContent, documentTitle) {
     // Create hidden iframe
     const iframe = document.createElement('iframe');
@@ -49,39 +42,52 @@ function printInHiddenIframe(htmlContent, documentTitle) {
     };
 }
 
+
+
+
+
 // Generate and print bill silently
-export const silentPrintBill = (orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails) => {
-    const billHTML = generateRestaruentBill(orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails, '');
+export const silentPrintBill = (orderId, kot_code, orderDetails, orderType,storeName,ADDRESS_LINE_1,ADDRESS_LINE_2,GST_NUMBER,FSSAI_NUMBER,CIN_NUMBER) => {
+    console.log("BILL : ", orderDetails, " -- ", orderType);
+    const billHTML = generateRestaruentBill(orderId, kot_code, orderDetails, orderType,storeName,ADDRESS_LINE_1,ADDRESS_LINE_2,GST_NUMBER,FSSAI_NUMBER,CIN_NUMBER);
     printInHiddenIframe(billHTML, `Bill-${orderId}`);
 };
 
 // Generate and print Food KOT silently
-export const silentPrintFoodKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) => {
-    const foodKOTHTML = generateFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+export const silentPrintFoodKOT = (orderId, kot_code, orderDetails ,orderType,storeName) => {
+    console.log("fOOD-KOT : ", orderType);
+    const foodKOTHTML = generateFoodKOT(orderId, kot_code, orderDetails,orderType,storeName);
     if (foodKOTHTML) {
         printInHiddenIframe(foodKOTHTML, `Food-KOT-${orderId}`);
     }
 };
 
 // Generate and print Coffee KOT silently
-export const silentPrintCoffeeKOT = (orderId, kot_code, KDSInvoiceId, orderDetails) => {
-    const coffeeKOTHTML = generateCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+export const silentPrintCoffeeKOT = (orderId, kot_code, orderDetails,orderType,storeName) => {
+    console.log("COFFEE-KOT : ", orderType);
+    const coffeeKOTHTML = generateCoffeeKOT(orderId, kot_code, orderDetails,orderType,storeName);
     if (coffeeKOTHTML) {
         printInHiddenIframe(coffeeKOTHTML, `Coffee-KOT-${orderId}`);
     }
 };
 
+
+
+
+
+
 // Print all documents silently
-export const silentPrintAll = (orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails) => {
+export const silentPrintAll = (orderId, kot_code, orderDetails, orderType, storeName,ADDRESS_LINE_1,ADDRESS_LINE_2,GST_NUMBER,FSSAI_NUMBER,CIN_NUMBER) => {
+
     // Print bill
-    silentPrintBill(orderId, kot_code, KDSInvoiceId, orderDetails, orderType, transactionDetails);
+    silentPrintBill(orderId, kot_code, orderDetails, orderType, storeName,ADDRESS_LINE_1,ADDRESS_LINE_2,GST_NUMBER,FSSAI_NUMBER,CIN_NUMBER);
 
     // Delay to ensure sequential printing
     setTimeout(() => {
-        silentPrintFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+        silentPrintFoodKOT(orderId, kot_code, orderDetails,orderType,storeName);
     }, 500);
 
     setTimeout(() => {
-        silentPrintCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+        silentPrintCoffeeKOT(orderId, kot_code, orderDetails,orderType,storeName);
     }, 1000);
 };
