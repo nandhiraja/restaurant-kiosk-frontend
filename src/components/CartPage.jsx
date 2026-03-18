@@ -28,14 +28,29 @@ function CartPage() {
 
   // Calculate totals properly
   const calculateItemTotal = (item) => {
-    const basePrice = item.price || 0;
-    const taxAmount = item.taxAmount || 0;
-    return (basePrice + taxAmount) * item.quantity;
+    return item.pricePerUnit ? (item.pricePerUnit * item.quantity) : ((item.price || 0) + (item.taxAmount || 0)) * item.quantity;
   };
 
   const breakdown = cart.items.reduce((acc, item) => {
-    const basePrice = item.price || 0;
-    const taxPerUnit = item.taxAmount || 0;
+    // If it has variations/addons, calculate its base and tax.
+    let basePrice = item.price || 0;
+    let taxPerUnit = item.taxAmount || 0;
+    
+    if (item.selectedCustomizations) {
+        let addonsTotal = 0;
+        if (item.selectedCustomizations.addons) {
+             item.selectedCustomizations.addons.forEach(a => addonsTotal += parseFloat(a.price || 0));
+        }
+        basePrice = (item.selectedCustomizations.variation ? parseFloat(item.selectedCustomizations.variation.price || 0) : (item.price || 0)) + addonsTotal;
+        
+        // recalculate tax per unit based on the new basePrice
+        if (item.taxes && item.taxes.length > 0) {
+            taxPerUnit = item.taxes.reduce((sum, tax) => sum + (basePrice * tax.percentage / 100), 0);
+        } else {
+            taxPerUnit = 0;
+        }
+    }
+
     const baseTotal = basePrice * item.quantity;
     const taxTotal = taxPerUnit * item.quantity;
     
@@ -69,10 +84,25 @@ const handleProceedToPayment = async () => {
   const orderPayload = {
     channel: "Palas Kiosk",
     order_type : orderTypePayload,
-    items: cart.items.map(item => ({
-      item_skuid: item.skuCode || item.itemId.toString(),
-      quantity: item.quantity
-    })),
+    items: cart.items.map(item => {
+      const payloadItem = {
+        item_skuid: item.skuCode || item.itemId.toString(),
+        quantity: item.quantity
+      };
+      
+      if (item.selectedCustomizations) {
+        if (item.selectedCustomizations.variation) {
+          payloadItem.variation_id = item.selectedCustomizations.variation.variation_id;
+        }
+        if (item.selectedCustomizations.addons && item.selectedCustomizations.addons.length > 0) {
+          payloadItem.addon_items = item.selectedCustomizations.addons.map(addon => ({
+            addon_item_id: addon.addon_item_id,
+            quantity: addon.quantity || 1
+          }));
+        }
+      }
+      return payloadItem;
+    }),
   total_amount_include_tax: Math.round(totalWithTax),
   total_amount_exclude_tax: Math.round(totalWithoutTax),
 
@@ -188,7 +218,7 @@ const handleProceedToPayment = async () => {
           ) : (
             cart.items.map((item, idx) => {
               const itemTotal = calculateItemTotal(item);
-              const pricePerUnit = (item.price || 0) + (item.taxAmount || 0);
+              const pricePerUnit = item.pricePerUnit || ((item.price || 0) + (item.taxAmount || 0));
               
               return (
                <div className="cart-item-card" key={idx}>
@@ -203,15 +233,18 @@ const handleProceedToPayment = async () => {
     />
     <div className="cart-item-info">
       <div className="cart-item-title">{item.itemName}</div>
-      {/* {item.tags && item.tags.length > 0 && (
-        <div className="cart-item-tags">
-          {item.tags.slice(0, 2).map((tag, i) => (
-            <span key={i} className="tag-small">{tag}</span>
-          ))}
-        </div>
-      )} */}
+      {item.selectedCustomizations?.variation && (
+         <div className="cart-item-variation" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+           Variation: {item.selectedCustomizations.variation.name}
+         </div>
+      )}
+      {item.selectedCustomizations?.addons?.length > 0 && (
+         <div className="cart-item-addons" style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginTop: '2px' }}>
+           Add-ons: {item.selectedCustomizations.addons.map(a => a.name).join(', ')}
+         </div>
+      )}
       <div className="cart-item-price-info">
-        {/* Base: ₹{item.price.toFixed(2)} + Tax: ₹{(item.taxAmount || 0).toFixed(2)} */}
+        {/* Customized base prices handled dynamically now */}
       </div>
     </div>
   </div>

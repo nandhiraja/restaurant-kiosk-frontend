@@ -148,6 +148,7 @@ const MenuSection = () => {
       {isModalOpen && selectedMenuItem && (
         <MenuItemModal
           item={selectedMenuItem}
+          addonGroups={allMenuData?.addongroups || []}
           onClose={closeModal}
           onAddToCart={handleAddToCart}
         />

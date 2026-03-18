@@ -30,7 +30,7 @@ const TokenSuccess = ({
     if (!printError && isPrintSuccess) {
       const timer = setTimeout(() => {
         navigate('/');
-      }, 25000); // 25 seconds
+      }, 2000); // 2 seconds
 
       return () => clearTimeout(timer);
     }
@@ -38,12 +38,58 @@ const TokenSuccess = ({
 
   // 🔥 AUTOMATED PARALLEL PRINTING WITH FALLBACK - Triggered automatically on page load
   useEffect(() => {
+
     const autoPrintAll = async () => {
+      // Set printing status and show notification
+      const orderType = localStorage.getItem('orderType') === "dine-in" ? 'DINE IN' : "TAKE AWAY";
+      const ECD_CONFIG_DATA = JSON.parse(localStorage.getItem('kiosk_config'));
+      const storeName = ECD_CONFIG_DATA.store_name;
+
+      const VERSOVA_ADDRESS_LINE_1 = "Shop no. 202, Society, JP Rd, Aram Nagar Part 2, Machlimar,";
+      const VERSOVA_ADDRESS_LINE_2 = "Versova, Andheri West, Mumbai, Maharashtra 400061";
+
+      const BANDRA_ADDRESS_LINE_1 = "Shop No.36/A, Off Carter Rd, Rizvi Complex, Union Park,";
+      const BANDRA_ADDRESS_LINE_2 = " Bandra West, Mumbai, Maharashtra 400050";
+
+      const BANDRA_GST_NUMBER = "27AA0FH7156G1Z0";
+      const VERSOVA_GST_NUMBER = "27AA0FH7156G1Z0";
+
+      const BANDRA_FSSAI_NUMBER = "21524005001190";
+      const VERSOVA_FSSAI_NUMBER = "21524005001190";
+
+      const BANDRA_CIN_NUMBER = "6731";
+      const VERSOVA_CIN_NUMBER = "6731";
+
+      
+
+      let GST_NUMBER = "";
+      let ADDRESS_LINE_1 = "";
+      let ADDRESS_LINE_2 = "";
+      let FSSAI_NUMBER = "";
+      let CIN_NUMBER = "";
+
+      if (storeName === "Versova") {
+        GST_NUMBER = VERSOVA_GST_NUMBER;
+        ADDRESS_LINE_1 = VERSOVA_ADDRESS_LINE_1;
+        ADDRESS_LINE_2 = VERSOVA_ADDRESS_LINE_2;
+        FSSAI_NUMBER = VERSOVA_FSSAI_NUMBER;
+        CIN_NUMBER = VERSOVA_CIN_NUMBER;
+      } else {
+        GST_NUMBER = BANDRA_GST_NUMBER;
+        ADDRESS_LINE_1 = BANDRA_ADDRESS_LINE_1;
+        ADDRESS_LINE_2 = BANDRA_ADDRESS_LINE_2;
+        FSSAI_NUMBER = BANDRA_FSSAI_NUMBER;
+        CIN_NUMBER = BANDRA_CIN_NUMBER;
+      }
+
+      console.log("storeName : ", storeName);
+      console.log("orderType : ", orderType);
       try {
-        // Set printing status and show notification
-        setPrintStatus('printing');
+       
+
         setPrintNotification('Bills are printing...');
         console.log('[TokenSuccess] 🖨️ Starting automated parallel printing...');
+        setPrintStatus('printing');
 
         // ✅ PRIMARY METHOD: Backend Print Service (Parallel)
         const printResults = await Promise.all([
@@ -52,9 +98,10 @@ const TokenSuccess = ({
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               orderId,
-              kot_code,
-              KDSInvoiceId,
-              orderDetails
+              kot_code,              
+              orderDetails,
+              orderType,
+              storeName
             })
           }),
           fetch('http://localhost:9100/print/coffee-kot', {
@@ -63,8 +110,9 @@ const TokenSuccess = ({
             body: JSON.stringify({
               orderId,
               kot_code,
-              KDSInvoiceId,
-              orderDetails
+              orderDetails,
+              orderType,
+              storeName
             })
           }),
           fetch('http://localhost:9100/print/bill', {
@@ -73,11 +121,14 @@ const TokenSuccess = ({
             body: JSON.stringify({
               orderId,
               kot_code,
-              KDSInvoiceId,
               orderDetails,
-              orderType: orderDetails?.orderType,
-              transactionDetails,
-              whatsappNumber: ''
+              orderType,
+              storeName,
+              ADDRESS_LINE_1,
+              ADDRESS_LINE_2,
+              GST_NUMBER,
+              FSSAI_NUMBER,
+              CIN_NUMBER
             })
           })
         ]);
@@ -103,21 +154,21 @@ const TokenSuccess = ({
         const hasFailures = failedPrints.foodKot || failedPrints.coffeeKot || failedPrints.bill;
 
         if (hasFailures) {
-          console.log('[TokenSuccess] ⚡ Backend print failed, attempting browser print fallback...');
+          console.log('[TokenSuccess - Local print Failed] ⚡ Backend print failed, attempting browser print fallback...');
 
           try {
             // Attempt browser print for failed items
             if (failedPrints.foodKot) {
-              console.log('[TokenSuccess] 🔄 Fallback: Printing Food KOT via browser...');
-              silentPrintFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+              console.log('[TokenSuccess - Local print Failed] 🔄 Fallback: Printing Food KOT via browser...');
+              silentPrintFoodKOT(orderId, kot_code, orderDetails,orderType,storeName);
             }
             if (failedPrints.coffeeKot) {
-              console.log('[TokenSuccess] 🔄 Fallback: Printing Coffee KOT via browser...');
-              silentPrintCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+              console.log('[TokenSuccess - Local print Failed] 🔄 Fallback: Printing Coffee KOT via browser...');
+              silentPrintCoffeeKOT(orderId, kot_code, orderDetails,orderType,storeName);
             }
             if (failedPrints.bill) {
-              console.log('[TokenSuccess] 🔄 Fallback: Printing Bill via browser...');
-              silentPrintBill(orderId, kot_code, KDSInvoiceId, orderDetails, orderDetails?.orderType, transactionDetails);
+              console.log('[TokenSuccess - Local print Failed] 🔄 Fallback: Printing Bill via browser...');
+              silentPrintBill(orderId, kot_code, orderDetails, orderType,storeName,ADDRESS_LINE_1,ADDRESS_LINE_2,GST_NUMBER,FSSAI_NUMBER,CIN_NUMBER);
             }
 
             // Assume fallback succeeded (browser print doesn't return status)
@@ -125,6 +176,8 @@ const TokenSuccess = ({
             setPrintStatus('success');
             setPrintNotification('Bills printed successfully, please collect them');
             setIsPrintSuccess(true);
+
+
           } catch (fallbackError) {
             console.error('[TokenSuccess] ✗ Fallback print also failed:', fallbackError);
             // Both methods failed - show error
@@ -145,18 +198,19 @@ const TokenSuccess = ({
           setIsPrintSuccess(true);
         }
       } catch (error) {
-        console.error('[TokenSuccess] ✗ Backend print service connection error:', error);
+        console.error('[TokenSuccess - Try fails] ✗ Backend print service connection error:', error);
 
         // ⚠️ FALLBACK: Try browser print when backend is unreachable
-        console.log('[TokenSuccess] ⚡ Backend unreachable, attempting browser print fallback...');
+        console.log('[TokenSuccess - Try fails] ⚡ Backend unreachable, attempting browser print fallback...');
+
 
         try {
-          silentPrintFoodKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+          silentPrintFoodKOT(orderId, kot_code, orderDetails,orderType,storeName);
           setTimeout(() => {
-            silentPrintCoffeeKOT(orderId, kot_code, KDSInvoiceId, orderDetails);
+            silentPrintCoffeeKOT(orderId, kot_code, orderDetails,orderType,storeName);
           }, 500);
           setTimeout(() => {
-            silentPrintBill(orderId, kot_code, KDSInvoiceId, orderDetails, orderDetails?.orderType, transactionDetails);
+            silentPrintBill(orderId, kot_code, orderDetails, orderType,storeName,ADDRESS_LINE_1,ADDRESS_LINE_2,GST_NUMBER,FSSAI_NUMBER,CIN_NUMBER);
           }, 1000);
 
           console.log('[TokenSuccess] ✅ Fallback print triggered successfully');

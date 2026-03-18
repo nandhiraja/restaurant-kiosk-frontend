@@ -124,6 +124,7 @@ const ConfigPage = () => {
             terminal_id: selectedConfig.terminal_id,
             mid_on_device: selectedConfig.mid_on_device,
             tid_on_device: selectedConfig.tid_on_device,
+            store_name: selectedConfig.store_name,
             configured_at: new Date().toISOString()
         };
 
