@@ -119,7 +119,7 @@ const PaymentPage = () => {
         body: JSON.stringify({
           order_id: orderId,
           amount_paise: amountInPaise,
-          store_id: config.store_id
+          terminal_id: config.terminal_id
         })
       });
 
@@ -206,7 +206,7 @@ const PaymentPage = () => {
         body: JSON.stringify({
           order_id: orderId,
           amount_paise: amountInPaise,
-          store_id: config.store_id
+          terminal_id: config.terminal_id
         })
       });
 
@@ -325,7 +325,7 @@ const PaymentPage = () => {
         body: JSON.stringify({
           order_id: orderId,
           amount_paise: amountInPaise,
-          store_id: config.store_id,
+          terminal_id: config.terminal_id,
           pin: cashPin
         })
       });
@@ -519,6 +519,7 @@ const PaymentPage = () => {
       />
     );
   }
+
 
   // ============================================
   // RENDER PAYMENT PAGE
