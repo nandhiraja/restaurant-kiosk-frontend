@@ -347,6 +347,106 @@
 }
 
 /* ============================================
+   VARIATIONS & ADD-ONS UI (Button Style)
+   ============================================ */
+
+.modal-variations,
+.modal-addons {
+  margin-top: 1rem;
+}
+
+.variation-options,
+.addon-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.addon-group {
+  margin-bottom: 1.25rem;
+}
+
+.variation-label,
+.addon-label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  background: var(--bg-cream);
+  border: 2px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  min-width: 100px;
+  text-align: center;
+  user-select: none;
+  flex: 1 1 calc(33.333% - 0.75rem);
+  max-width: 180px;
+}
+
+/* Hide native radio/checkbox */
+.variation-label input,
+.addon-label input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Hover effects */
+.variation-label:hover:not([disabled]),
+.addon-label:hover:not([disabled]) {
+  border-color: var(--gold-light);
+  background: var(--neutral-800);
+  transform: translateY(-2px);
+}
+
+/* Selected State */
+.variation-label.selected,
+.addon-label.selected {
+  border-color: var(--gold-dark);
+  background: rgb(251, 145, 32);
+  /* box-shadow: 0 4px 12px rgba(241, 125, 62, 0.951); */
+  transform: translateY(-2px);
+}
+
+.variation-name,
+.addon-name {
+  font-weight: var(--font-weight-bold);
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.variation-price,
+.addon-price {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.addon-label input:disabled ~ .addon-name,
+.addon-label input:disabled ~ .addon-price {
+  opacity: 0.5;
+}
+
+.addon-label:has(input:disabled) {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--neutral-200);
+  border-color: var(--neutral-300);
+}
+
+.required-star {
+  color: var(--status-error, #e53e3e);
+  margin-left: 4px;
+}
+
+
+/* ============================================
    RESPONSIVE BREAKPOINTS
    ============================================ */
 
