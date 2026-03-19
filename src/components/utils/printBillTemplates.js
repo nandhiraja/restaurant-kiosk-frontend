@@ -1,5 +1,5 @@
 // Coffee Category ID (from backend) - Only coffee, not beverages
-const COFFEE_CATEGORY_ID = "6868ca5dc29c8ed4d3c98dd8";
+const COFFEE_CATEGORY_ID = "9534540";
 
 
 
