@@ -401,7 +401,9 @@ export const generateFoodKOT = (orderId, kot_code, orderDetails, orderType, stor
           <span style="font-size: 10px;">Date : ${new Date().toLocaleDateString()}</span>
           <span style="font-size: 10px;">Time : ${new Date().toLocaleTimeString()}</span>
         </div>    
-        <div style="font-size: 10px;">Type: ${orderType}</div>
+        <div style="font-size: 24px; font-weight: 900; margin: 8px 0; border: 2px dashed #000; padding: 4px; text-align: center; text-transform: uppercase;">
+          ${orderType}
+        </div>
     
         <div class="divider"></div>
 
@@ -567,8 +569,8 @@ export const generateCoffeeKOT = (orderId, kot_code, orderDetails, orderType, st
         </div>
 
         <div style="margin-top: 10px;">
-          <div class="info-line">
-            <span class="label">BILL TYPE:</span> ${orderType}
+          <div style="font-size: 20px; font-weight: 900; margin: 6px 0; border: 2px dashed #000; padding: 4px; text-align: center; text-transform: uppercase;">
+            ${orderType}
           </div>
           <div class="info-line">
             <span class="label">BILL NO:</span> KTR-${orderId}
