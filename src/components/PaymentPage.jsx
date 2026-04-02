@@ -559,9 +559,15 @@ const PaymentPage = () => {
               <span>Subtotal:</span>
               <span>₹{orderDetails.subtotal.toFixed(2)}</span>
             </div>
+            {orderDetails.takeawayChargeWithoutTax > 0 && (
+              <div className="summary-total-row">
+                <span>Takeaway Charge:</span>
+                <span>₹{orderDetails.takeawayChargeWithoutTax.toFixed(2)}</span>
+              </div>
+            )}
             <div className="summary-total-row">
               <span>Tax:</span>
-              <span>₹{orderDetails.tax.toFixed(2)}</span>
+              <span>₹{(orderDetails.tax + (orderDetails.takeawayTax || 0)).toFixed(2)}</span>
             </div>
             <div className="summary-total-row grand-total">
               <span>Total:</span>

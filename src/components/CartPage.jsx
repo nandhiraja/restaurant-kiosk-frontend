@@ -6,6 +6,27 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { IoMdArrowRoundBack } from "react-icons/io";
 
 const BASE_URL = import.meta.env.VITE_Base_url;
+// just for verification
+const others = [   
+  "1302832751",
+  "1302832750",
+  "1302832749",
+  "1302832748",
+  "1302832747",
+  "1302832746",
+  "1302832198",
+]
+const EXCLUDED_TAKEAWAY_ITEM_IDS = [
+  "1302832751",
+  "1302832750",
+  "1302832749",
+  "1302832748",
+  "1302832747",
+  "1302832746",
+  "1302832198",
+  "1303112180",
+  "1303001035"
+] // Add item IDs here to exclude from takeaway charge
 
 function CartPage() {
   const navigate = useNavigate();
@@ -60,7 +81,33 @@ function CartPage() {
     };
   }, { subtotal: 0, tax: 0 });
 
-  const total = breakdown.subtotal + breakdown.tax;
+  const orderTypePayload = orderType === 'Dine In' ? 'DINEIN' : 'TAKEAWAY';
+
+  // Calculate Takeaway Charges
+  let takeawayChargesWithoutTax = 0;
+  let takeawayChargesWithTax = 0;
+  let takeawayTax = 0;
+
+  if (orderTypePayload === 'TAKEAWAY') {
+    let applicableQuantity = 0;
+    cart.items.forEach(item => {
+      const itemId = item.skuCode || item.itemId?.toString() || '';
+      if (!EXCLUDED_TAKEAWAY_ITEM_IDS.includes(itemId)) {
+        applicableQuantity += item.quantity;
+      }
+    });
+
+    takeawayChargesWithoutTax = applicableQuantity * 10;
+    if (takeawayChargesWithoutTax > 100) {
+      takeawayChargesWithoutTax = 100;
+    }
+    
+    // 5% GST on takeaway charge
+    takeawayTax = takeawayChargesWithoutTax * 0.05;
+    takeawayChargesWithTax = takeawayChargesWithoutTax + takeawayTax;
+  }
+
+  const total = breakdown.subtotal + breakdown.tax + takeawayChargesWithTax;
 
   const handleQuantityUpdate = (index, newQuantity) => {
     updateQuantity(index, newQuantity);
@@ -70,15 +117,14 @@ const handleProceedToPayment = async () => {
     alert('Your cart is empty!');
     return;
   }
-  const orderTypePayload = orderType === 'Dine In' ? 'DINEIN' : 'TAKEAWAY';
 
   console.log("ordertype : ",orderTypePayload )
   setLoading(true);
   setError(null);
 
   // Calculate totals
-  const totalWithTax = breakdown.subtotal + breakdown.tax;
-  const totalWithoutTax = breakdown.subtotal;
+  const totalWithTax = breakdown.subtotal + breakdown.tax + takeawayChargesWithTax;
+  const totalWithoutTax = breakdown.subtotal + takeawayChargesWithoutTax;
 
   // Prepare order payload exactly as per API spec
   const orderPayload = {
@@ -105,7 +151,8 @@ const handleProceedToPayment = async () => {
     }),
   total_amount_include_tax: Math.round(totalWithTax),
   total_amount_exclude_tax: Math.round(totalWithoutTax),
-
+  takeaway_charges_without_tax: takeawayChargesWithoutTax,
+  takeaway_charges_with_tax: takeawayChargesWithTax,
   };
 
   console.log('Creating Order:', orderPayload);
@@ -138,6 +185,9 @@ const handleProceedToPayment = async () => {
           items: cart.items,
           subtotal: breakdown.subtotal,
           tax: breakdown.tax,
+          takeawayChargeWithoutTax: takeawayChargesWithoutTax,
+          takeawayTax: takeawayTax,
+          takeawayChargeWithTax: takeawayChargesWithTax,
           total: totalWithTax
         }
       } 
@@ -298,9 +348,15 @@ const handleProceedToPayment = async () => {
               <span>Base Amount:</span>
               <span>₹{breakdown.subtotal.toFixed(2)}</span>
             </div>
+            {orderTypePayload === 'TAKEAWAY' && takeawayChargesWithoutTax > 0 && (
+              <div className="summary-row">
+                <span>Takeaway Charge:</span>
+                <span>₹{takeawayChargesWithoutTax.toFixed(2)}</span>
+              </div>
+            )}
             <div className="summary-row">
               <span>Total Tax:</span>
-              <span>₹{breakdown.tax.toFixed(2)}</span>
+              <span>₹{(breakdown.tax + takeawayTax).toFixed(2)}</span>
             </div>
             <div className="summary-row total">
               <span>Total:</span>
