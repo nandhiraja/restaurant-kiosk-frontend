@@ -14,15 +14,44 @@ import PrintFoodKOTPage from './components/PrintFoodKOTPage';
 import PrintCoffeeKOTPage from './components/PrintCoffeeKOTPage';
 
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-const Layout = () => (
-  <CartProvider>
-    <div className="page-border-wrapper">
-      <Outlet />
-    </div>
-  </CartProvider>
-);
+const Layout = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let timeoutId;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      if (location.pathname !== '/') {
+        timeoutId = setTimeout(() => {
+          navigate('/');
+        }, 40000); // 40 seconds
+      }
+    };
+
+    resetTimer();
+
+    const events = ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'];
+    events.forEach(event => window.addEventListener(event, resetTimer));
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach(event => window.removeEventListener(event, resetTimer));
+    };
+  }, [location.pathname, navigate]);
+
+  return (
+    <CartProvider>
+      <div className="page-border-wrapper">
+        <Outlet />
+      </div>
+    </CartProvider>
+  );
+};
 
 // Then in your router
 const router = createBrowserRouter([
